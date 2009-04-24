@@ -33,6 +33,15 @@ public class TNodoAB {
 		return hijoDerecho;
 	}
 
+	
+	private void setHijoIzquierdo(TNodoAB hijoIzquierdo) {
+		this.hijoIzquierdo = hijoIzquierdo;
+	}
+
+	private void setHijoDerecho(TNodoAB hijoDerecho) {
+		this.hijoDerecho = hijoDerecho;
+	}
+
 	// *********************FIN de Getters**********************//
 	@Override
 	public String toString() {
@@ -80,24 +89,24 @@ public class TNodoAB {
 		 */
 		if (clave.compareTo(this.clave) > 0) {
 			// Si el hijo derecho es nulo lo inserto en el hijo derecho, sino, le digo al hijo derecho que lo inserte
-			if (this.hijoDerecho == null) {
-				this.hijoDerecho = new TNodoAB(clave, elemento);
+			if (getHijoDerecho() == null) {
+				setHijoDerecho( new TNodoAB(clave, elemento));
 				salida = true;
 			} else {
-				salida = this.hijoDerecho.insertar(clave, elemento);
+				salida = getHijoDerecho().insertar(clave, elemento);
 			}
 		}
 		/*
 		 * Si la clave es menor que la del nodo actual inserto en nuevo nodo en el hijo derecho
 		 */
-		else if (clave.compareTo(this.clave) < 0) {
+		else if (clave.compareTo(getClave()) < 0) {
 			// Si el hijo izquierdo es nulo lo inserto en el hijo izquierdo,
 			// sino, le digo al hijo izquierdo que lo inserte
-			if (this.hijoIzquierdo == null) {
-				this.hijoIzquierdo = new TNodoAB(clave, elemento);
+			if (getHijoIzquierdo() == null) {
+				setHijoIzquierdo(new TNodoAB(clave, elemento));
 				salida = true;
 			} else{
-				salida = this.hijoIzquierdo.insertar(clave, elemento);
+				salida = getHijoIzquierdo().insertar(clave, elemento);
 			}
 		}
 		return salida;
