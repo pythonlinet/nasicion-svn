@@ -56,10 +56,10 @@ public class TNodoAB {
 
 		if (this.clave.compareTo(clave) == 0)
 			salida = this;
-		if (this.clave.compareTo(clave) > 0 && this.hijoIzquierdo != null)
-			salida = hijoIzquierdo.buscar(clave);
-		if (this.clave.compareTo(clave) < 0 && this.hijoDerecho != null)
-			salida = hijoDerecho.buscar(clave);
+		if (this.clave.compareTo(clave) > 0 && getHijoIzquierdo() != null)
+			salida = getHijoIzquierdo().buscar(clave);
+		if (this.clave.compareTo(clave) < 0 && getHijoDerecho() != null)
+			salida = getHijoDerecho().buscar(clave);
 
 		return salida;
 	}
@@ -196,11 +196,11 @@ public class TNodoAB {
 		//Seteo tamanio a 1
 		int tamanio = 1;
 		//Le sumo el tamanio de mi hijo Derecho
-		if (this.hijoDerecho != null)
-			tamanio += hijoDerecho.getTamanio();
+		if (getHijoDerecho() != null)
+			tamanio += getHijoDerecho().getTamanio();
 		//Le sumo el tamanio de mi hijo Izquierdo
-		if (this.hijoIzquierdo != null)
-			tamanio += hijoIzquierdo.getTamanio();
+		if (getHijoIzquierdo() != null)
+			tamanio += getHijoIzquierdo().getTamanio();
 		return tamanio;
 	}
 
@@ -236,7 +236,7 @@ public class TNodoAB {
 	 */
 	public boolean esHoja() {
 		boolean salida = false;
-		if (this.hijoDerecho == null && this.hijoIzquierdo == null)
+		if (getHijoDerecho() == null && getHijoIzquierdo() == null)
 			salida = true;
 		return salida;
 	}
@@ -338,30 +338,30 @@ public class TNodoAB {
 		if (!esHoja()) {
 			int i = 0;
 			// Recorro mi hijoIzquierdo en Inorden
-			if (this.hijoIzquierdo != null) {
-				Comparable[] hIIno = this.hijoIzquierdo.inOrden();
+			if (getHijoIzquierdo() != null) {
+				Comparable[] hIIno = getHijoIzquierdo().inOrden();
 				for (int j = 0; j < hIIno.length; j++, i++) {
 					salida[i] = hIIno[j];
 				}
 			}
 			// Yo
-			salida[i] = this.clave;
+			salida[i] = getClave();
 			i++;
 
 			// Recorro mi hijoDerecho en Inorden
-			if (this.hijoDerecho != null) {
-				Comparable[] hDIno = this.hijoDerecho.inOrden();
+			if (getHijoDerecho() != null) {
+				Comparable[] hDIno = getHijoDerecho().inOrden();
 				for (int j = 0; j < hDIno.length; j++, i++) {
 					salida[i] = hDIno[j];
 				}
 			}
 		} else
 			// Si soy hoja, retorno mi clave
-			salida[0] = this.clave;
+			salida[0] = getClave();
 
 		return salida;
 	}
-	
+
 	/**
 	 * Metodo que retorna el menor nodo de un subArbol
 	 * @return unNodo - el nodo menor del subArbol
