@@ -3,6 +3,7 @@ package uy.edu.ucu.pii.obligatorio1;
 import uy.edu.ucu.pii.obligatorio1.gnasi.datos.Actor;
 import uy.edu.ucu.pii.obligatorio1.gnasi.datos.Categoria;
 import uy.edu.ucu.pii.obligatorio1.gnasi.datos.Pelicula;
+import uy.edu.ucu.pii.obligatorio1.gnasi.exec.SoloPeliculasException;
 import uy.edu.ucu.pii.obligatorio1.gnasi.exec.ValorNoPermitidoException;
 import uy.edu.ucu.pii.obligatorio1.repo.Actores;
 import uy.edu.ucu.pii.obligatorio1.repo.Categorias;
@@ -165,8 +166,21 @@ public class Obligatorio {
 	 * Método para cargar la nominación de un actor en una categoría dada
 	 */
 	public boolean nominarActorACategoria(String nomActor, String nomCategoria) {
-		//TODO - Implementar método
-		return false;
+		boolean salida = false;
+		Categoria categoria = categorias.buscarCategoria(nomCategoria);
+		if(categoria != null){
+			Actor actor = actores.buscarActor(nomActor);
+			if(actor != null){
+				try {
+					salida = categoria.nominarActorACategoria(actor);
+				} catch (SoloPeliculasException e) {
+					/*Se captura la excepcion que es lanzada en
+					 * el caso de que se quiera insertar un actor en una categoria de peliculas
+					 */
+				}
+			}
+		}
+		return salida;
 	}
 	
 	/**

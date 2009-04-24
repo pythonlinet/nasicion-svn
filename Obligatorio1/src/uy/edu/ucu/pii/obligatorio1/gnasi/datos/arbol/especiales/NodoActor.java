@@ -13,7 +13,7 @@ public class NodoActor extends TNodoAB {
 		return hijoIzquierdo;
 	}
 
-	public void setHijoIzquierdo(NodoActor hijoIzquierdo) {
+	private void setHijoIzquierdo(NodoActor hijoIzquierdo) {
 		this.hijoIzquierdo = hijoIzquierdo;
 	}
 
@@ -21,7 +21,7 @@ public class NodoActor extends TNodoAB {
 		return hijoDerecho;
 	}
 
-	public void setHijoDerecho(NodoActor hijoDerecho) {
+	private void setHijoDerecho(NodoActor hijoDerecho) {
 		this.hijoDerecho = hijoDerecho;
 	}
 
@@ -64,6 +64,7 @@ public class NodoActor extends TNodoAB {
 		}
 		return salida;
 	}
+	
 	
 	
 	
