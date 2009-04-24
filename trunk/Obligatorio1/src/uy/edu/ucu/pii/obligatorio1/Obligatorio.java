@@ -1,6 +1,8 @@
 package uy.edu.ucu.pii.obligatorio1;
 
+import uy.edu.ucu.pii.obligatorio1.gnasi.datos.Actor;
 import uy.edu.ucu.pii.obligatorio1.gnasi.datos.Categoria;
+import uy.edu.ucu.pii.obligatorio1.gnasi.datos.Pelicula;
 import uy.edu.ucu.pii.obligatorio1.gnasi.exec.ValorNoPermitidoException;
 import uy.edu.ucu.pii.obligatorio1.repo.Actores;
 import uy.edu.ucu.pii.obligatorio1.repo.Categorias;
@@ -125,8 +127,16 @@ public class Obligatorio {
 	 * Método utilizado para asociar un actor a una película
 	 */
 	public boolean asignarActorAPelicula(String nomActor, String nomPelicula) {
-		//TODO - Implementar método
-		return false;
+		boolean result = false;
+		Actor actor = actores.buscarActor(nomActor);
+		if(actor != null){
+			Pelicula pelicula = peliculas.buscarPelicula(nomPelicula);
+			if(pelicula != null){
+				result = pelicula.agregarActor(actor);
+			}
+		}
+		
+		return result;
 	}
 	
 	/**
@@ -136,8 +146,16 @@ public class Obligatorio {
 	 * Método utilizado para validar la asignación de un actor a una película
 	 */
 	public String buscarActorEnPelicula(String nomActor, String nomPelicula) {
-		//TODO - Implementar método
-		return null;
+		String result = null;
+		Pelicula pelicula = peliculas.buscarPelicula(nomPelicula);
+
+		if(pelicula != null){
+			Actor actor = pelicula.buscarActor(nomActor);
+			if(actor != null)
+				result = actor.getNombre();
+		}
+		
+		return result;
 	}
 	
 	/**
