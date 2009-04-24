@@ -14,6 +14,11 @@ public class TArbol {
 		return raiz;
 	}
 
+	private void setRaiz(TNodoAB raiz) {
+		this.raiz = raiz;
+	}
+	
+	
 	public TArbol() {
 		this.raiz = null;
 	}
@@ -28,7 +33,7 @@ public class TArbol {
 	public TNodoAB buscar(Comparable clave) {
 		TNodoAB salida = null;
 		if (!vacio()) {
-			salida = this.raiz.buscar(clave);
+			salida = getRaiz().buscar(clave);
 		}
 		return salida;
 	}
@@ -44,10 +49,10 @@ public class TArbol {
 	public boolean insertar(Comparable clave, Object elemento) {
 		boolean salida = false;
 		if (vacio()) {
-			this.raiz = new TNodoAB(clave, elemento);
+			setRaiz(new TNodoAB(clave, elemento));
 			salida = true;
 		} else
-			salida = this.raiz.insertar(clave, elemento);
+			salida = getRaiz().insertar(clave, elemento);
 
 		return salida;
 	}
@@ -60,8 +65,8 @@ public class TArbol {
 	@SuppressWarnings("unchecked")
 	public boolean eliminar(Comparable clave) {
 		boolean salida = false;
-		if (!vacio() && this.raiz.buscar(clave) != null) {
-			this.raiz = this.raiz.eliminar(clave,this.raiz);
+		if (!vacio() && getRaiz().buscar(clave) != null) {
+			setRaiz(getRaiz().eliminar(clave,this.raiz));
 			if(this.buscar(clave) == null) salida = true;
 		}
 		return salida;
@@ -74,7 +79,7 @@ public class TArbol {
 	 */
 	@SuppressWarnings("unchecked")
 	public TNodoAB getParent(Comparable clave) {
-		return this.raiz.getParent(clave);
+		return getRaiz().getParent(clave);
 	}
 
 	/**
@@ -83,7 +88,7 @@ public class TArbol {
 	 */
 	public boolean vacio() {
 		boolean salida = false;
-		if (this.raiz == null)
+		if (getRaiz() == null)
 			salida = true;
 
 		return salida;
@@ -96,7 +101,7 @@ public class TArbol {
 	public int getTamanio() {
 		int tamanio = 0;
 		if (!vacio()) {
-			tamanio = this.raiz.getTamanio();
+			tamanio = getRaiz().getTamanio();
 		}
 		return tamanio;
 	}
@@ -114,8 +119,8 @@ public class TArbol {
 	 */
 	public int getAltura() {
 		int altura = 0;
-		if (this.raiz != null)
-			altura = this.raiz.getAltura();
+		if (getRaiz() != null)
+			altura = getRaiz().getAltura();
 		return altura;
 	}
 
@@ -129,7 +134,7 @@ public class TArbol {
 		Comparable[] salida = new Comparable[0];
 		if (!vacio()) {
 			salida = new Comparable[getTamanio()];
-			salida = this.raiz.preOrden();
+			salida = getRaiz().preOrden();
 		}
 		return salida;
 	}
@@ -144,7 +149,7 @@ public class TArbol {
 		Comparable[] salida = new Comparable[0];
 		if (!vacio()) {
 			salida = new Comparable[getTamanio()];
-			salida = this.raiz.postOrden();
+			salida = getRaiz().postOrden();
 		}
 		return salida;
 	}
@@ -159,7 +164,7 @@ public class TArbol {
 		Comparable[] salida = new Comparable[0];
 		if (!vacio()) {
 			salida = new Comparable[getTamanio()];
-			salida = this.raiz.inOrden();
+			salida = getRaiz().inOrden();
 		}
 		return salida;
 	}
@@ -174,7 +179,7 @@ public class TArbol {
 	public boolean similar(TArbol arbolSimilar) {
 		boolean salida = false;
 		if(!this.vacio() && !arbolSimilar.vacio())
-			salida = this.raiz.similar(arbolSimilar.raiz);
+			salida = getRaiz().similar(arbolSimilar.raiz);
 		
 			return salida;
 	}
@@ -189,7 +194,7 @@ public class TArbol {
 	public boolean equivalente(TArbol arbolEquivalente) {
 		boolean salida = false;
 		if(!this.vacio() && !arbolEquivalente.vacio())
-			salida = this.raiz.equivalente(arbolEquivalente.raiz);
+			salida = getRaiz().equivalente(arbolEquivalente.raiz);
 		
 			return salida;
 	}

@@ -14,7 +14,7 @@ import uy.edu.ucu.pii.obligatorio1.repo.Peliculas;
  *
  */
 public class Obligatorio {
-	private Actores actores;
+	public Actores actores;
 	private Peliculas peliculas;
 	private Categorias categorias;
 
@@ -227,8 +227,7 @@ public class Obligatorio {
 	 */
 	@SuppressWarnings("unchecked")	
 	public Comparable[] listadoActrices() {
-		//TODO - Implementar método
-		return null;
+		return actores.listadoActrices();
 	}
 	
 	/**
