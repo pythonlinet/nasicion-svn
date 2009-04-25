@@ -215,7 +215,7 @@ public class Obligatorio {
 		boolean salida = false;
 		Categoria categoria = categorias.buscarCategoria(nomCategoria);
 		if(categoria != null){
-			
+			salida = categoria.votarActorEnCategoria(nomActor);
 		}
 		
 		
