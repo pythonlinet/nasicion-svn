@@ -26,6 +26,7 @@ public class Categoria {
 		super();
 		this.nomCategoria = nomCategoria;
 		this.tipo = tipo;
+		this.nominados = new TLista();
 	}
 
 	public boolean nominarActorACategoria(Actor actor) throws SoloPeliculasException {
