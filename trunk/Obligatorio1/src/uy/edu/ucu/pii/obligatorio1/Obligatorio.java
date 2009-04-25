@@ -290,8 +290,12 @@ public class Obligatorio {
 	 * Corresponde a la consulta 2.2.6
 	 */
 	public int cantidadVotosEnCategoria (String nomCategoria) {
-		//TODO - Implementar método
-		return -1;
+		int salida = -1;
+		Categoria categoria = categorias.buscarCategoria(nomCategoria);
+		if(categoria != null){
+			salida = categoria.cantidadVotosEnCategoria();
+		}
+		return salida;
 	}
 	
 	/**

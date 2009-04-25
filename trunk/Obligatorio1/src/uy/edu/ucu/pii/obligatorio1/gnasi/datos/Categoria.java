@@ -132,4 +132,18 @@ public class Categoria {
 
 		return salida;
 	}
+	/**
+	 * 
+	 * @return
+	 */
+	public int cantidadVotosEnCategoria() {
+		int salida = 0;
+		TNodoNominados nodo = nominados.getPrimero();
+		while(nodo != null){
+			salida += nodo.getVotos();
+			nodo = nodo.getSiguiente();
+		}
+			
+		return salida;
+	}
 }
