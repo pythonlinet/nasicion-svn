@@ -4,6 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uy.edu.ucu.pii.obligatorio1.Obligatorio;
+import uy.edu.ucu.pii.obligatorio1.gnasi.datos.Actor;
+import uy.edu.ucu.pii.obligatorio1.gnasi.datos.Categoria;
+import uy.edu.ucu.pii.obligatorio1.gnasi.exec.SoloPeliculasException;
 import uy.edu.ucu.pii.obligatorio1.gnasi.exec.ValorNoPermitidoException;
 import uy.edu.ucu.pii.obligatorio1.repo.Actores;
 import uy.edu.ucu.pii.obligatorio1.repo.Categorias;
@@ -115,6 +118,32 @@ public class TestPropio extends TestCase{
 		assertNotNull(categorias.buscarCategoria(nomCategoria));
 		
 	}
+	
+	@Test
+	public void testInsertEnCategoria(){
+		Categoria categoria = new Categoria("Actores","A");
+		String nomCategoria = "Oscar Mejor Actor";
+
+		try {
+			Actor actor1 = new Actor("Will Smith","M");
+			Actor actor2 = new Actor("Tommy Lee Jones","M");
+			Actor actor3 = new Actor("George Harris","M");
+			Actor actor4 = new Actor("Leonardo DiCaprio","M");
+			Actor actor5 = new Actor("Adam Sandler","M");
+			categoria.nominarActorACategoria(actor1);
+			categoria.nominarActorACategoria(actor2);
+			categoria.nominarActorACategoria(actor3);
+			categoria.nominarActorACategoria(actor4);
+			categoria.nominarActorACategoria(actor5);
+			
+			
+		} catch (SoloPeliculasException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
 	
 	
 }

@@ -22,7 +22,7 @@ public class TLista {
 	}
 
 	@SuppressWarnings("unused")
-	private void setPrimero(TNodo primero) {
+	protected void setPrimero(TNodo primero) {
 		this.primero = primero;
 	}
 
@@ -34,7 +34,7 @@ public class TLista {
 		return this.tamanio;
 	}
 
-	private void setTamanio(int tamanio){
+	protected void setTamanio(int tamanio){
 		this.tamanio = tamanio; 
 	}
 	
@@ -106,8 +106,7 @@ public class TLista {
 						if (puntero.getSiguiente() == null) {
 							puntero.setSiguiente(aux);
 							salida = true;
-						} else if (puntero.getSiguiente().getClave().compareTo(
-								clave) > 0) {
+						} else if (puntero.getSiguiente().getClave().compareTo(clave) > 0) {
 							aux.setSiguiente(puntero.getSiguiente());
 							puntero.setSiguiente(aux);
 							salida = true;
@@ -122,7 +121,7 @@ public class TLista {
 			salida = true;
 		}
 		// Si se realizo una insercion incrementamos el tamaño de la lista
-		setTamanio(getTamanio() +( salida ? 1 : 0));
+		setTamanio(getTamanio() +(salida ? 1 : 0));
 		return salida;
 	}
 
