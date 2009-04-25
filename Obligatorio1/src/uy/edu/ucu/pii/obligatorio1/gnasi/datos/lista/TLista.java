@@ -34,6 +34,10 @@ public class TLista {
 		return this.tamanio;
 	}
 
+	private void setTamanio(int tamanio){
+		this.tamanio = tamanio; 
+	}
+	
 	/*
 	 * Fin del bloque de getters y setters
 	 */
@@ -42,7 +46,7 @@ public class TLista {
 	 */
 	public TLista() {
 		this.tamanio = 0;
-		this.primero = null;
+		setPrimero(null);
 	}
 
 	/**
@@ -89,12 +93,12 @@ public class TLista {
 			TNodo aux = buscarNodo(clave);
 			if (aux == null) {
 				aux = new TNodo(clave, elemento);
-				TNodo puntero = this.primero;
+				TNodo puntero = getPrimero();
 
 				do {
 					// Comprobamos si aux es menor que el puntero
 					if (puntero.getClave().compareTo(clave) > 0) {
-						if (puntero.equals(this.primero)) {
+						if (puntero.equals(getPrimero())) {
 							insertarPrimero(aux.getClave(), aux.getElemento());
 							salida = true;
 						}
@@ -114,11 +118,11 @@ public class TLista {
 
 			}
 		} else {
-			this.primero = new TNodo(clave, elemento);
+			setPrimero(new TNodo(clave, elemento));
 			salida = true;
 		}
 		// Si se realizo una insercion incrementamos el tamaño de la lista
-		this.tamanio += salida ? 1 : 0;
+		setTamanio(getTamanio() +( salida ? 1 : 0));
 		return salida;
 	}
 
@@ -135,15 +139,17 @@ public class TLista {
 		if (!esVacia()) {
 			if (buscarNodo(clave) == null) {
 				TNodo nNodo = new TNodo(clave, elemento);
-				nNodo.setSiguiente(this.primero);
-				this.primero = nNodo;
+				nNodo.setSiguiente(getPrimero());
+				setPrimero(nNodo);
 				salida = true;
 			}
 		} else {
-			this.primero = new TNodo(clave, elemento);
+			//this.primero = new TNodo(clave, elemento);
+			setPrimero(new TNodo(clave, elemento));
 			salida = true;
 		}
-		this.tamanio += salida?1:0;
+		//this.tamanio += salida?1:0;
+		setTamanio(getTamanio() +(salida?1:0));
 		return salida;
 	}
 
@@ -161,13 +167,13 @@ public class TLista {
 			 * Controlamos que la posicion sea mayor que cero que no sea mayor
 			 * que el tama�o de la lista
 			 */
-			if (pos >= 0 && pos < this.tamanio) {
+			if (pos >= 0 && pos < getTamanio()) {
 				if (!esVacia()) {
 					/*
 					 * Cargamos en la salida el primer nodo
 					 */
 					int i = 0;
-					salida = this.primero;
+					salida = getPrimero();
 					/*
 					 * Si la posicion es mayor que 0, empezamos a recorrer la
 					 * lista, si la posicion es 0 significa que se trata del
@@ -192,9 +198,10 @@ public class TLista {
 	@SuppressWarnings("unchecked")
 	public TNodo buscarNodo(Comparable clave) {
 		if (!esVacia()) {
-			TNodo aux = primero;
+			TNodo aux = getPrimero();
 			do {
 				if (aux.getClave().compareTo(clave) == 0)
+					//TODO Esto no deberia hacerse, va contra buenas practicas de programacion
 					return aux;
 				aux = aux.getSiguiente();
 			} while (aux != null);
@@ -209,7 +216,7 @@ public class TLista {
 	 * @return true - si la lista esta vacia; false - si la lista contiene al menos un elemento.
 	 */
 	public boolean esVacia() {
-		if (this.primero != null)
+		if (getPrimero() != null)
 			return false;
 		return true;
 	}
@@ -225,7 +232,7 @@ public class TLista {
 		TNodo salida = null;
 
 		if (this.primero.getClave() != clave) {
-			TNodo aux = primero;
+			TNodo aux = getPrimero();
 			do {
 				if (aux.getSiguiente().getClave().compareTo(clave) == 0)
 					salida = aux;
@@ -255,9 +262,11 @@ public class TLista {
 			if(anterior != null)
 				anterior.setSiguiente(aEliminar.getSiguiente());
 			else
-				this.primero = aEliminar.getSiguiente();
+				//this.primero = aEliminar.getSiguiente();
+				setPrimero(aEliminar.getSiguiente());
 			
-			this.tamanio -= 1;
+			//this.tamanio -= 1;
+			setTamanio(getTamanio() -1);
 			salida = true;
 		}
 
@@ -276,12 +285,14 @@ public class TLista {
 			// Creamos una array del tamaño de la lista
 			lista = new Comparable[tamanio];
 			// Guardamos en una varialbe auxiliar el primero
-			TNodo aux = this.primero;
+			TNodo aux = getPrimero();
 			// Y en una el siguiente
 			TNodo siguiente = aux.getSiguiente();
 			// Borramos la referencia a primero para dejar la lista vacia
-			primero = null;
-			this.tamanio = 0;
+			//primero = null;
+			setPrimero(null);
+			//this.tamanio = 0;
+			setTamanio(0);
 			// ahora mientras que la auxiliar no sea nula recorremos la lista
 			while (aux != null) {
 				// Insertamos al principio de la lista los nodos
@@ -309,8 +320,8 @@ public class TLista {
 	public Comparable[] mostrar() {
 		Comparable[] lista = null;
 		if (!esVacia()) {
-			lista = new Comparable[tamanio];
-			for (int i = 0; i < tamanio; i++) {
+			lista = new Comparable[getTamanio()];
+			for (int i = 0; i < getTamanio(); i++) {
 				lista[i] = recuperar(i).getClave();
 			}
 		}
@@ -326,8 +337,8 @@ public class TLista {
 	public TNodo getMax() {
 		TNodo max = null;
 		if (!esVacia()) {
-			max = this.primero;
-			for (int i = 0; i < this.tamanio; i++) {
+			max = getPrimero();
+			for (int i = 0; i < getTamanio(); i++) {
 				max = max.getClave().compareTo(recuperar(i).getClave()) < 0 ? recuperar(i) : max;
 			}
 		}
@@ -343,8 +354,8 @@ public class TLista {
 	public TNodo getMin() {
 		TNodo min = null;
 		if (!esVacia()) {
-			min = this.primero;
-			for (int i = 0; i < this.tamanio; i++) {
+			min = getPrimero();
+			for (int i = 0; i < getTamanio(); i++) {
 				min = min.getClave().compareTo(recuperar(i).getClave()) > 0 ? recuperar(i)
 						: min;
 			}
@@ -359,7 +370,7 @@ public class TLista {
 	 * @param j  posicion del segundo nodo
 	 */
 	public void swapNodes(int i, int j) {
-		if (!esVacia() && i < this.tamanio && j < this.tamanio) {
+		if (!esVacia() && i < getTamanio() && j < getTamanio()) {
 			TNodo nodoA = recuperar(i);
 			TNodo nodoB = recuperar(j);
 			TNodo aux = anterior(nodoB.getClave());
@@ -367,7 +378,8 @@ public class TLista {
 			if (anterior(nodoA.getClave()) != null)
 				anterior(nodoA.getClave()).setSiguiente(nodoB);
 			else
-				this.primero = nodoB;
+				//this.primero = nodoB;
+				setPrimero(nodoB);
 
 			aux.setSiguiente(nodoA);
 
@@ -388,8 +400,8 @@ public class TLista {
 	public Comparable[] ordenar() {
 		TNodo aux;
 
-		for (int i = this.tamanio - 1; i >= 0; i--) {
-			for (int k = this.tamanio - 1; k >= 0; k--) {
+		for (int i = getTamanio() - 1; i >= 0; i--) {
+			for (int k = getTamanio() - 1; k >= 0; k--) {
 				if (recuperar(i).getClave().compareTo(recuperar(k).getClave()) > 0)
 					swapNodes(i, k);
 			}

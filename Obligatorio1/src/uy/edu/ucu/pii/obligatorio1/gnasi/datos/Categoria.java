@@ -1,12 +1,13 @@
 package uy.edu.ucu.pii.obligatorio1.gnasi.datos;
 
 import uy.edu.ucu.pii.obligatorio1.gnasi.datos.lista.TLista;
+import uy.edu.ucu.pii.obligatorio1.gnasi.datos.lista.especiales.TListaNominados;
 import uy.edu.ucu.pii.obligatorio1.gnasi.exec.SoloPeliculasException;
 
 public class Categoria {
 	private String nomCategoria;
 	private String tipo;
-	private TLista nominados;
+	private TListaNominados nominados;
 
 //******************************************************************************/
 	public String getNomCategoria() {
@@ -26,9 +27,15 @@ public class Categoria {
 		super();
 		this.nomCategoria = nomCategoria;
 		this.tipo = tipo;
-		this.nominados = new TLista();
+		this.nominados = new TListaNominados();
 	}
 
+	/**
+	 * 
+	 * @param actor
+	 * @return
+	 * @throws SoloPeliculasException
+	 */
 	public boolean nominarActorACategoria(Actor actor) throws SoloPeliculasException {
 		boolean salida = false;
 		
