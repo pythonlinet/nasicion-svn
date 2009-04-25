@@ -106,9 +106,29 @@ public class Categoria {
 		boolean salida = false;
 
 		if (this.tipo.equals("A"))
+			//Si la categoria era de Actores y no de Peliculas lanzo la excepción
 			throw new SoloActoresException(this.getNomCategoria() + ", " + pelicula.getNombre());
 
 		salida = getNominados().insertarOrdenado(pelicula.getNombre(), pelicula);
+
+		return salida;
+	}
+
+	/**
+	 * 
+	 * @param nomPelicula
+	 * @return
+	 */
+	public boolean votarPeliculaEnCategoria(String nomPelicula) {
+		boolean salida = false;
+		if (getTipo().equals("P")) {
+			TNodoNominados pelicula = (TNodoNominados) nominados.buscarNodo(nomPelicula);
+			if (pelicula != null) {
+				pelicula.setVotos(pelicula.getVotos() + 1);
+				salida = true;
+			}
+
+		}
 
 		return salida;
 	}
