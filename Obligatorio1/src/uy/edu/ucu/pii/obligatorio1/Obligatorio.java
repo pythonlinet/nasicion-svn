@@ -215,8 +215,14 @@ public class Obligatorio {
 	 * Método para cargar un voto a una película nominada en una categoría
 	 */
 	public boolean votarPeliculaEnCategoria(String nomPelicula, String nomCategoria) {
-		//TODO - Implementar método
-		return false;
+		boolean salida = false;
+		Categoria categoria = categorias.buscarCategoria(nomCategoria);
+		if(categoria != null){
+			salida = categoria.votarPeliculaEnCategoria(nomPelicula);
+		}
+		
+		
+		return salida;
 	}
 	
 	/**
