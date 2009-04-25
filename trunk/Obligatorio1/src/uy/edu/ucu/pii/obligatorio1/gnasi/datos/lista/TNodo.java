@@ -2,9 +2,9 @@ package uy.edu.ucu.pii.obligatorio1.gnasi.datos.lista;
 
 @SuppressWarnings("unchecked")
 public class TNodo implements Comparable{
-	private Comparable clave;
+	protected Comparable clave;
 	private TNodo siguiente;
-	private Object elemento;
+	protected Object elemento;
 	
 	/*
 	 * Inicio bloque getters y setters

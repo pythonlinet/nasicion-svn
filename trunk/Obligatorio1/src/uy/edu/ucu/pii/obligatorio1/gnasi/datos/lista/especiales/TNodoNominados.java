@@ -27,7 +27,6 @@ public class TNodoNominados extends TNodo {
 	public TNodoNominados(Comparable clave, Object elemento) {
 		super(clave, elemento);
 		this.votos = 0;
-		// TODO Auto-generated constructor stub
 	}
 
 }

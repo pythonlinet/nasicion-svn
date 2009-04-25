@@ -3,6 +3,7 @@ package uy.edu.ucu.pii.obligatorio1;
 import uy.edu.ucu.pii.obligatorio1.gnasi.datos.Actor;
 import uy.edu.ucu.pii.obligatorio1.gnasi.datos.Categoria;
 import uy.edu.ucu.pii.obligatorio1.gnasi.datos.Pelicula;
+import uy.edu.ucu.pii.obligatorio1.gnasi.exec.SoloActoresException;
 import uy.edu.ucu.pii.obligatorio1.gnasi.exec.SoloPeliculasException;
 import uy.edu.ucu.pii.obligatorio1.gnasi.exec.ValorNoPermitidoException;
 import uy.edu.ucu.pii.obligatorio1.repo.Actores;
@@ -190,8 +191,21 @@ public class Obligatorio {
 	 * Método para cargar la nominación de una película en una categoría dada
 	 */
 	public boolean nominarPeliculaACategoria(String nomPelicula, String nomCategoria) {
-		//TODO - Implementar método
-		return false;
+		boolean salida = false;
+		Categoria categoria = categorias.buscarCategoria(nomCategoria);
+		if(categoria != null){
+			Pelicula pelicula = peliculas.buscarPelicula(nomPelicula);
+			if(pelicula != null){
+				try {
+					salida = categoria.nominarPeliculaACategoria(pelicula);
+				} catch (SoloActoresException e) {
+					/*Se captura la excepcion que es lanzada en
+					 * el caso de que se quiera insertar un actor en una categoria de peliculas
+					 */
+				}
+			}
+		}
+		return salida;
 	}
 
 	/**
@@ -256,8 +270,12 @@ public class Obligatorio {
 	 * Corresponde a la consulta 2.2.5
 	 */
 	public String ganadorEnCategoria (String nomCategoria) {
-		//TODO - Implementar método
-		return null;
+		String salida = null;
+		Categoria categoria = categorias.buscarCategoria(nomCategoria);
+		if(categoria != null){
+			salida = categoria.ganadorEnCategoria();
+		}
+		return salida;
 	}
 	
 	/**
