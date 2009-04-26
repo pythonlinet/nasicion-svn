@@ -1,9 +1,9 @@
 package uy.edu.ucu.pii.obligatorio1.repo;
 
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.Actor;
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.arbol.TArbol;
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.arbol.TNodoAB;
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.arbol.especiales.TNodoABActor;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.Actor;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TArbol;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TNodoAB;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.especiales.TNodoABActor;
 
 public class Actores extends TArbol{
 	private TNodoABActor raiz;

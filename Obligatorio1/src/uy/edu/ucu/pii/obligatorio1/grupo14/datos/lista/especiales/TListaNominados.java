@@ -1,4 +1,4 @@
-package uy.edu.ucu.pii.obligatorio1.gnasi.datos.lista.especiales;
+package uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.especiales;
 
 import uy.edu.ucu.pii.obligatorio1.gnasi.datos.lista.TLista;
 import uy.edu.ucu.pii.obligatorio1.gnasi.datos.lista.TNodo;

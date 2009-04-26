@@ -1,11 +1,11 @@
 package uy.edu.ucu.pii.obligatorio1;
 
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.Actor;
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.Categoria;
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.Pelicula;
-import uy.edu.ucu.pii.obligatorio1.gnasi.exec.SoloActoresException;
-import uy.edu.ucu.pii.obligatorio1.gnasi.exec.SoloPeliculasException;
-import uy.edu.ucu.pii.obligatorio1.gnasi.exec.ValorNoPermitidoException;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.Actor;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.Categoria;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.Pelicula;
+import uy.edu.ucu.pii.obligatorio1.grupo14.exec.SoloActoresException;
+import uy.edu.ucu.pii.obligatorio1.grupo14.exec.SoloPeliculasException;
+import uy.edu.ucu.pii.obligatorio1.grupo14.exec.ValorNoPermitidoException;
 import uy.edu.ucu.pii.obligatorio1.repo.Actores;
 import uy.edu.ucu.pii.obligatorio1.repo.Categorias;
 import uy.edu.ucu.pii.obligatorio1.repo.Peliculas;

@@ -1,4 +1,4 @@
-package uy.edu.ucu.pii.obligatorio1.gnasi.datos.arbol;
+package uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol;
 
 /**
  * Clase para la representación de Arboles Binarios de busqueda

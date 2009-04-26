@@ -1,4 +1,4 @@
-package uy.edu.ucu.pii.obligatorio1.gnasi.datos;
+package uy.edu.ucu.pii.obligatorio1.grupo14.datos;
 
 public class Actor {
 	private String nombre;
