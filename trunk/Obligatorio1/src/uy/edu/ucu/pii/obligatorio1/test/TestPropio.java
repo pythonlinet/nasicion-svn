@@ -33,6 +33,7 @@ public class TestPropio extends TestCase{
 	/**
 	 * Método utilitario para la carga de información de los actores desde el archivo
 	 */
+	@SuppressWarnings("unused")
 	private void cargarActores() {
 		String[] dataActores = LectorArchivos.leerArchivo(nombreArchivoActores);
 		
