@@ -123,8 +123,6 @@ public class TestPropio extends TestCase{
 	@Test
 	public void testInsertEnCategoria(){
 		Categoria categoria = new Categoria("Actores","A");
-		String nomCategoria = "Oscar Mejor Actor";
-
 		try {
 			Actor actor1 = new Actor("Will Smith","M");
 			Actor actor2 = new Actor("Tommy Lee Jones","M");
