@@ -1,6 +1,6 @@
 package uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.especiales;
 
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.lista.TNodo;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TNodo;
 
 public class TNodoNominados extends TNodo {
 

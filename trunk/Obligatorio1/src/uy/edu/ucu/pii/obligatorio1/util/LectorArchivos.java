@@ -3,8 +3,8 @@ package uy.edu.ucu.pii.obligatorio1.util;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.lista.TLista;
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.lista.TNodo;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TLista;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TNodo;
 
 public class LectorArchivos {
     
