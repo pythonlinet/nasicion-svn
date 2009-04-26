@@ -46,6 +46,19 @@ public class Peliculas  extends TArbol{
 		salida = eliminar(nomPelicula);
 		return salida;
 	}
+
+	public Comparable[] listarActoresYActrices(String nomPelicula) {
+		Comparable[] salida = null;
+		Pelicula pelicula = buscarPelicula(nomPelicula);
+		if(pelicula != null)
+			/*Para mostrar los actores se podria usar el metodo ordenar()
+			 *que devuelve a los actores de forma ordenada de un array
+			 *pero como ya los insertamos de forma ordenada no tiene sentido hacerlo
+			 */
+			salida = pelicula.getActores().mostrar();
+		
+		return salida;
+	}
 	
 	
 }

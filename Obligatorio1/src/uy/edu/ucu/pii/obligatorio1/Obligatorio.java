@@ -314,8 +314,9 @@ public class Obligatorio {
 	 * Corresponde a la consulta 2.2.8
 	 */
 	public int cantidadVotosDeActorOActriz(String nomActor) {
-		//TODO - Implementar método
-		return -1;
+		int salida = -1;
+		salida = categorias.cantidadVotosDeActorOActriz(nomActor);
+		return salida;
 	}
 	
 	/**
@@ -325,8 +326,9 @@ public class Obligatorio {
 	 */
 	@SuppressWarnings("unchecked")
 	public Comparable[] listarActoresYActrices(String nomPelicula) {
-		//TODO - Implementar método
-		return null;
+		Comparable[] salida = null;
+		salida = peliculas.listarActoresYActrices(nomPelicula);
+		return salida;
 	}
 	
 	/**

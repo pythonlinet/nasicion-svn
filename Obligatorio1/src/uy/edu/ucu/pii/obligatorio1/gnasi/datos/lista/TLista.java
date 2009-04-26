@@ -100,6 +100,7 @@ public class TLista {
 					if (puntero.getClave().compareTo(clave) > 0) {
 						if (puntero.equals(getPrimero())) {
 							insertarPrimero(aux.getClave(), aux.getElemento());
+							setTamanio(getTamanio()-1);
 							salida = true;
 						}
 					} else {

@@ -3,18 +3,18 @@ package uy.edu.ucu.pii.obligatorio1.repo;
 import uy.edu.ucu.pii.obligatorio1.gnasi.datos.Actor;
 import uy.edu.ucu.pii.obligatorio1.gnasi.datos.arbol.TArbol;
 import uy.edu.ucu.pii.obligatorio1.gnasi.datos.arbol.TNodoAB;
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.arbol.especiales.NodoActor;
+import uy.edu.ucu.pii.obligatorio1.gnasi.datos.arbol.especiales.TNodoABActor;
 
 public class Actores extends TArbol{
-	private NodoActor raiz;
+	private TNodoABActor raiz;
 
 	
 	
-	public NodoActor getRaiz() {
+	public TNodoABActor getRaiz() {
 		return raiz;
 	}
 	
-	private void setRaiz(NodoActor raiz) {
+	private void setRaiz(TNodoABActor raiz) {
 		this.raiz = raiz;
 	}
 
@@ -41,7 +41,7 @@ public class Actores extends TArbol{
 	public boolean agregarActor(String nomActor, String sexo){
 		boolean salida = false;
 		if (vacio()) {
-			this.raiz = new NodoActor(nomActor, new Actor(nomActor,sexo));
+			this.raiz = new TNodoABActor(nomActor, new Actor(nomActor,sexo));
 			salida = true;
 		} else
 			salida = this.raiz.insertar(nomActor, new Actor(nomActor,sexo));
