@@ -1,8 +1,8 @@
 package uy.edu.ucu.pii.obligatorio1.repo;
 
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.Pelicula;
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.arbol.TArbol;
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.arbol.TNodoAB;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.Pelicula;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TArbol;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TNodoAB;
 
 public class Peliculas  extends TArbol{
 	

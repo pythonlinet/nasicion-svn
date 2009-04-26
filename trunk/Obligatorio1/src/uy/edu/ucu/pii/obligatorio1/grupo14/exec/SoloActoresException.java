@@ -1,4 +1,4 @@
-package uy.edu.ucu.pii.obligatorio1.gnasi.exec;
+package uy.edu.ucu.pii.obligatorio1.grupo14.exec;
 
 @SuppressWarnings("serial")
 public class SoloActoresException extends Exception {

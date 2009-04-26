@@ -1,12 +1,12 @@
 package uy.edu.ucu.pii.obligatorio1.repo;
 
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.Actor;
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.Categoria;
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.arbol.TArbol;
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.arbol.TNodoAB;
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.arbol.especiales.TNodoABActor;
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.arbol.especiales.TNodoABCategoria;
-import uy.edu.ucu.pii.obligatorio1.gnasi.exec.ValorNoPermitidoException;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.Actor;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.Categoria;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TArbol;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TNodoAB;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.especiales.TNodoABActor;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.especiales.TNodoABCategoria;
+import uy.edu.ucu.pii.obligatorio1.grupo14.exec.ValorNoPermitidoException;
 
 public class Categorias extends TArbol {
 	private final String VALOR_NO_PERMITIDO = "Valor no permitido";

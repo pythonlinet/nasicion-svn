@@ -1,10 +1,10 @@
-package uy.edu.ucu.pii.obligatorio1.gnasi.datos;
+package uy.edu.ucu.pii.obligatorio1.grupo14.datos;
 
 import uy.edu.ucu.pii.obligatorio1.gnasi.datos.lista.TLista;
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.lista.especiales.TListaNominados;
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.lista.especiales.TNodoNominados;
-import uy.edu.ucu.pii.obligatorio1.gnasi.exec.SoloActoresException;
-import uy.edu.ucu.pii.obligatorio1.gnasi.exec.SoloPeliculasException;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.especiales.TListaNominados;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.especiales.TNodoNominados;
+import uy.edu.ucu.pii.obligatorio1.grupo14.exec.SoloActoresException;
+import uy.edu.ucu.pii.obligatorio1.grupo14.exec.SoloPeliculasException;
 
 public class Categoria {
 	private String nomCategoria;

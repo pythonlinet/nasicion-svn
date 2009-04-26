@@ -1,4 +1,4 @@
-package uy.edu.ucu.pii.obligatorio1.gnasi.datos.arbol;
+package uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol;
 
 
 /**

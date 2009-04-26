@@ -1,9 +1,9 @@
-package uy.edu.ucu.pii.obligatorio1.gnasi.datos.arbol.especiales;
+package uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.especiales;
 
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.Actor;
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.Categoria;
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.arbol.TNodoAB;
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.lista.especiales.TNodoNominados;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.Actor;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.Categoria;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TNodoAB;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.especiales.TNodoNominados;
 
 public class TNodoABCategoria extends TNodoAB {
 	private TNodoABCategoria hijoIzquierdo;
