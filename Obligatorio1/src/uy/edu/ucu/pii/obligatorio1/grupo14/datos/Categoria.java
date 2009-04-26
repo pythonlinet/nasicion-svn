@@ -1,6 +1,6 @@
 package uy.edu.ucu.pii.obligatorio1.grupo14.datos;
 
-import uy.edu.ucu.pii.obligatorio1.gnasi.datos.lista.TLista;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TLista;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.especiales.TListaNominados;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.especiales.TNodoNominados;
 import uy.edu.ucu.pii.obligatorio1.grupo14.exec.SoloActoresException;
