@@ -3,29 +3,29 @@ package uy.edu.ucu.pii.obligatorio1.gnasi.datos.arbol.especiales;
 import uy.edu.ucu.pii.obligatorio1.gnasi.datos.Actor;
 import uy.edu.ucu.pii.obligatorio1.gnasi.datos.arbol.TNodoAB;
 
-public class NodoActor extends TNodoAB {
-	private NodoActor hijoIzquierdo;
-	private NodoActor hijoDerecho;
+public class TNodoABActor extends TNodoAB {
+	private TNodoABActor hijoIzquierdo;
+	private TNodoABActor hijoDerecho;
 
 	
 	
-	public NodoActor getHijoIzquierdo() {
+	public TNodoABActor getHijoIzquierdo() {
 		return hijoIzquierdo;
 	}
 
-	private void setHijoIzquierdo(NodoActor hijoIzquierdo) {
+	private void setHijoIzquierdo(TNodoABActor hijoIzquierdo) {
 		this.hijoIzquierdo = hijoIzquierdo;
 	}
 
-	public NodoActor getHijoDerecho() {
+	public TNodoABActor getHijoDerecho() {
 		return hijoDerecho;
 	}
 
-	private void setHijoDerecho(NodoActor hijoDerecho) {
+	private void setHijoDerecho(TNodoABActor hijoDerecho) {
 		this.hijoDerecho = hijoDerecho;
 	}
 
-	public NodoActor(Comparable clave, Object elemento) {
+	public TNodoABActor(Comparable clave, Object elemento) {
 		super(clave, elemento);
 		// TODO Auto-generated constructor stub
 	}
@@ -43,7 +43,7 @@ public class NodoActor extends TNodoAB {
 		if (clave.compareTo(this.getClave()) > 0) {
 			// Si el hijo derecho es nulo lo inserto en el hijo derecho, sino, le digo al hijo derecho que lo inserte
 			if (this.hijoDerecho == null) {
-				this.hijoDerecho = new NodoActor(clave, elemento);
+				this.hijoDerecho = new TNodoABActor(clave, elemento);
 				salida = true;
 			} else {
 				salida = this.hijoDerecho.insertar(clave, elemento);
@@ -56,7 +56,7 @@ public class NodoActor extends TNodoAB {
 			// Si el hijo izquierdo es nulo lo inserto en el hijo izquierdo,
 			// sino, le digo al hijo izquierdo que lo inserte
 			if (this.hijoIzquierdo == null) {
-				this.hijoIzquierdo = new NodoActor(clave, elemento);
+				this.hijoIzquierdo = new TNodoABActor(clave, elemento);
 				salida = true;
 			} else{
 				salida = this.hijoIzquierdo.insertar(clave, elemento);

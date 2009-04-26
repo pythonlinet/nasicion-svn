@@ -63,11 +63,11 @@ public class TNodoAB {
 	public TNodoAB buscar(Comparable clave) {
 		TNodoAB salida = null;
 
-		if (this.clave.compareTo(clave) == 0)
+		if (getClave().compareTo(clave) == 0)
 			salida = this;
-		if (this.clave.compareTo(clave) > 0 && getHijoIzquierdo() != null)
+		if (getClave().compareTo(clave) > 0 && getHijoIzquierdo() != null)
 			salida = getHijoIzquierdo().buscar(clave);
-		if (this.clave.compareTo(clave) < 0 && getHijoDerecho() != null)
+		if (getClave().compareTo(clave) < 0 && getHijoDerecho() != null)
 			salida = getHijoDerecho().buscar(clave);
 
 		return salida;
