@@ -1,4 +1,4 @@
-package uy.edu.ucu.pii.obligatorio1.repo;
+package uy.edu.ucu.pii.obligatorio1.grupo14.repo;
 
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.Pelicula;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TArbol;
