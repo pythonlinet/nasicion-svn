@@ -6,9 +6,9 @@ import uy.edu.ucu.pii.obligatorio1.grupo14.datos.Pelicula;
 import uy.edu.ucu.pii.obligatorio1.grupo14.exec.SoloActoresException;
 import uy.edu.ucu.pii.obligatorio1.grupo14.exec.SoloPeliculasException;
 import uy.edu.ucu.pii.obligatorio1.grupo14.exec.ValorNoPermitidoException;
-import uy.edu.ucu.pii.obligatorio1.repo.Actores;
-import uy.edu.ucu.pii.obligatorio1.repo.Categorias;
-import uy.edu.ucu.pii.obligatorio1.repo.Peliculas;
+import uy.edu.ucu.pii.obligatorio1.grupo14.repo.Actores;
+import uy.edu.ucu.pii.obligatorio1.grupo14.repo.Categorias;
+import uy.edu.ucu.pii.obligatorio1.grupo14.repo.Peliculas;
 
 
 /**
