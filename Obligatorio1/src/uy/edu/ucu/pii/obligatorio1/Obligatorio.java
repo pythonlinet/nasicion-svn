@@ -304,8 +304,9 @@ public class Obligatorio {
 	 * Corresponde a la consulta 2.2.7
 	 */
 	public int cantidadVotosDePelicula(String nomPelicula) {
-		//TODO - Implementar método
-		return -1;
+		int salida = -1;
+		salida = categorias.cantidadVotosDePelicula(nomPelicula);
+		return salida;
 	}
 	
 	/**
@@ -337,7 +338,11 @@ public class Obligatorio {
 	 */
 	@SuppressWarnings("unchecked")
 	public Comparable[] listarPeliculasMasVotadas () {
-		//TODO - Implementar método
-		return null;
+		Comparable[] salida = null;
+		if(!categorias.vacio()){
+				Comparable[] listaPeliculas = peliculas.inOrden();
+				salida = categorias.listarToFivePeliculas(listaPeliculas);
+		}
+		return salida;
 	}
 }
