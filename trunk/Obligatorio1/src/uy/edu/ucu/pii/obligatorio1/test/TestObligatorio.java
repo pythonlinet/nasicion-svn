@@ -250,15 +250,18 @@ public class TestObligatorio extends TestCase {
 	public void testCantidadVotosPelicula() {
 		int datosEsperados = 3;
 		String nomCategoria = "Oscar a la Mejor Pelicula";
-		String nomCategoria2 = "Oscar al Mejor Actor";
+		String nomCategoriaInvalida = "Oscar al Mejor Actor";
+		String nomCategoria2 = "Oscar a la Mejor Banda Sonora";
 		String nomPelicula = "Mejor Imposible";
 		
-		assertTrue(obliga.nominarPeliculaACategoria("Titanic", nomCategoria));
-		assertTrue(obliga.nominarPeliculaACategoria("El Resplandor", nomCategoria));
-		assertTrue(obliga.nominarPeliculaACategoria("Mr. Deeds", nomCategoria));
-		assertTrue(obliga.nominarPeliculaACategoria("Matrix Reloaded", nomCategoria));
-		assertTrue(obliga.nominarPeliculaACategoria(nomPelicula, nomCategoria));
-		assertTrue(obliga.nominarPeliculaACategoria(nomPelicula, nomCategoria2));
+		assertTrue("Debe ser posible nominar una película a una categoría válida",obliga.nominarPeliculaACategoria("Titanic", nomCategoria));
+		assertFalse("No debe ser posible nominar una actor a una categoría para películas",obliga.nominarActorACategoria("Helen Hunt", nomCategoria));
+		assertTrue("Debe ser posible nominar una película a una categoría válida",obliga.nominarPeliculaACategoria("El Resplandor", nomCategoria));
+		assertTrue("Debe ser posible nominar una película a una categoría válida",obliga.nominarPeliculaACategoria("Mr. Deeds", nomCategoria));
+		assertTrue("Debe ser posible nominar una película a una categoría válida",obliga.nominarPeliculaACategoria("Matrix Reloaded", nomCategoria));
+		assertTrue("Debe ser posible nominar una película a una categoría válida",obliga.nominarPeliculaACategoria(nomPelicula, nomCategoria));
+		assertFalse("No es posible nominar una película a una categoría de actor",obliga.nominarPeliculaACategoria(nomPelicula, nomCategoriaInvalida));
+		assertTrue("Debe ser posible nominar una película a una categoría válida",obliga.nominarPeliculaACategoria(nomPelicula, nomCategoria2));
 
 		assertTrue(obliga.votarPeliculaEnCategoria(nomPelicula, nomCategoria));
 		assertTrue(obliga.votarPeliculaEnCategoria("Matrix Reloaded", nomCategoria));
@@ -315,7 +318,7 @@ public class TestObligatorio extends TestCase {
 	 */
 	@SuppressWarnings("unchecked")
 	public void test5PeliculasMasVotadas() {
-		String[] categorias = {"Oscar al Mejor Director","Oscar a la Mejor Banda Sonora","Oscar a la Mejor Actriz"};
+		String[] categorias = {"Oscar a la Mejor Banda Sonora","Oscar a la Mejor Pelicula","Oscar al Mejor Documental"};
 		String[] peliculas = {"Matrix Reloaded","Mejor Imposible","Zohan","Mr. Deeds","300"};
 		for (int i = 0; i < categorias.length; i++) {
 			for (int j = 0; j < peliculas.length; j++) {

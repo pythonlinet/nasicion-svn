@@ -108,6 +108,31 @@ public class TNodoABCategoria extends TNodoAB {
 		
 		return salida;
 	}
+
+
+
+	public int cantidadVotosDePelicula(String nomPelicula) {
+		int salida = 0;
+		Categoria categoria =(Categoria)getElemento(); 
+			
+		//Si la categoria es de actores
+		if(categoria.getTipo().equals("P")){
+			TNodoNominados nominado = (TNodoNominados)categoria.getNominados().buscarNodo(nomPelicula);
+			//Si el actor esta nominado a esa categoria
+			if(nominado != null){
+				//sumo 1 al total de los votos
+				salida += nominado.getVotos();
+			}
+		}
+		if(getHijoIzquierdo() != null){
+			salida += ((TNodoABCategoria)getHijoIzquierdo()).cantidadVotosDePelicula(nomPelicula);
+		}
+		if(getHijoDerecho() != null){
+			salida += ((TNodoABCategoria)getHijoDerecho()).cantidadVotosDePelicula(nomPelicula);
+		}
+		
+		return salida;
+	}
 	
 	
 
