@@ -6,6 +6,7 @@ import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TNodo;
 public class Pelicula {
 	private String nomPelicula;
 	private TLista actores = new TLista();
+	private int votos;
 	
 	public String getNombre() {
 		return nomPelicula;
@@ -17,9 +18,19 @@ public class Pelicula {
 		return actores;
 	}
 	
+	
+	
+	
+	public int getVotos() {
+		return votos;
+	}
+	public void setVotos(int votos) {
+		this.votos = votos;
+	}
 	public Pelicula(String nombre) {
 		super();
 		this.nomPelicula = nombre;
+		this.votos = 0;
 	}
 	
 	/**

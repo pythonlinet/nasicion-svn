@@ -1,5 +1,7 @@
 package uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol;
 
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TLista;
+
 
 /**
  * Clase para representar un nodo dentro de un Arbol Binario de busqueda

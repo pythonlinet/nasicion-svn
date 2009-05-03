@@ -59,9 +59,12 @@ public class Categoria {
 	public boolean votarActorEnCategoria(String nomActor) {
 		boolean salida = false;
 		if (getTipo().equals("A")) {
-			TNodoNominados actor = (TNodoNominados) nominados
-					.buscarNodo(nomActor);
+			TNodoNominados actor = (TNodoNominados) nominados	.buscarNodo(nomActor);
 			if (actor != null) {
+				//Aumento los votos totatels de actor
+				((Actor)actor.getElemento()).setVotos(((Actor)actor.getElemento()).getVotos() + 1);
+							
+				//Aumento los votos del actor dentro de la categoria
 				actor.setVotos(actor.getVotos() + 1);
 				salida = true;
 			}
@@ -124,6 +127,10 @@ public class Categoria {
 		if (getTipo().equals("P")) {
 			TNodoNominados pelicula = (TNodoNominados) nominados.buscarNodo(nomPelicula);
 			if (pelicula != null) {
+				//Aumento los votos totales que tiene la pelicula
+				((Pelicula)pelicula.getElemento()).setVotos(((Pelicula)pelicula.getElemento()).getVotos() + 1);
+				
+				//Aumento los votos dentro de la categoria
 				pelicula.setVotos(pelicula.getVotos() + 1);
 				salida = true;
 			}
