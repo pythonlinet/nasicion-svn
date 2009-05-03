@@ -3,6 +3,7 @@ package uy.edu.ucu.pii.obligatorio1.grupo14.repo;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.Pelicula;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TArbol;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TNodoAB;
+import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TLista;
 
 public class Peliculas  extends TArbol{
 	
@@ -58,7 +59,5 @@ public class Peliculas  extends TArbol{
 			salida = pelicula.getActores().mostrar();
 		
 		return salida;
-	}
-	
-	
+	}	
 }

@@ -91,6 +91,10 @@ public class Categorias extends TArbol {
 
 
 	public Comparable[] listarToFivePeliculas(Comparable[] listaPeliculas) {
+		/*Solucion alterna:
+		 * 					agergar un atrib votosTotales en las peliculas y lo actores para evitar chanchadas como esta :P
+		 */
+		
 		Comparable[] salida = new Comparable[5];
 		TLista peliculasOrdenadasPorVotos = new TLista();
 		int votos;

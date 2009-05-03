@@ -39,7 +39,6 @@ public class Obligatorio {
 		try {
 			salida = categorias.agregarCategoria(nomCategoria, tipo);
 		} catch (ValorNoPermitidoException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -248,7 +247,6 @@ public class Obligatorio {
 	 */
 	@SuppressWarnings("unchecked")
 	public Comparable[] listadoActoresActrices () {
-		//TODO - Implementar método
 		return actores.inOrden();
 	}
 	
@@ -305,7 +303,11 @@ public class Obligatorio {
 	 */
 	public int cantidadVotosDePelicula(String nomPelicula) {
 		int salida = -1;
-		salida = categorias.cantidadVotosDePelicula(nomPelicula);
+		
+		Pelicula pelicula = peliculas.buscarPelicula(nomPelicula);
+		if(pelicula != null)
+			salida = pelicula.getVotos();
+		
 		return salida;
 	}
 	
@@ -316,7 +318,9 @@ public class Obligatorio {
 	 */
 	public int cantidadVotosDeActorOActriz(String nomActor) {
 		int salida = -1;
-		salida = categorias.cantidadVotosDeActorOActriz(nomActor);
+		Actor actor = actores.buscarActor(nomActor);
+		if(actor != null)
+			salida = actor.getVotos();
 		return salida;
 	}
 	
