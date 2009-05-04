@@ -6,6 +6,13 @@ import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.especiales.TNodoNominados
 import uy.edu.ucu.pii.obligatorio1.grupo14.exec.SoloActoresException;
 import uy.edu.ucu.pii.obligatorio1.grupo14.exec.SoloPeliculasException;
 
+/**
+ * Clase usada para representar una categoria y sus nominados en el TDA
+ * @author Grupo14
+ * @version 1.0
+ * @see uy.edu.ucu.pii.obligatorio1.grupo14.datos.Actor
+ * @see uy.edu.ucu.pii.obligatorio1.grupo14.datos.Pelicula
+ */
 public class Categoria {
 	private String nomCategoria;
 	private String tipo;
@@ -34,9 +41,9 @@ public class Categoria {
 	}
 
 	/**
-	 * 
+	 * Nomina a un actor a la categoria
 	 * @param actor
-	 * @return
+	 * @return true - si se pudo nominar el actor; false - si el actor ya esta nominado o la categoria no es de actores
 	 * @throws SoloPeliculasException
 	 */
 	public boolean nominarActorACategoria(Actor actor)
@@ -52,18 +59,18 @@ public class Categoria {
 	}
 
 	/**
-	 * 
+	 * Suma 1 voto al actor en la categoria
 	 * @param nomActor
-	 * @return
+	 * @return true - si se pudo incrementar el voto del actor; false - si el actor no esta en la categoria o la categoria no es de actores
 	 */
 	public boolean votarActorEnCategoria(String nomActor) {
 		boolean salida = false;
 		if (getTipo().equals("A")) {
-			TNodoNominados actor = (TNodoNominados) nominados	.buscarNodo(nomActor);
+			TNodoNominados actor = (TNodoNominados) nominados.buscarNodo(nomActor);
 			if (actor != null) {
-				//Aumento los votos totatels de actor
+				//Aumento los votos totales del actor
 				((Actor)actor.getElemento()).setVotos(((Actor)actor.getElemento()).getVotos() + 1);
-							
+				
 				//Aumento los votos del actor dentro de la categoria
 				actor.setVotos(actor.getVotos() + 1);
 				salida = true;
@@ -75,8 +82,8 @@ public class Categoria {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Metodo que retorna el ganador dentro de la categoria
+	 * @return unString - nombre del ganador de la categoria Actor/Pelicula
 	 */
 	public String ganadorEnCategoria() {
 		String salida = null;
@@ -99,9 +106,9 @@ public class Categoria {
 	}
 
 	/**
-	 * 
-	 * @param pelicula
-	 * @return
+	 * Metodo para nominar peliculas a una categoria
+	 * @param pelicula pelicula a nominar
+	 * @return true - si se nomino la pelicula; false - si la pelicula ya estaba nominada o si la categoria no es de peliculas
 	 * @throws SoloActoresException
 	 */
 	public boolean nominarPeliculaACategoria(Pelicula pelicula)
@@ -118,19 +125,19 @@ public class Categoria {
 	}
 
 	/**
-	 * 
-	 * @param nomPelicula
-	 * @return
+	 * Metodo para incrementar en 1 la cantidad de votos de una pelicula en una categoria
+	 * @param nomPelicula nombre de la pelicula
+	 * @return true - si se pudo incrementar la cantidad de votos; false - si la pelicula no está en la categoria o si la categoria no es de peliculas
 	 */
 	public boolean votarPeliculaEnCategoria(String nomPelicula) {
 		boolean salida = false;
 		if (getTipo().equals("P")) {
 			TNodoNominados pelicula = (TNodoNominados) nominados.buscarNodo(nomPelicula);
 			if (pelicula != null) {
-				//Aumento los votos totales que tiene la pelicula
+				//Aumento los votos totales de la pelicula
 				((Pelicula)pelicula.getElemento()).setVotos(((Pelicula)pelicula.getElemento()).getVotos() + 1);
 				
-				//Aumento los votos dentro de la categoria
+				
 				pelicula.setVotos(pelicula.getVotos() + 1);
 				salida = true;
 			}
@@ -140,8 +147,8 @@ public class Categoria {
 		return salida;
 	}
 	/**
-	 * 
-	 * @return
+	 * Retorna la cantidad de votos que tiene la categoria
+	 * @return unNumero - cantidad de votos dentro de la categoria
 	 */
 	public int cantidadVotosEnCategoria() {
 		int salida = 0;

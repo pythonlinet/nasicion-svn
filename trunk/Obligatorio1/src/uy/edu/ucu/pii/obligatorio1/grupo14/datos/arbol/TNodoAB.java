@@ -8,7 +8,7 @@ import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TLista;
  * Solución diseañada y codificad por Guillermo Nasi para la materia: Programación 2, Abril 2009, Universidad Catolica del Uruguay
  *@author Guillermo Nasi
  *@version 1.0
- *@see com.moguisoft.ucu.prog2.tdas.arblobinario.TArbol
+ *@see TArbol
  */
 public class TNodoAB {
 	@SuppressWarnings("unchecked")

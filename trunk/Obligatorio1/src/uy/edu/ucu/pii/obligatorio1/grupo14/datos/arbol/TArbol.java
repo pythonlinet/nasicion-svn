@@ -5,7 +5,7 @@ package uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol;
  * Codigo escrito por Guillermo Nasi para la materia: Programación 2, Abril 2009, Universidad Catolica del Uruguay
  *@author Guillermo Nasi
  *@version 1.0
- * @see com.moguisoft.ucu.prog2.tdas.arblobinario.TNodoAB
+ * @see TNodoAB
  */
 public class TArbol {
 	private TNodoAB raiz;

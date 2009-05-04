@@ -3,6 +3,14 @@ package uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.especiales;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.Actor;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TNodoAB;
 
+/**
+ * Reimplementacion de {@link TNodoAB} para agregar ciertos casos de busqueda que no eran solucionados por el TDA Arbol
+ * @author Guillermo
+ * @version 1.0
+ * @see uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TArbol
+ * @see uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TNodoAB
+ */
+
 public class TNodoABActor extends TNodoAB {
 	private TNodoABActor hijoIzquierdo;
 	private TNodoABActor hijoDerecho;
@@ -31,7 +39,11 @@ public class TNodoABActor extends TNodoAB {
 	}
 
 	/**
+	 * Inserta un nuevo nodo del tipo {@link TNodoABActor}
 	 * 
+	 * @param clave - clave del nodo
+	 * @param elemento - objeto que se almacenara en el nodo
+	 * @return true - si pudo insertar en nuevo nodo; false - si no se pudo realizar la insercion, por ejemplo si el nodo ya existe
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean insertar(Comparable clave, Object elemento) {
@@ -71,7 +83,7 @@ public class TNodoABActor extends TNodoAB {
 	/**
 	 * Metodo para contar la cantidad de actrices
 	 * 
-	 * @return cantidad de actrices
+	 * @return unNumero - cantidad de actrices
 	 */
 	public int contarActrices() {
 		/*
@@ -96,7 +108,7 @@ public class TNodoABActor extends TNodoAB {
 	/**
 	 * Metodo para contar la cantidad de actores
 	 * 
-	 * @return cantidad de actrices
+	 * @return unNumero - cantidad de actores
 	 */
 	public int contarActores() {
 		/*

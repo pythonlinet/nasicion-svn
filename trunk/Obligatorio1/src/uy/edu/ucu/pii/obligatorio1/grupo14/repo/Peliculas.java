@@ -3,13 +3,18 @@ package uy.edu.ucu.pii.obligatorio1.grupo14.repo;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.Pelicula;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TArbol;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TNodoAB;
-import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TLista;
 
+/**
+ * Clase usada para almacenar las peliculas dentro del TDA
+ * @author Grupo14
+ * @see uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TArbol
+ *
+ */
 public class Peliculas  extends TArbol{
 	
 
 	/**
-	 * 
+	 * agrega una pelicula al arbol
 	 * @param nomPelicula
 	 * @return true - si se insertro correctamente; false - si ya existe una pelicula con ese nombre
 	 */
@@ -23,9 +28,9 @@ public class Peliculas  extends TArbol{
 	}
 	
 	/**
-	 * 
-	 * @param nomPelicula
-	 * @return
+	 * Busca una pelicula dentro del arbol de Peliculas
+	 * @param nomPelicula nombre de la pelicula
+	 * @return pelicula - la pelicula buscada; null - si la pelicula no existe
 	 */
 	public Pelicula buscarPelicula(String nomPelicula){
 		Pelicula result = null;
@@ -38,7 +43,7 @@ public class Peliculas  extends TArbol{
 	}
 	
 	/**
-	 * 
+	 * Borra una pelicula del arbol
 	 * @param nomPelicula
 	 * @return
 	 */
@@ -48,6 +53,11 @@ public class Peliculas  extends TArbol{
 		return salida;
 	}
 
+	/**
+	 * Devuelve una lista de los actores de una pelicula
+	 * @param nomPelicula nombre de la pelicula
+	 * @return lista de actores - si se encuentra la pelicula y esta tiene acotres; null - si la pelicula no existe o si no tiene actores
+	 */
 	public Comparable[] listarActoresYActrices(String nomPelicula) {
 		Comparable[] salida = null;
 		Pelicula pelicula = buscarPelicula(nomPelicula);

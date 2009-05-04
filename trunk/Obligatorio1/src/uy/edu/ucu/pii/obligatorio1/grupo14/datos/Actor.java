@@ -1,10 +1,17 @@
 package uy.edu.ucu.pii.obligatorio1.grupo14.datos;
 
+/**
+ * Clase usada para representar un Actor dentro del TDA
+ * 
+ * @author Grupo14
+ *@version 1.0
+ *@see uy.edu.ucu.pii.obligatorio1.grupo14.datos.Pelicula
+ *@see uy.edu.ucu.pii.obligatorio1.grupo14.datos.Categoria
+ */
 public class Actor {
 	private String nombre;
 	private String sexo;
 	private int votos;
-
 	public String getNombre() {
 		return nombre;
 	}
@@ -21,6 +28,7 @@ public class Actor {
 		this.sexo = sexo;
 	}
 
+	
 	public int getVotos() {
 		return votos;
 	}

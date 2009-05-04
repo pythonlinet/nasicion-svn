@@ -1,6 +1,11 @@
 package uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.especiales;
 
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TNodo;
+/**
+ * Reeimplementacion de la clase {@link TNodo}
+ * @author Grupo14
+ * @see uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TNodo
+ */
 
 public class TNodoNominados extends TNodo {
 
