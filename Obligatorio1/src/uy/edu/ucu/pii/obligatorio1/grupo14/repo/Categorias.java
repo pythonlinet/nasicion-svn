@@ -1,15 +1,18 @@
 package uy.edu.ucu.pii.obligatorio1.grupo14.repo;
 
-import uy.edu.ucu.pii.obligatorio1.grupo14.datos.Actor;
+
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.Categoria;
-import uy.edu.ucu.pii.obligatorio1.grupo14.datos.Pelicula;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TArbol;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TNodoAB;
-import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.especiales.TNodoABActor;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.especiales.TNodoABCategoria;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TLista;
 import uy.edu.ucu.pii.obligatorio1.grupo14.exec.ValorNoPermitidoException;
 
+/**
+ * Clase para representar el conjunto de categorias dentro del TDA
+ * @author Grupo14
+ * @see uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TArbol
+ */
 public class Categorias extends TArbol {
 	private final String VALOR_NO_PERMITIDO = "Valor no permitido";
 	private TNodoABCategoria raiz = null;
@@ -27,7 +30,7 @@ public class Categorias extends TArbol {
 	//********************************************************/
 
 	/**
-	 * 
+	 * Metodo para agregar una categoria al arbol de categorias
 	 * @param nomCategoria
 	 * @param tipo
 	 * @return
@@ -53,7 +56,7 @@ public class Categorias extends TArbol {
 	
 	
 	/**
-	 * 
+	 * Metodo para buscar una categoria
 	 * @param nomCategoria
 	 * @return
 	 */
@@ -68,9 +71,9 @@ public class Categorias extends TArbol {
 	}
 
 	/**
-	 * 
-	 * @param nomActor
-	 * @return
+	 * Retorna la cantidad de votos de un actor o actriz
+	 * @param nomActor actor del que se quiere saber los votos
+	 * @return unNumero - cantidad de votos
 	 */
 	public int cantidadVotosDeActorOActriz(String nomActor) {
 		int salida = -1;
@@ -89,7 +92,8 @@ public class Categorias extends TArbol {
 		return salida;
 	}
 
-
+	
+	
 	public Comparable[] listarToFivePeliculas(Comparable[] listaPeliculas) {
 		/*Solucion alterna:
 		 * 					agergar un atrib votosTotales en las peliculas y lo actores para evitar chanchadas como esta :P

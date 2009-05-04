@@ -5,6 +5,11 @@ import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TArbol;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TNodoAB;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.especiales.TNodoABActor;
 
+/**
+ * Clase para representar el arbol de actores.
+ * @author Grupo14
+ * @see uy.edu.ucu.pii.obligatorio1.grupo14.datos.Actor
+ */
 public class Actores extends TArbol{
 	private TNodoABActor raiz;
 
@@ -19,9 +24,9 @@ public class Actores extends TArbol{
 	}
 
 	/**
-	 * 	
+	 * 	Busca un actor dentro del arbol de actores
 	 * @param nomActor
-	 * @return
+	 * @return actor - el actor buscado; null - si el actor no existe
 	 */
 	public Actor buscarActor(String nomActor){
 		Actor result = null;
@@ -33,10 +38,10 @@ public class Actores extends TArbol{
 		return  result;
 	}
 	/**
-	 * 
-	 * @param nomActor
-	 * @param sexo
-	 * @return
+	 * Agrega un actor al arbol
+	 * @param nomActor nombre del actor
+	 * @param sexo sexo del actor
+	 * @return true - si se inserto corretamente; false - si el actor ya existia
 	 */
 	public boolean agregarActor(String nomActor, String sexo){
 		boolean salida = false;
@@ -76,7 +81,7 @@ public class Actores extends TArbol{
 	
 	/**
 	 * Reimplementacion del metodo inOrden para que filtre las actrices
-	 * @return
+	 * @return lista de actrices
 	 */
 	public Comparable[] listadoActrices() {
 		Comparable[] listadoActrices = new Comparable[0];

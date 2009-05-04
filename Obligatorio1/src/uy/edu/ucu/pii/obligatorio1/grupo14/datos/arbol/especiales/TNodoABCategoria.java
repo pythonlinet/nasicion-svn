@@ -5,6 +5,13 @@ import uy.edu.ucu.pii.obligatorio1.grupo14.datos.Categoria;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TNodoAB;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.especiales.TNodoNominados;
 
+/**
+ * Reimplementacion de {@link TNodoAB} para agregar ciertos casos de busqueda que no eran solucionados por el TDA Arbol
+ * @author Guillermo
+ * @version 1.0
+ * @see uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TArbol
+ * @see uy.edu.ucu.pii.obligatorio1.grupo14.datos.arbol.TNodoAB
+ */
 public class TNodoABCategoria extends TNodoAB {
 	private TNodoABCategoria hijoIzquierdo;
 	private TNodoABCategoria hijoDerecho;
@@ -44,7 +51,11 @@ public class TNodoABCategoria extends TNodoAB {
 	
 	
 	/**
+	 * Inserta un nuevo nodo tipo {@link TNodoABCategoria}
 	 * 
+	 * @param clave - clave del nodo
+	 * @param elemento - objeto que se almacenara en el nodo
+	 * @return true - si pudo insertar en nuevo nodo; false - si no se pudo realizar la insercion, por ejemplo si el nodo ya existe
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean insertar(Comparable clave, Object elemento) {
@@ -82,10 +93,12 @@ public class TNodoABCategoria extends TNodoAB {
 	
 	
 	/**
-	 * 
-	 * @param nomActor
-	 * @return
+	 * Metodo que recorre un subArbol de categorias buscando la cantidad de votos que tiene el actor
+	 * <i><b>Este metodo se encuentra fuera de uso ya que se agrego una variable a {@link Actor} que contabiliza la cantidad total de votos que tiene en el concurso</b></i>
+	 * @param nomActor - actor del que se quiere saber los votos
+	 * @return unNumero - la cantidad total de votos que tiene el actor 
 	 */
+	@Deprecated
 	public int cantidadVotosDeActorOActriz(String nomActor) {
 		int salida = 0;
 		Categoria categoria =(Categoria)getElemento(); 
