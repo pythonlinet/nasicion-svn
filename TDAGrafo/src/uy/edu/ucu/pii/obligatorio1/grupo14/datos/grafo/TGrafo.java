@@ -1,10 +1,7 @@
 package uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo;
 
-import java.util.Vector;
-
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TLista;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TNodo;
-import uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo.TArista;
 
 /**
  * Clase para la implementacion de Grafos.
@@ -13,13 +10,22 @@ import uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo.TArista;
  * 
  */
 public class TGrafo {
+	@SuppressWarnings("unchecked")
 	private static final Comparable INFINITO = null;
 
 	private TLista vertices;
 
+	@SuppressWarnings("unchecked")
 	private Comparable[][] mAdyacencia;
+	@SuppressWarnings("unchecked")
 	private Comparable[][] mFloyd;
+	/**
+	 * Indica a varios metodos si es necesario regenerar las matrices
+	 */
 	private boolean regenMatriz;
+	/**
+	 * Indica la cantidad de vertices del grafo, es utilizado también para setear a los vertices la posición que van a tener dentro de la matriz
+	 */
 	private int cantVertices = 0;
 
 	public int getCantVertices() {
@@ -44,6 +50,7 @@ public class TGrafo {
 	 * @return true - si el vertice se inserto correctamente; false - si el
 	 *         vertice ya existe
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean insertarVertice(Comparable etiqueta) {
 		// El metodo insertar de TLista no permite insercion de datos
 		// duplicados, por lo tanto no es necesario verificar que el elemento no
@@ -75,6 +82,7 @@ public class TGrafo {
 	 * @return true - si se pudo agregar la adyacencia; false - si ya existia
 	 *         una adyacencia o si uno de los
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean insertarAdyacencia(Comparable origen, Comparable destino,
 			Comparable costo) {
 		boolean salida = false;
@@ -107,8 +115,9 @@ public class TGrafo {
 	 * 
 	 * @param etiquetaOrigen
 	 * @param etiquetaDestino
-	 * @return
+	 * @return true - si existe un camino desde el origen hasta el destino; false - si no existe un camino hasta el destino
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean existeCamino(Comparable etiquetaOrigen, Comparable etiquetaDestino) {
 		if(regenMatriz)
 			implementacionFloyd();
@@ -117,6 +126,7 @@ public class TGrafo {
 		return  mFloyd[origen][destino] != INFINITO?true:false;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Comparable[] mejorCamino(Comparable etiquetaOrigen,
 			Comparable etiquetaDestino) {
 		// TODO Auto-generated method stub
@@ -125,8 +135,9 @@ public class TGrafo {
 
 	/**
 	 * Metodo que retorna el vertice que sea el centro del grafo
-	 * @return 
+	 * @return Etiqueta del centro del grafo
 	 */
+	@SuppressWarnings("unchecked")
 	public Object centroDelGrafo() {
 		Comparable aux = 0;
 		int pos = 0;
@@ -144,6 +155,7 @@ public class TGrafo {
 	 * Metodo para obtener la excentricidad del grafo
 	 * @return array de Comparable
 	 */
+	@SuppressWarnings("unchecked")
 	public Comparable[] excentricidad(){
 		if(regenMatriz)
 			implementacionFloyd();
@@ -237,6 +249,7 @@ public class TGrafo {
 	 * @param etiqueta etiqueta del vertice del que se quiere saber la posicion
 	 * @return unNumero - la posiciï¿½n del vertice dentro de la matriz de adyacencia; -1 - si el vertice no existe
 	 */
+	@SuppressWarnings("unchecked")
 	private int getPosMatriz(Comparable etiqueta) {
 		int salida = -1;
 		// Buscamos el vertice
@@ -252,6 +265,7 @@ public class TGrafo {
 	 * 
 	 * @return Comparable[][] - con los costos minimos de ir desde un Origen hasta un Destino
 	 */
+	@SuppressWarnings("unchecked")
 	private Comparable[][] implementacionFloyd() {
 		// Si la matriz fue marcada para regeneracion se la genera otra vez
 		if (regenMatriz)
