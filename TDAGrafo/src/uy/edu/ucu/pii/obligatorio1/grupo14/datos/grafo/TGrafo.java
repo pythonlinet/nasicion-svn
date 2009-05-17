@@ -1,5 +1,7 @@
 package uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo;
 
+import java.util.Vector;
+
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TLista;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TNodo;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo.TArista;
@@ -46,7 +48,7 @@ public class TGrafo {
 		// El metodo insertar de TLista no permite insercion de datos
 		// duplicados, por lo tanto no es necesario verificar que el elemento no
 		// exista
-		boolean salida = vertices.insertarOrdenado(etiqueta, new TVertice(
+		boolean salida = vertices.insertar(etiqueta, new TVertice(
 				etiqueta, cantVertices));
 		// Si se realiza la insercion aumentamos la cantidad de vertices en el
 		// grafo
@@ -101,14 +103,15 @@ public class TGrafo {
 	}
 
 	/**
-	 * Floyd
+	 * Utiliza el algoritmo de Floyd, tambiÃ©n se podrÃ­a haber hecho usando Warshall, pero como ambos algor
 	 * 
 	 * @param etiquetaOrigen
 	 * @param etiquetaDestino
 	 * @return
 	 */
 	public boolean existeCamino(Comparable etiquetaOrigen, Comparable etiquetaDestino) {
-		implementacionFloyd();
+		if(regenMatriz)
+			implementacionFloyd();
 		int origen = getPosMatriz(etiquetaOrigen);
 		int destino = getPosMatriz(etiquetaDestino);
 		return  mFloyd[origen][destino] != INFINITO?true:false;
@@ -120,11 +123,47 @@ public class TGrafo {
 		return null;
 	}
 
+	/**
+	 * Metodo que retorna el vertice que sea el centro del grafo
+	 * @return 
+	 */
 	public Object centroDelGrafo() {
-		// TODO Auto-generated method stub
-		return null;
+		Comparable aux = 0;
+		int pos = 0;
+		Comparable[] excentricidad = excentricidad();
+		for(int i = 0; i < excentricidad.length; i++){
+			if(aux.compareTo(excentricidad[i]) < 0){
+				aux = excentricidad[i];
+				pos = i;
+			}
+		}
+		
+		return vertices.recuperar(pos).getClave();
 	}
+	/**
+	 * Metodo para obtener la excentricidad del grafo
+	 * @return array de Comparable
+	 */
+	public Comparable[] excentricidad(){
+		if(regenMatriz)
+			implementacionFloyd();
 
+		Comparable[] salida = new Comparable[mFloyd.length];
+		
+		
+		Comparable aux;
+		for(int i = 0; i < mFloyd.length; i++){
+			aux = 0;
+			for(int j = 0; j < mFloyd.length; j++){
+				if(mFloyd[j][i]!=INFINITO && mFloyd[j][i].compareTo(aux) > 0)
+					aux = mFloyd[j][i];
+			}
+			salida[i] = aux;
+		}
+		return salida;
+	}
+	
+	
 	/**
 	 * Metodo para saber si existe un vertice con una X etiqueta
 	 * 
@@ -196,13 +235,13 @@ public class TGrafo {
 	 * Metodo para saber la posicion que tiene un vertice en la matriz
 	 * 
 	 * @param etiqueta etiqueta del vertice del que se quiere saber la posicion
-	 * @return unNumero - la posición del vertice dentro de la matriz de adyacencia; -1 - si el vertice no existe
+	 * @return unNumero - la posiciï¿½n del vertice dentro de la matriz de adyacencia; -1 - si el vertice no existe
 	 */
 	private int getPosMatriz(Comparable etiqueta) {
 		int salida = -1;
 		// Buscamos el vertice
 		TVertice vertice = (TVertice) vertices.buscarNodo(etiqueta).getElemento();
-		// Si el vertice existe guardamos la posición que tiene en la matriz
+		// Si el vertice existe guardamos la posiciï¿½n que tiene en la matriz
 		salida = vertice != null ? vertice.getPosMatriz() : salida;
 
 		return salida;
@@ -215,7 +254,7 @@ public class TGrafo {
 	 */
 	private Comparable[][] implementacionFloyd() {
 		// Si la matriz fue marcada para regeneracion se la genera otra vez
-		//if (regenMatriz)
+		if (regenMatriz)
 			cargarMatrizDeAdyacencia();
 
 		Comparable[][] salida = this.mAdyacencia;
