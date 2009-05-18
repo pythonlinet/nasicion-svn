@@ -10,8 +10,8 @@ import uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo.TGrafo;
 public class TGrafoTest {
 	private static final String[] VERTICES_INICIALES_1 = new String[]{"A","B","C"};
 	private static final String[] VERTICES_INICIALES_2 = new String[]{"A","B","C","D","E","F"};
-	private static final String[][] ARISTAS_INICIALES_2 = new String[][]{{"A","B"},{"B","C"},{"B","E"},{"C","D"},{"C","E"},{"E","F"}};
-	private static final Integer[] COSTOS_ARTISTAS_INICIALES_2 = new Integer[]{10,10,9,8,6,14};
+	private static final String[][] ARISTAS_INICIALES_2 = new String[][]{{"A","B"},{"B","C"},{"B","E"},{"C","D"},{"C","E"},{"D","E"},{"E","F"}};
+	private static final Integer[] COSTOS_ARTISTAS_INICIALES_2 = new Integer[]{10,10,9,8,6,11,14};
 	
 	
 	private TGrafo g = null;
@@ -55,7 +55,7 @@ public class TGrafoTest {
 	public void testCentro() {
 		validarInsercionVertices(VERTICES_INICIALES_2);
 		validarInsercionAdyacencias(ARISTAS_INICIALES_2, COSTOS_ARTISTAS_INICIALES_2);
-		
+	
 		assertEquals(g.centroDelGrafo(),"F");
 	}
 

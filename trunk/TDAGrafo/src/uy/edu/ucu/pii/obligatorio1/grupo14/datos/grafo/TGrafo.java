@@ -4,10 +4,12 @@ import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TLista;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TNodo;
 
 /**
- * Clase para la implementacion de Grafos.
+ * Clase para la implementación de Grafos. Diseñada y Desarrollada por el
+ * Grupo14 para la materia Porgarmacion II de la Universidad Catolica del
+ * Uruguay Año 2009
  * 
  * @author Grupo14
- * 
+ * @version 1.0
  */
 public class TGrafo {
 	@SuppressWarnings("unchecked")
@@ -24,7 +26,8 @@ public class TGrafo {
 	 */
 	private boolean regenMatriz;
 	/**
-	 * Indica la cantidad de vertices del grafo, es utilizado también para setear a los vertices la posición que van a tener dentro de la matriz
+	 * Indica la cantidad de vertices del grafo, es utilizado también para
+	 * setear a los vertices la posición que van a tener dentro de la matriz
 	 */
 	private int cantVertices = 0;
 
@@ -55,14 +58,14 @@ public class TGrafo {
 		// El metodo insertar de TLista no permite insercion de datos
 		// duplicados, por lo tanto no es necesario verificar que el elemento no
 		// exista
-		boolean salida = vertices.insertar(etiqueta, new TVertice(
-				etiqueta, cantVertices));
+		boolean salida = vertices.insertar(etiqueta, new TVertice(etiqueta,
+				cantVertices));
 		// Si se realiza la insercion aumentamos la cantidad de vertices en el
 		// grafo
 		setCantVertices(salida ? getCantVertices() + 1 : getCantVertices());
 		// Si se realizo la insercion marcamos que la matriz tiene que ser
 		// regenerada la proxima vez que se la quiera accesar
-		if(salida){
+		if (salida) {
 			this.regenMatriz = salida;
 		}
 
@@ -102,7 +105,7 @@ public class TGrafo {
 				// Si se realizo la insercion de adyacencia marcamos que la
 				// matriz tiene que ser regenerada la proxima vez que se la
 				// quiera accesar
-				if(salida){
+				if (salida) {
 					this.regenMatriz = salida;
 				}
 			}
@@ -111,19 +114,22 @@ public class TGrafo {
 	}
 
 	/**
-	 * Utiliza el algoritmo de Floyd, tambiÃ©n se podrÃ­a haber hecho usando Warshall, pero como ambos algor
+	 * Utiliza el algoritmo de Floyd, tambiÃ©n se podrÃ­a haber hecho usando
+	 * Warshall, pero como ambos algor
 	 * 
 	 * @param etiquetaOrigen
 	 * @param etiquetaDestino
-	 * @return true - si existe un camino desde el origen hasta el destino; false - si no existe un camino hasta el destino
+	 * @return true - si existe un camino desde el origen hasta el destino;
+	 *         false - si no existe un camino hasta el destino
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean existeCamino(Comparable etiquetaOrigen, Comparable etiquetaDestino) {
-		if(regenMatriz)
+	public boolean existeCamino(Comparable etiquetaOrigen,
+			Comparable etiquetaDestino) {
+		if (regenMatriz)
 			implementacionFloyd();
 		int origen = getPosMatriz(etiquetaOrigen);
 		int destino = getPosMatriz(etiquetaDestino);
-		return  mFloyd[origen][destino] != INFINITO?true:false;
+		return mFloyd[origen][destino] != INFINITO ? true : false;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -135,59 +141,90 @@ public class TGrafo {
 
 	/**
 	 * Metodo que retorna el vertice que sea el centro del grafo
+	 * 
 	 * @return Etiqueta del centro del grafo
 	 */
 	@SuppressWarnings("unchecked")
 	public Object centroDelGrafo() {
-		
+
 		int pos = 0;
 		Comparable[] excentricidad = excentricidad();
 		Comparable aux = excentricidad[0];
-		
-		for(Comparable c:excentricidad)
-			System.out.println(c);
-		
-		//Recorro el array de excentricidad del Grafo buscando la menor de las excentricidades
-		for(int i = 1; i < excentricidad.length; i++){
-			if(aux.compareTo(excentricidad[i]) > 0){
+
+		// Recorro el array de excentricidad del Grafo buscando la menor de las
+		// excentricidades, que por definicion deberia se el centro del grafo
+		for (int i = 1; i < excentricidad.length; i++) {
+			/*
+			 * Si aux es INFINITO y excentricidad[i] es != de INFINITO,
+			 * asignamos a aux el valor de excentricidad[i], este control se
+			 * hace porque en el caso de que aux sea INIFINITO (null), al querer
+			 * comparar el programa dara NullPointerException
+			 */
+			if (aux == INFINITO && excentricidad[i] != INFINITO){
 				aux = excentricidad[i];
-				//guardo la posicion del elemento en el array
+				//Guardamos la posicion del vertice
+				pos = i;
+			}
+			/*
+			 * Aqui hacemos el mismo control que en el IF anterior por la misma
+			 * razon, si excentricidad[i] es nulo (INFINITO), se cae por
+			 * NullPointerException
+			 */
+			else if (excentricidad[i] != INFINITO && aux.compareTo(excentricidad[i]) > 0) {
+				aux = excentricidad[i];
+				// guardo la posicion del elemento en el array
 				pos = i;
 			}
 		}
-		System.out.println(aux);
+		//Devolvemos la etiqueta del vertice
 		return vertices.recuperar(pos).getClave();
 	}
+
 	/**
 	 * Metodo para obtener la excentricidad del grafo
+	 * 
 	 * @return array de Comparable
 	 */
 	@SuppressWarnings("unchecked")
-	public Comparable[] excentricidad(){
-		if(regenMatriz)
+	public Comparable[] excentricidad() {
+		if (regenMatriz)
 			implementacionFloyd();
 
 		Comparable[] salida = new Comparable[mFloyd.length];
-		
-		
+
+		boolean continuar = true;
 		Comparable aux;
-		for(int i = 0; i < mFloyd.length; i++){
+		for (int i = 0; i < mFloyd.length; i++) {
 			aux = 0;
-			for(int j = 0; j < mFloyd.length; j++){
-				if(mFloyd[j][i]!=INFINITO && mFloyd[j][i].compareTo(aux) > 0)
+
+			for (int j = 0; j < mFloyd.length && continuar; j++) {
+
+				// Si el costo es infinito (null), seteamos aux como INFINITO,
+				// porque no va a haber un costo mayor a ese
+				if (mFloyd[j][i] == INFINITO) {
+					aux = INFINITO;
+					// Cortamos la ejecucion ya que no va a haber un valor mayor
+					// que INFINITO
+					continuar = false;
+				} else if (mFloyd[j][i].compareTo(aux) > 0)
 					aux = mFloyd[j][i];
+
 			}
+			// Volemos a setear continuar en true para que se ejecute bien el
+			// for
+			continuar = true;
 			salida[i] = aux;
 		}
 		return salida;
 	}
-	
-	
+
 	/**
 	 * Metodo para saber si existe un vertice con una X etiqueta
 	 * 
-	 * @param etiqueta etiqueta del vertices
-	 * @return true - si el vertice existe en el grafo; false - si el vertice no existe en el grafo
+	 * @param etiqueta
+	 *            etiqueta del vertices
+	 * @return true - si el vertice existe en el grafo; false - si el vertice no
+	 *         existe en el grafo
 	 */
 	public boolean existeVertice(String etiqueta) {
 		return vertices.buscarNodo(etiqueta) == null ? false : true;
@@ -196,16 +233,21 @@ public class TGrafo {
 	/**
 	 * Metodo para saber si dos vectores ORIGEN y DESTINO son adyacentes
 	 * 
-	 * @param etiquetaOrigen etiqueta del nodo origen
-	 * @param etiquetaDestino etiqueta del nodo destino
-	 * @return true - si existe la adyacencia; false - si no existe una adyacencia entre ambos vertices
+	 * @param etiquetaOrigen
+	 *            etiqueta del nodo origen
+	 * @param etiquetaDestino
+	 *            etiqueta del nodo destino
+	 * @return true - si existe la adyacencia; false - si no existe una
+	 *         adyacencia entre ambos vertices
 	 */
-	public boolean existeAdyacencia(String etiquetaOrigen,	String etiquetaDestino) {
+	public boolean existeAdyacencia(String etiquetaOrigen,
+			String etiquetaDestino) {
 		boolean salida = false;
 		TNodo origen = vertices.buscarNodo(etiquetaOrigen);
 		// Si existe el origen
 		if (origen != null) {
-			salida = ((TVertice) origen.getElemento()).existeAdyacencia(etiquetaDestino);
+			salida = ((TVertice) origen.getElemento())
+					.existeAdyacencia(etiquetaDestino);
 		}
 		return salida;
 	}
@@ -235,15 +277,17 @@ public class TGrafo {
 			vertice = (TVertice) vertices.recuperar(i).getElemento();
 			// Cantida de adyacencias del vertice
 			cantAdyacencias = vertice.getAdyacentes().getTamanio();
-			
-			// Cuando sea el costo de un vertice x hacia el mismo, seteamos el costo en 0
+
+			// Cuando sea el costo de un vertice x hacia el mismo, seteamos el
+			// costo en 0
 			mAdyacencia[i][i] = 0;
-			
+
 			// Recorremos las adyacencias del vertice
 			for (int j = 0; j < cantAdyacencias; j++) {
 
 				// Guardo la referencia a la arista
-				adyacencia = ((TArista) vertice.getAdyacentes().recuperar(j).getElemento());
+				adyacencia = ((TArista) vertice.getAdyacentes().recuperar(j)
+						.getElemento());
 				mAdyacencia[i][adyacencia.destino.getPosMatriz()] = adyacencia.costo;
 			}
 		}
@@ -253,14 +297,17 @@ public class TGrafo {
 	/**
 	 * Metodo para saber la posicion que tiene un vertice en la matriz
 	 * 
-	 * @param etiqueta etiqueta del vertice del que se quiere saber la posicion
-	 * @return unNumero - la posiciï¿½n del vertice dentro de la matriz de adyacencia; -1 - si el vertice no existe
+	 * @param etiqueta
+	 *            etiqueta del vertice del que se quiere saber la posicion
+	 * @return unNumero - la posiciï¿½n del vertice dentro de la matriz de
+	 *         adyacencia; -1 - si el vertice no existe
 	 */
 	@SuppressWarnings("unchecked")
 	private int getPosMatriz(Comparable etiqueta) {
 		int salida = -1;
 		// Buscamos el vertice
-		TVertice vertice = (TVertice) vertices.buscarNodo(etiqueta).getElemento();
+		TVertice vertice = (TVertice) vertices.buscarNodo(etiqueta)
+				.getElemento();
 		// Si el vertice existe guardamos la posiciï¿½n que tiene en la matriz
 		salida = vertice != null ? vertice.getPosMatriz() : salida;
 
@@ -270,7 +317,8 @@ public class TGrafo {
 	/**
 	 * Implementacion del algoritmo de Floyd
 	 * 
-	 * @return Comparable[][] - con los costos minimos de ir desde un Origen hasta un Destino
+	 * @return Comparable[][] - con los costos minimos de ir desde un Origen
+	 *         hasta un Destino
 	 */
 	@SuppressWarnings("unchecked")
 	private Comparable[][] implementacionFloyd() {
@@ -289,8 +337,8 @@ public class TGrafo {
 					// Si ninguno de los dos es infinito(NULL)
 					if (salida[i][k] != INFINITO && salida[k][j] != INFINITO) {
 
-						aIK = (Integer)salida[i][k];
-						aKJ = (Integer)salida[k][j];
+						aIK = (Integer) salida[i][k];
+						aKJ = (Integer) salida[k][j];
 						// Si el costo inicial no es INFINITO
 						if (salida[i][j] != INFINITO) {
 							// Para poder realizar la comparacion o la suma de
@@ -311,8 +359,48 @@ public class TGrafo {
 				}
 			}
 		}
-		
+
 		this.mFloyd = salida;
 		return salida;
+	}
+
+	public Comparable[] implementacionDijkstra() {
+		Comparable[] d = new Comparable[cantVertices];
+
+		return d;
+	}
+
+	/**
+	 * Metodo auxiliar de imprimirMatrizAdyacente y imprimirMatrizFloyd
+	 * 
+	 * @param matriz
+	 *            - matriz que se quiere imprimir en consola
+	 */
+	private void imprimirMatrizGrafo(Comparable[][] matriz) {
+		for (int i = 0; i < matriz.length; i++) {
+			for (int j = 0; j < matriz[i].length; j++) {
+				System.out.print(matriz[i][j] + "\t");
+			}
+			System.out.println();
+		}
+	}
+
+	/**
+	 * Metodo usado para mostrar en consola la matriz de adyacencia
+	 */
+	public void imprimirMatrizAdyacente() {
+		if (regenMatriz)
+			cargarMatrizDeAdyacencia();
+		imprimirMatrizGrafo(mAdyacencia);
+	}
+
+	/**
+	 * Metodo para mostrar por consola la matriz resultante de aplicar Floyd al
+	 * grafo
+	 */
+	public void imprimirMatrizFloyd() {
+		implementacionFloyd();
+
+		imprimirMatrizGrafo(mFloyd);
 	}
 }
