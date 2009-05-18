@@ -139,16 +139,23 @@ public class TGrafo {
 	 */
 	@SuppressWarnings("unchecked")
 	public Object centroDelGrafo() {
-		Comparable aux = 0;
+		
 		int pos = 0;
 		Comparable[] excentricidad = excentricidad();
-		for(int i = 0; i < excentricidad.length; i++){
-			if(aux.compareTo(excentricidad[i]) < 0){
+		Comparable aux = excentricidad[0];
+		
+		for(Comparable c:excentricidad)
+			System.out.println(c);
+		
+		//Recorro el array de excentricidad del Grafo buscando la menor de las excentricidades
+		for(int i = 1; i < excentricidad.length; i++){
+			if(aux.compareTo(excentricidad[i]) > 0){
 				aux = excentricidad[i];
+				//guardo la posicion del elemento en el array
 				pos = i;
 			}
 		}
-		
+		System.out.println(aux);
 		return vertices.recuperar(pos).getClave();
 	}
 	/**
