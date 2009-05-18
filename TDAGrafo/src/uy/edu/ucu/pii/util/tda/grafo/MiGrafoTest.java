@@ -71,26 +71,38 @@ public class MiGrafoTest {
 	
 	@Test
 	public void testCentro(){
+		String[] vertices = new String[] {"A","B","C","D","E"};
+		
+		for(int i = 0; i < vertices.length; i++)
+			assertTrue(g.insertarVertice(vertices[i]));
+		for(int i = 0; i < vertices.length; i++)
+			assertTrue(g.existeVertice(vertices[i]));
+		
+		//Pruebo utilizando un grafo con el que se trabajo en clase para estar seguro que los metodos funcionan correctamente
+		g.insertarAdyacencia("A", "C", 1);
+		g.insertarAdyacencia("A", "D", 4);
+		
+		g.insertarAdyacencia("B", "A", 6);
+		g.insertarAdyacencia("B", "E", 3);
+		
+		g.insertarAdyacencia("C", "B", 2);
+		g.insertarAdyacencia("C", "E", 1);
+		
+		g.insertarAdyacencia("D", "C", 5);
 
-
-		g.insertarVertice("Toronto");
-		g.insertarVertice("New York");
-		g.insertarVertice("Montevideo");
-		g.insertarVertice("Timbuktu");
-		g.insertarVertice("Madrid");
-		g.insertarVertice("Praga");
+		g.insertarAdyacencia("E", "A", 3);
 		
-		g.insertarAdyacencia("Toronto", "New York", 10);
-		g.insertarAdyacencia("New York","Montevideo", 100);
+		System.out.println("Matriz de Adyacencia");
+		g.imprimirMatrizAdyacente();
 		
-		g.existeCamino("Toronto", "New York");
-		g.existeCamino("Toronto", "Montevideo");
-		g.existeCamino("Montevideo", "Timbuktu");
+		System.out.println("Matriz resultante del Floyd");
+		g.imprimirMatrizFloyd();
 		
-		g.insertarAdyacencia("Montevideo", "Madrid", 500);
-		g.insertarAdyacencia("Madrid", "Timbuktu", 100);
+		assertEquals("E", g.centroDelGrafo());
 		
-		Comparable[] list = g.excentricidad();
+		
+		
+		
 
 	}
 }

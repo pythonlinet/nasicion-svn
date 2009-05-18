@@ -6,6 +6,7 @@ public class TVertice {
 	private Comparable etiqueta;
 	private TLista adyacentes;
 	private int posMatriz;
+	private boolean visitado;
 
 	public Comparable getEtiqueta() {
 		return etiqueta;
@@ -32,11 +33,20 @@ public class TVertice {
 		this.posMatriz = posMatriz;
 	}
 
+	public boolean isVisitado() {
+		return visitado;
+	}
+
+	public void setVisitado(boolean visitado) {
+		this.visitado = visitado;
+	}
+
 	public TVertice(Comparable etiqueta, int posMatriz) {
 		super();
 		this.etiqueta = etiqueta;
 		this.adyacentes = new TLista();
 		this.posMatriz = posMatriz;
+		this.visitado = false;
 	}
 
 	/**
