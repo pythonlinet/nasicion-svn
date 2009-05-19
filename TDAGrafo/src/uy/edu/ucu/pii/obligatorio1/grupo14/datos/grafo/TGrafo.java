@@ -133,9 +133,9 @@ public class TGrafo {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Comparable[] mejorCamino(Comparable etiquetaOrigen,
-			Comparable etiquetaDestino) {
+	public Comparable[] mejorCamino(Comparable etiquetaOrigen,	Comparable etiquetaDestino) {
 		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -364,8 +364,9 @@ public class TGrafo {
 		return salida;
 	}
 
-	public Comparable[] implementacionDijkstra() {
+	private Comparable[] implementacionDijkstra() {
 		Comparable[] d = new Comparable[cantVertices];
+		
 
 		return d;
 	}

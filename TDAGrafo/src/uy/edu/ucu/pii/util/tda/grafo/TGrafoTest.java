@@ -56,6 +56,11 @@ public class TGrafoTest {
 		validarInsercionVertices(VERTICES_INICIALES_2);
 		validarInsercionAdyacencias(ARISTAS_INICIALES_2, COSTOS_ARTISTAS_INICIALES_2);
 	
+		System.out.println("Matriz adyacente");
+		g.imprimirMatrizAdyacente();
+		System.out.println("Matriz del Floyd");
+		g.imprimirMatrizFloyd();
+		
 		assertEquals(g.centroDelGrafo(),"F");
 	}
 
