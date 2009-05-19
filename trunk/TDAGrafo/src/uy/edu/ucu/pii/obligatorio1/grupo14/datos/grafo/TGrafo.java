@@ -1,12 +1,14 @@
 package uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo;
 
+import java.util.Vector;
+
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TLista;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TNodo;
 
 /**
- * Clase para la implementación de Grafos. Diseñada y Desarrollada por el
+ * Clase para la implementaciï¿½n de Grafos. Diseï¿½ada y Desarrollada por el
  * Grupo14 para la materia Porgarmacion II de la Universidad Catolica del
- * Uruguay Año 2009
+ * Uruguay Aï¿½o 2009
  * 
  * @author Grupo14
  * @version 1.0
@@ -21,13 +23,14 @@ public class TGrafo {
 	private Comparable[][] mAdyacencia;
 	@SuppressWarnings("unchecked")
 	private Comparable[][] mFloyd;
+	
 	/**
 	 * Indica a varios metodos si es necesario regenerar las matrices
 	 */
 	private boolean regenMatriz;
 	/**
-	 * Indica la cantidad de vertices del grafo, es utilizado también para
-	 * setear a los vertices la posición que van a tener dentro de la matriz
+	 * Indica la cantidad de vertices del grafo, es utilizado tambiï¿½n para
+	 * setear a los vertices la posiciï¿½n que van a tener dentro de la matriz
 	 */
 	private int cantVertices = 0;
 
@@ -37,6 +40,12 @@ public class TGrafo {
 
 	private void setCantVertices(int cantVertices) {
 		this.cantVertices = cantVertices;
+	}
+
+	
+	
+	public Comparable[][] getMFloyd() {
+		return mFloyd;
 	}
 
 	public TGrafo() {
@@ -134,8 +143,9 @@ public class TGrafo {
 
 	@SuppressWarnings("unchecked")
 	public Comparable[] mejorCamino(Comparable etiquetaOrigen,	Comparable etiquetaDestino) {
-		// TODO Auto-generated method stub
-		
+		Comparable[] matrizCamino = implementacionDijkstra(etiquetaOrigen, true);
+		for(Comparable c : matrizCamino)
+			System.out.println(c);
 		return null;
 	}
 
@@ -160,9 +170,9 @@ public class TGrafo {
 			 * hace porque en el caso de que aux sea INIFINITO (null), al querer
 			 * comparar el programa dara NullPointerException
 			 */
-			if (aux == INFINITO && excentricidad[i] != INFINITO){
+			if (aux == INFINITO && excentricidad[i] != INFINITO) {
 				aux = excentricidad[i];
-				//Guardamos la posicion del vertice
+				// Guardamos la posicion del vertice
 				pos = i;
 			}
 			/*
@@ -170,16 +180,18 @@ public class TGrafo {
 			 * razon, si excentricidad[i] es nulo (INFINITO), se cae por
 			 * NullPointerException
 			 */
-			else if (excentricidad[i] != INFINITO && aux.compareTo(excentricidad[i]) > 0) {
+			else if (excentricidad[i] != INFINITO
+					&& aux.compareTo(excentricidad[i]) > 0) {
 				aux = excentricidad[i];
 				// guardo la posicion del elemento en el array
 				pos = i;
 			}
 		}
-		//Devolvemos la etiqueta del vertice
+		// Devolvemos la etiqueta del vertice
 		return vertices.recuperar(pos).getClave();
 	}
 
+	
 	/**
 	 * Metodo para obtener la excentricidad del grafo
 	 * 
@@ -326,7 +338,13 @@ public class TGrafo {
 		if (regenMatriz)
 			cargarMatrizDeAdyacencia();
 
-		Comparable[][] salida = this.mAdyacencia;
+		Comparable[][] salida = new Comparable[this.mAdyacencia.length][this.mAdyacencia.length];
+		for(int i = 0; i < salida.length; i++)
+			for(int j = 0; j < salida.length; j++)
+				salida[i][j] = mAdyacencia[i][j];
+		
+		
+		
 		Integer aIJ;
 		Integer aIK;
 		Integer aKJ;
@@ -364,10 +382,135 @@ public class TGrafo {
 		return salida;
 	}
 
-	private Comparable[] implementacionDijkstra() {
-		Comparable[] d = new Comparable[cantVertices];
-		
+	/**
+	 * Implementacion del algoritmo de Dijkstra que devuelve los costos desde un
+	 * nodo origen hasta el resto de los vertices del Grafo
+	 * 
+	 * @param origen
+	 *            etiqueta del vertice de origen
+	 * @return array de Comparable - los costos desde el vertice origen hasta
+	 *         los demas vertices; null - si el nodo origen no existe
+	 */
+	public Comparable[] implementacionDijkstra(Comparable origen, boolean retornarCaminos) {
+		Comparable[] d = null;
+		TNodo existeOrigen = vertices.buscarNodo(origen);
+		// Compruebo que exista el origen
+		if (existeOrigen != null) {
+			TVertice vOrigen = (TVertice) existeOrigen.getElemento();
 
+			/*
+			 * Si la matriz de adyacencia no existe o esta marcada para
+			 * regeneracion la generamos
+			 */
+			if (regenMatriz)
+				cargarMatrizDeAdyacencia();
+			// Cargamos D con los valores iniciales
+			d = mAdyacencia[vOrigen.getPosMatriz()];
+
+			// Posicion del ORIGEN dentro de la matriz de adyacencia
+			int x = vOrigen.getPosMatriz();
+
+			
+			//Inicializamos el array
+			Comparable[] p = new Comparable[vertices.getTamanio()];
+			for(int i = 0; i < p.length; i++)
+				p[i] = origen;
+			p[x] = null;
+			
+			
+			// Vertice Actual
+			TVertice a = null;
+
+			// Variables usadas a la hora de buscar el w minimo
+			Comparable distACTUAL, distAUX;
+			TVertice aux;
+
+			// Variables usadas en la busqueda de caminos mas cortos
+			Integer sumaDeCostos = null;
+			boolean costosValidos;
+
+			// Lista de vertices
+			TLista v = new TLista();
+
+			// Cargo la lista de vertices v
+			for (Comparable etiquetaV : vertices.mostrar())
+				v.insertar(etiquetaV, vertices.buscarNodo(etiquetaV)
+						.getElemento());
+
+			// Quito el vertice origen
+			v.eliminar(origen);
+
+			// Comienza el algoritmo de Dijkstra
+
+			while (v.getPrimero() != null) {
+
+				// Ahora hay que elegir el vertice mas cerca de X(Origen)
+				// Distancia minima actual es la del primer elemento del
+				// conjunto V de vertices
+				a = ((TVertice) v.recuperar(0).getElemento());
+				distACTUAL = d[a.getPosMatriz()];
+
+				for (int i = 1; i < v.getTamanio(); i++) {
+					// Guardo el vertice de V sobre el que estoy parado
+					aux = ((TVertice) v.recuperar(i).getElemento());
+					distAUX = d[aux.getPosMatriz()];
+
+					// Si distACTUAL es INFINITO, seteo distACTUAL como distAUX
+					// ya que no puede ser peor
+					if (distACTUAL == INFINITO) {
+						distACTUAL = distAUX;
+					} else if (distAUX != INFINITO	&& distACTUAL.compareTo(distAUX) > 0) {
+						distACTUAL = distAUX;
+						// Guardo el vertice acutal
+						a = aux;
+					}
+				}
+
+				// Elimino el vertice elegido del conjunto V
+				v.eliminar(a.getEtiqueta());
+
+				for (int i = 0; i < v.getTamanio(); i++) {
+					aux = (TVertice) v.recuperar(i).getElemento();
+
+					// Permite saber si los costos de D[v] y C[w,v] son
+					// validos(no son infinitos), para asi poder sumarlos
+					costosValidos = (d[a.getPosMatriz()] != INFINITO) && (mAdyacencia[a.getPosMatriz()][aux.getPosMatriz()] != INFINITO);
+
+					if (costosValidos)
+						// Se hace el casteo porque sino no puede realizarse la
+						// suma de los costos ya que Comparable no soporta esa
+						// operacion
+						sumaDeCostos = (Integer) d[a.getPosMatriz()] + (Integer) mAdyacencia[a.getPosMatriz()][aux.getPosMatriz()];
+
+					if (d[aux.getPosMatriz()] == INFINITO) {
+						if (costosValidos) {
+
+							d[aux.getPosMatriz()] = sumaDeCostos;
+						}
+						// Si el costo actual no es INFINITO y los costos de
+						// D[w] y C[w,v] no son INFINITOS ninguno de los dos
+					} else if (costosValidos) {
+						boolean esMenor = d[aux.getPosMatriz()].compareTo(sumaDeCostos) > 0;
+						// Si la suma de costos es menor que el costo ya
+						// ingresado, nos quedamos con la suma de costos
+
+						d[aux.getPosMatriz()] =  esMenor? sumaDeCostos:d[aux.getPosMatriz()];
+
+						if(esMenor){
+							p[aux.getPosMatriz()] =  a.getEtiqueta();
+							System.out.println(aux.getEtiqueta());
+							
+						}
+						
+					}
+
+				}
+			}
+			if(retornarCaminos){
+				d = p;
+			}
+		}
+		
 		return d;
 	}
 
