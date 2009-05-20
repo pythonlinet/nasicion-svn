@@ -48,6 +48,11 @@ public class TGrafoTest {
 		validarInsercionAdyacencias(ARISTAS_INICIALES_2, COSTOS_ARTISTAS_INICIALES_2);
 		
 		String[] caminoEsperado = new String[] {"A","B","E","F"};
+/*
+		Comparable[] c = g.mejorCamino("A", "F");
+		for(Comparable j: c)
+			System.out.print(j+"\t");
+	*/	
 		validarListasIguales("El mejor camino entre A y F debe ser "+caminoEsperado,caminoEsperado,g.mejorCamino("A", "F"));
 	}
 	
@@ -56,8 +61,6 @@ public class TGrafoTest {
 		validarInsercionVertices(VERTICES_INICIALES_2);
 		validarInsercionAdyacencias(ARISTAS_INICIALES_2, COSTOS_ARTISTAS_INICIALES_2);
 	
-		g.imprimirMatrizFloyd();
-		
 		assertEquals(g.centroDelGrafo(),"F");
 	}
 

@@ -120,11 +120,12 @@ public class MiGrafoTest {
 		g.insertarAdyacencia(4, 3, 20);
 		g.insertarAdyacencia(4, 5, 60);
 
-		g.imprimirMatrizFloyd();
-
+		//g.imprimirMatrizFloyd();
+/*
 		System.out.println();
 		g.imprimirMatrizAdyacente();
-
+*/
+		/*
 		Comparable[] c;
 		for (int i = 1; i < g.getCantVertices(); i++) {
 			c = g.implementacionDijkstra(i, false);
@@ -132,7 +133,8 @@ public class MiGrafoTest {
 				assertEquals(c[j], g.getMFloyd()[i - 1][j]);
 			}
 
-		}
+		}*/
+		g.implementacionDijkstra(1, true);
 
 	}
 }
