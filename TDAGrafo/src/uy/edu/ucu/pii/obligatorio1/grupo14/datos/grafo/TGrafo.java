@@ -45,6 +45,8 @@ public class TGrafo {
 	
 	
 	public Comparable[][] getMFloyd() {
+		if(mFloyd == null)
+			implementacionFloyd();
 		return mFloyd;
 	}
 
@@ -141,12 +143,64 @@ public class TGrafo {
 		return mFloyd[origen][destino] != INFINITO ? true : false;
 	}
 
+	
+	/**
+	 * 
+	 * @param etiquetaOrigen
+	 * @param etiquetaDestino
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public Comparable[] mejorCamino(Comparable etiquetaOrigen,	Comparable etiquetaDestino) {
-		Comparable[] matrizCamino = implementacionDijkstra(etiquetaOrigen, true);
-		for(Comparable c : matrizCamino)
-			System.out.println(c);
-		return null;
+		Comparable[] salida = null;
+		//Buscamos que exista el ORIGEN
+		TNodo existeO = vertices.buscarNodo(etiquetaOrigen);
+		if(existeO != null){
+			//Buscamos que exista el DESTINO
+			TNodo existeD = vertices.buscarNodo(etiquetaDestino);
+			if(existeD != null){
+				//Obtenemos la lista de predecesores
+				Comparable[] arrayPredecesores = implementacionDijkstra(etiquetaOrigen, true);
+				
+				//Obtenemos la posicion que tiene el destino dentro del array
+				int posicionDestino = ((TVertice)existeD.getElemento()).getPosMatriz();
+				
+				//Verificamos que exista un camino hasta el destino, si lo hay procedemos a armarlo
+				if(arrayPredecesores[posicionDestino] != INFINITO){
+					/*
+					int i = 0;
+					for(Comparable c: arrayPredecesores){
+						System.out.println("["+i+"] = " + c);
+						i++;
+					}
+					*/
+					
+					
+					TLista camino = new TLista();
+					//Inserto el final del camino
+					camino.insertarPrimero(etiquetaDestino, null);
+					camino.insertarPrimero(arrayPredecesores[posicionDestino], null);
+					posicionDestino = ((TVertice) vertices.buscarNodo(arrayPredecesores[posicionDestino]).getElemento()).getPosMatriz();
+					TVertice aux;
+					while(arrayPredecesores[posicionDestino].compareTo(etiquetaOrigen) != 0){
+						aux = (TVertice) vertices.buscarNodo(arrayPredecesores[posicionDestino]).getElemento();
+						camino.insertarPrimero(arrayPredecesores[posicionDestino], null);
+						posicionDestino = ((TVertice) vertices.buscarNodo(arrayPredecesores[posicionDestino]).getElemento()).getPosMatriz();
+					}
+					
+					//Agrego por ultimo el origen
+					camino.insertarPrimero(etiquetaOrigen, null);
+					
+					for(Comparable c: camino.mostrar())
+						System.out.println(c);
+					
+					salida = camino.mostrar();
+				}
+				
+			}
+		}
+		
+		return salida;
 	}
 
 	/**
@@ -406,54 +460,64 @@ public class TGrafo {
 				cargarMatrizDeAdyacencia();
 			// Cargamos D con los valores iniciales
 			d = mAdyacencia[vOrigen.getPosMatriz()];
-
+			
 			// Posicion del ORIGEN dentro de la matriz de adyacencia
 			int x = vOrigen.getPosMatriz();
 
 			
-			//Inicializamos el array
+			//Inicializamos el array de predecesores
 			Comparable[] p = new Comparable[vertices.getTamanio()];
 			for(int i = 0; i < p.length; i++)
 				p[i] = origen;
-			p[x] = null;
+			p[x] = origen;
 			
+			/*
+			 * 
+			 *
+			System.out.println("P inicial");
+			for(Comparable c : p)
+				System.out.print(c + "\t");
+			System.out.println();
+			*
+			 * 
+			 */
 			
 			// Vertice Actual
-			TVertice a = null;
+			TVertice w = null;
 
 			// Variables usadas a la hora de buscar el w minimo
 			Comparable distACTUAL, distAUX;
-			TVertice aux;
+			TVertice v;
 
 			// Variables usadas en la busqueda de caminos mas cortos
 			Integer sumaDeCostos = null;
 			boolean costosValidos;
 
 			// Lista de vertices
-			TLista v = new TLista();
+			TLista conjuntoV = new TLista();
 
 			// Cargo la lista de vertices v
 			for (Comparable etiquetaV : vertices.mostrar())
-				v.insertar(etiquetaV, vertices.buscarNodo(etiquetaV)
+				conjuntoV.insertar(etiquetaV, vertices.buscarNodo(etiquetaV)
 						.getElemento());
 
 			// Quito el vertice origen
-			v.eliminar(origen);
+			conjuntoV.eliminar(origen);
 
 			// Comienza el algoritmo de Dijkstra
 
-			while (v.getPrimero() != null) {
+			while (conjuntoV.getPrimero() != null) {
 
 				// Ahora hay que elegir el vertice mas cerca de X(Origen)
 				// Distancia minima actual es la del primer elemento del
 				// conjunto V de vertices
-				a = ((TVertice) v.recuperar(0).getElemento());
-				distACTUAL = d[a.getPosMatriz()];
+				w = ((TVertice) conjuntoV.recuperar(0).getElemento());
+				distACTUAL = d[w.getPosMatriz()];
 
-				for (int i = 1; i < v.getTamanio(); i++) {
+				for (int i = 1; i < conjuntoV.getTamanio(); i++) {
 					// Guardo el vertice de V sobre el que estoy parado
-					aux = ((TVertice) v.recuperar(i).getElemento());
-					distAUX = d[aux.getPosMatriz()];
+					v = ((TVertice) conjuntoV.recuperar(i).getElemento());
+					distAUX = d[v.getPosMatriz()];
 
 					// Si distACTUAL es INFINITO, seteo distACTUAL como distAUX
 					// ya que no puede ser peor
@@ -462,43 +526,49 @@ public class TGrafo {
 					} else if (distAUX != INFINITO	&& distACTUAL.compareTo(distAUX) > 0) {
 						distACTUAL = distAUX;
 						// Guardo el vertice acutal
-						a = aux;
+						w = v;
 					}
 				}
 
 				// Elimino el vertice elegido del conjunto V
-				v.eliminar(a.getEtiqueta());
+				conjuntoV.eliminar(w.getEtiqueta());
 
-				for (int i = 0; i < v.getTamanio(); i++) {
-					aux = (TVertice) v.recuperar(i).getElemento();
+				for (int i = 0; i < conjuntoV.getTamanio(); i++) {
+					v = (TVertice) conjuntoV.recuperar(i).getElemento();
 
 					// Permite saber si los costos de D[v] y C[w,v] son
 					// validos(no son infinitos), para asi poder sumarlos
-					costosValidos = (d[a.getPosMatriz()] != INFINITO) && (mAdyacencia[a.getPosMatriz()][aux.getPosMatriz()] != INFINITO);
+					costosValidos = (d[w.getPosMatriz()] != INFINITO) && 
+									(mAdyacencia[w.getPosMatriz()][v.getPosMatriz()] != INFINITO);
 
 					if (costosValidos)
 						// Se hace el casteo porque sino no puede realizarse la
 						// suma de los costos ya que Comparable no soporta esa
 						// operacion
-						sumaDeCostos = (Integer) d[a.getPosMatriz()] + (Integer) mAdyacencia[a.getPosMatriz()][aux.getPosMatriz()];
+						sumaDeCostos = (Integer) d[w.getPosMatriz()] + (Integer) mAdyacencia[w.getPosMatriz()][v.getPosMatriz()];
 
-					if (d[aux.getPosMatriz()] == INFINITO) {
+					//Si la la distancia al vertice es inifito
+					if (d[v.getPosMatriz()] == INFINITO) {
+						//Y los costos son validos
 						if (costosValidos) {
 
-							d[aux.getPosMatriz()] = sumaDeCostos;
+							d[v.getPosMatriz()] = sumaDeCostos;
+							//Parche
+							//Se guarda el predecesor del vetice
+							p[v.getPosMatriz()] =  w.getEtiqueta();
 						}
 						// Si el costo actual no es INFINITO y los costos de
 						// D[w] y C[w,v] no son INFINITOS ninguno de los dos
 					} else if (costosValidos) {
-						boolean esMenor = d[aux.getPosMatriz()].compareTo(sumaDeCostos) > 0;
+						boolean esMenor = d[v.getPosMatriz()].compareTo(sumaDeCostos) > 0;
 						// Si la suma de costos es menor que el costo ya
 						// ingresado, nos quedamos con la suma de costos
-
-						d[aux.getPosMatriz()] =  esMenor? sumaDeCostos:d[aux.getPosMatriz()];
-
+						
+						d[v.getPosMatriz()] =  esMenor? sumaDeCostos:d[v.getPosMatriz()];
+						
+						//Si era una arista valida y menor guardamos el predecesor de ese vertice
 						if(esMenor){
-							p[aux.getPosMatriz()] =  a.getEtiqueta();
-							System.out.println(aux.getEtiqueta());
+							p[v.getPosMatriz()] =  w.getEtiqueta();
 							
 						}
 						
@@ -507,6 +577,11 @@ public class TGrafo {
 				}
 			}
 			if(retornarCaminos){
+				/*
+				System.out.println("P final");
+				for(Comparable c:p)
+					System.out.print(c+"\t");
+				*/
 				d = p;
 			}
 		}
