@@ -6,12 +6,12 @@ import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TLista;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TNodo;
 
 /**
- * Clase para la implementaci�n de Grafos. Dise�ada y Desarrollada por el
- * Grupo14 para la materia Porgarmacion II de la Universidad Catolica del
- * Uruguay A�o 2009
+ * <b>Clase para la implementacion de Grafos. Diseniada y Desarrollada por el Grupo14 para la materia Porgarmacion II de la Universidad Catolica del Uruguay Anio 2009</b>
  * 
- * @author Grupo14
- * @version 1.0
+ * @author <i>Grupo14</i>
+ * @version <i>1.0</i>
+ * <b>@see uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo.TVertice</b>
+ * <b>@see uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo.TArista</b>
  */
 public class TGrafo {
 	@SuppressWarnings("unchecked")
@@ -42,8 +42,6 @@ public class TGrafo {
 		this.cantVertices = cantVertices;
 	}
 
-	
-	
 	public Comparable[][] getMFloyd() {
 		if(mFloyd == null)
 			implementacionFloyd();
@@ -145,10 +143,10 @@ public class TGrafo {
 
 	
 	/**
-	 * 
-	 * @param etiquetaOrigen
-	 * @param etiquetaDestino
-	 * @return
+	 * Metodo para saber el camino mas corto dado un nodo de origen y un nodo de desitno
+	 * @param etiquetaOrigen nombre o identificador del punto de origen
+	 * @param etiquetaDestino nombre o identificador del punto de llegada
+	 * @return null - si no existen alguno de los vertices o si no existe el camino; Comparable[] - lista ordenada de los nodos que forman el camino
 	 */
 	@SuppressWarnings("unchecked")
 	public Comparable[] mejorCamino(Comparable etiquetaOrigen,	Comparable etiquetaDestino) {
@@ -167,34 +165,22 @@ public class TGrafo {
 				
 				//Verificamos que exista un camino hasta el destino, si lo hay procedemos a armarlo
 				if(arrayPredecesores[posicionDestino] != INFINITO){
-					/*
-					int i = 0;
-					for(Comparable c: arrayPredecesores){
-						System.out.println("["+i+"] = " + c);
-						i++;
-					}
-					*/
-					
-					
-					TLista camino = new TLista();
+					String camino;
 					//Inserto el final del camino
-					camino.insertarPrimero(etiquetaDestino, null);
-					camino.insertarPrimero(arrayPredecesores[posicionDestino], null);
+					camino = (String) etiquetaDestino;
+					camino = arrayPredecesores[posicionDestino]+"," + camino;
 					posicionDestino = ((TVertice) vertices.buscarNodo(arrayPredecesores[posicionDestino]).getElemento()).getPosMatriz();
 					TVertice aux;
 					while(arrayPredecesores[posicionDestino].compareTo(etiquetaOrigen) != 0){
 						aux = (TVertice) vertices.buscarNodo(arrayPredecesores[posicionDestino]).getElemento();
-						camino.insertarPrimero(arrayPredecesores[posicionDestino], null);
+						camino = arrayPredecesores[posicionDestino]+"," + camino;
 						posicionDestino = ((TVertice) vertices.buscarNodo(arrayPredecesores[posicionDestino]).getElemento()).getPosMatriz();
 					}
 					
 					//Agrego por ultimo el origen
-					camino.insertarPrimero(etiquetaOrigen, null);
-					
-					for(Comparable c: camino.mostrar())
-						System.out.println(c);
-					
-					salida = camino.mostrar();
+					camino = etiquetaOrigen+"," + camino;
+	
+					salida = camino.split(",");
 				}
 				
 			}
@@ -354,7 +340,7 @@ public class TGrafo {
 				// Guardo la referencia a la arista
 				adyacencia = ((TArista) vertice.getAdyacentes().recuperar(j)
 						.getElemento());
-				mAdyacencia[i][adyacencia.destino.getPosMatriz()] = adyacencia.costo;
+				mAdyacencia[i][adyacencia.getDestino().getPosMatriz()] = adyacencia.getCosto();
 			}
 		}
 		this.regenMatriz = false;
@@ -438,8 +424,8 @@ public class TGrafo {
 
 	/**
 	 * Implementacion del algoritmo de Dijkstra que devuelve los costos desde un
-	 * nodo origen hasta el resto de los vertices del Grafo
-	 * 
+	 * nodo origen hasta el resto de los vertices del Grafo o si se pasa el valor TRUE en "retornarCaminos" este devolvera 
+	 * la lista de precedencia de los nodos
 	 * @param origen
 	 *            etiqueta del vertice de origen
 	 * @return array de Comparable - los costos desde el vertice origen hasta
@@ -471,17 +457,6 @@ public class TGrafo {
 				p[i] = origen;
 			p[x] = origen;
 			
-			/*
-			 * 
-			 *
-			System.out.println("P inicial");
-			for(Comparable c : p)
-				System.out.print(c + "\t");
-			System.out.println();
-			*
-			 * 
-			 */
-			
 			// Vertice Actual
 			TVertice w = null;
 
@@ -498,8 +473,7 @@ public class TGrafo {
 
 			// Cargo la lista de vertices v
 			for (Comparable etiquetaV : vertices.mostrar())
-				conjuntoV.insertar(etiquetaV, vertices.buscarNodo(etiquetaV)
-						.getElemento());
+				conjuntoV.insertar(etiquetaV, vertices.buscarNodo(etiquetaV).getElemento());
 
 			// Quito el vertice origen
 			conjuntoV.eliminar(origen);
@@ -577,11 +551,6 @@ public class TGrafo {
 				}
 			}
 			if(retornarCaminos){
-				/*
-				System.out.println("P final");
-				for(Comparable c:p)
-					System.out.print(c+"\t");
-				*/
 				d = p;
 			}
 		}

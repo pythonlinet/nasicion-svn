@@ -51,8 +51,8 @@ public class TVertice {
 
 	/**
 	 * Metodo para ingresar una adyacencia en un vertice
-	 * @param destino - vertice destino de la adyacencia
-	 * @param costo - costo de la adyacencia
+	 * @param destino vertice destino de la adyacencia
+	 * @param costo costo de la adyacencia
 	 * @return true - si se pudo crear la adycencia; false - si la adyacencia ya existe
 	 */
 	public boolean ingresarAdyacencia(TVertice destino, Comparable costo){
@@ -62,7 +62,7 @@ public class TVertice {
 	}
 	/**
 	 * Metodo para saber si el Vertice tiene como adyacente otro Vertice
-	 * @param destino - destino del que se quiere saber si existe adyacencia
+	 * @param destino destino del que se quiere saber si existe adyacencia
 	 * @return true - si es adyacente del vertice; false - si no es adyacente
 	 */
 	public boolean existeAdyacencia(Comparable destino){
