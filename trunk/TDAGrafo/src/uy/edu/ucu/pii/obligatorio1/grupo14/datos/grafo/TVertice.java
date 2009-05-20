@@ -2,6 +2,14 @@ package uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo;
 
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TLista;
 
+/**
+ * <b>Clase diseñada para representar los vertices de un grafo</b>
+ * @author <i>Grupo14</i>
+ * @version <i>1.0</i>
+ * 
+ * @see uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo.TGrafo
+ * @see uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo.TArista
+ */
 public class TVertice {
 	private Comparable etiqueta;
 	private TLista adyacentes;
@@ -67,6 +75,14 @@ public class TVertice {
 	 */
 	public boolean existeAdyacencia(Comparable destino){
 		return adyacentes.buscarNodo(destino) == null?false:true;
+	}
+	
+	/**
+	 * Metodo para saber la cantidad de vertices adyacentes a este vertice
+	 * @return Integer - cantidad de vertices adyacentes
+	 */
+	public Integer cantidadDeAdyacencias(){
+		return adyacentes.getTamanio();
 	}
 	
 }
