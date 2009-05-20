@@ -10,8 +10,8 @@ import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TNodo;
  * 
  * @author <i>Grupo14</i>
  * @version <i>1.0</i>
- * <b>@see uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo.TVertice</b>
- * <b>@see uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo.TArista</b>
+ * @see uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo.TVertice
+ * @see uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo.TArista
  */
 public class TGrafo {
 	@SuppressWarnings("unchecked")
@@ -123,11 +123,12 @@ public class TGrafo {
 	}
 
 	/**
-	 * Utiliza el algoritmo de Floyd, también se podría haber hecho usando
-	 * Warshall, pero como ambos algor
+	 * Utiliza el algoritmo de Floyd, tambien se podria haber hecho usando
+	 * el algoritmo de Warshall, pero como ambos algoritmos son similares
+	 * se considero que no era necesario desarrollar tambien el algoritmo antes mencionado 
 	 * 
-	 * @param etiquetaOrigen
-	 * @param etiquetaDestino
+	 * @param etiquetaOrigen identificador del vertice de origen
+	 * @param etiquetaDestino identificador del vertice de destino
 	 * @return true - si existe un camino desde el origen hasta el destino;
 	 *         false - si no existe un camino hasta el destino
 	 */
