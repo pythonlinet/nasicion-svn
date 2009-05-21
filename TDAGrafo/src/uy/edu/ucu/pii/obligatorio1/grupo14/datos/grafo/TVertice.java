@@ -63,7 +63,7 @@ public class TVertice {
 	 * @param costo costo de la adyacencia
 	 * @return true - si se pudo crear la adycencia; false - si la adyacencia ya existe
 	 */
-	public boolean ingresarAdyacencia(TVertice destino, Comparable costo){
+	public boolean ingresarAdyacencia(TVertice destino, Integer costo){
 		//No es necesario verificar por elementos duplicados ya que el metodo insertar de TLista lo hace por nosotros
 		return adyacentes.insertar(destino.getEtiqueta() , new TArista(costo,destino)); 
 		

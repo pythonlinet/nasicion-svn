@@ -2,6 +2,8 @@ package uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo;
 
 import java.util.Vector;
 
+import org.omg.CORBA.OBJECT_NOT_EXIST;
+
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TLista;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TNodo;
 
@@ -15,14 +17,15 @@ import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TNodo;
  */
 public class TGrafo {
 	@SuppressWarnings("unchecked")
-	private static final Comparable INFINITO = null;
+	private static final Integer INFINITO = Integer.MAX_VALUE;
+	private static final Object NULO = null;
 
 	private TLista vertices;
 
 	@SuppressWarnings("unchecked")
-	private Comparable[][] mAdyacencia;
+	private Integer[][] mAdyacencia;
 	@SuppressWarnings("unchecked")
-	private Comparable[][] mFloyd;
+	private Integer[][] mFloyd;
 	
 	/**
 	 * Indica a varios metodos si es necesario regenerar las matrices
@@ -65,17 +68,17 @@ public class TGrafo {
 	@SuppressWarnings("unchecked")
 	public boolean insertarVertice(Comparable etiqueta) {
 		// El metodo insertar de TLista no permite insercion de datos
-		// duplicados, por lo tanto no es necesario verificar que el elemento no
-		// exista
-		boolean salida = vertices.insertar(etiqueta, new TVertice(etiqueta,
-				cantVertices));
-		// Si se realiza la insercion aumentamos la cantidad de vertices en el
-		// grafo
+		// duplicados, por lo tanto no es necesario verificar que 
+		// el elemento no exista
+		boolean salida = vertices.insertar(etiqueta, new TVertice(etiqueta,	cantVertices));
+		
+		// Si se realiza la insercion aumentamos la cantidad de vertices en el grafo
 		setCantVertices(salida ? getCantVertices() + 1 : getCantVertices());
+		
 		// Si se realizo la insercion marcamos que la matriz tiene que ser
 		// regenerada la proxima vez que se la quiera accesar
 		if (salida) {
-			this.regenMatriz = salida;
+			this.regenMatriz = true;
 		}
 
 		return salida;
@@ -96,7 +99,7 @@ public class TGrafo {
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean insertarAdyacencia(Comparable origen, Comparable destino,
-			Comparable costo) {
+			Integer costo) {
 		boolean salida = false;
 
 		TNodo nodoOrigen = vertices.buscarNodo(origen);
@@ -108,12 +111,9 @@ public class TGrafo {
 				// Demasiados casteos?? :P
 				// No es necesario hacer un control de si ya existe la
 				// adyacencia porque el insertar de la lista ya lo hace
-				salida = ((TVertice) nodoOrigen.getElemento())
-						.ingresarAdyacencia((TVertice) nodoDestino
-								.getElemento(), costo);
-				// Si se realizo la insercion de adyacencia marcamos que la
-				// matriz tiene que ser regenerada la proxima vez que se la
-				// quiera accesar
+				salida = ((TVertice) nodoOrigen.getElemento()).ingresarAdyacencia((TVertice) nodoDestino.getElemento(), costo);
+				// Si se realizo la insercion de adyacencia marcamos que la matriz
+				// tiene que ser regenerada la proxima vez que se la quiera accesar
 				if (salida) {
 					this.regenMatriz = salida;
 				}
@@ -133,13 +133,16 @@ public class TGrafo {
 	 *         false - si no existe un camino hasta el destino
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean existeCamino(Comparable etiquetaOrigen,
-			Comparable etiquetaDestino) {
+	public boolean existeCamino(Comparable etiquetaOrigen, Comparable etiquetaDestino) {
 		if (regenMatriz)
 			implementacionFloyd();
+		
 		int origen = getPosMatriz(etiquetaOrigen);
 		int destino = getPosMatriz(etiquetaDestino);
-		return mFloyd[origen][destino] != INFINITO ? true : false;
+		//System.err.println(etiquetaOrigen +" "+etiquetaDestino+" " +!mFloyd[origen][destino].equals(INFINITO));
+		
+
+		return mFloyd[origen][destino].equals(INFINITO)? false : true;
 	}
 
 	
@@ -147,7 +150,8 @@ public class TGrafo {
 	 * Metodo para saber el camino mas corto dado un nodo de origen y un nodo de desitno
 	 * @param etiquetaOrigen nombre o identificador del punto de origen
 	 * @param etiquetaDestino nombre o identificador del punto de llegada
-	 * @return null - si no existen alguno de los vertices o si no existe el camino; Comparable[] - lista ordenada de los nodos que forman el camino
+	 * @return 	null - si no existen alguno de los vertices o si no existe el camino; 
+	 * 			Comparable[] - lista ordenada de los nodos que forman el camino
 	 */
 	@SuppressWarnings("unchecked")
 	public Comparable[] mejorCamino(Comparable etiquetaOrigen,	Comparable etiquetaDestino) {
@@ -199,32 +203,18 @@ public class TGrafo {
 	public Object centroDelGrafo() {
 
 		int pos = 0;
-		Comparable[] excentricidad = excentricidad();
-		Comparable aux = excentricidad[0];
+		Integer[] excentricidad = excentricidad();
+		Integer aux = excentricidad[0];
 
 		// Recorro el array de excentricidad del Grafo buscando la menor de las
 		// excentricidades, que por definicion deberia se el centro del grafo
 		for (int i = 1; i < excentricidad.length; i++) {
-			/*
-			 * Si aux es INFINITO y excentricidad[i] es != de INFINITO,
-			 * asignamos a aux el valor de excentricidad[i], este control se
-			 * hace porque en el caso de que aux sea INIFINITO (null), al querer
-			 * comparar el programa dara NullPointerException
-			 */
-			if (aux == INFINITO && excentricidad[i] != INFINITO) {
+			
+			//Si la excentricidad del nodo actual es menor que la guardada
+			if(aux > excentricidad[i]){
+				//Guardamos la nueva excentricidad
 				aux = excentricidad[i];
 				// Guardamos la posicion del vertice
-				pos = i;
-			}
-			/*
-			 * Aqui hacemos el mismo control que en el IF anterior por la misma
-			 * razon, si excentricidad[i] es nulo (INFINITO), se cae por
-			 * NullPointerException
-			 */
-			else if (excentricidad[i] != INFINITO
-					&& aux.compareTo(excentricidad[i]) > 0) {
-				aux = excentricidad[i];
-				// guardo la posicion del elemento en el array
 				pos = i;
 			}
 		}
@@ -239,32 +229,28 @@ public class TGrafo {
 	 * @return array de Comparable
 	 */
 	@SuppressWarnings("unchecked")
-	public Comparable[] excentricidad() {
+	public Integer[] excentricidad() {
 		if (regenMatriz)
 			implementacionFloyd();
 
-		Comparable[] salida = new Comparable[mFloyd.length];
+		Integer[] salida = new Integer[mFloyd.length];
 
 		boolean continuar = true;
-		Comparable aux;
+		Integer aux;
 		for (int i = 0; i < mFloyd.length; i++) {
 			aux = 0;
-
 			for (int j = 0; j < mFloyd.length && continuar; j++) {
-
-				// Si el costo es infinito (null), seteamos aux como INFINITO,
+				// Si el costo es infinito, seteamos aux como INFINITO,
 				// porque no va a haber un costo mayor a ese
 				if (mFloyd[j][i] == INFINITO) {
 					aux = INFINITO;
 					// Cortamos la ejecucion ya que no va a haber un valor mayor
 					// que INFINITO
 					continuar = false;
-				} else if (mFloyd[j][i].compareTo(aux) > 0)
+				} else if (mFloyd[j][i] > (aux))
 					aux = mFloyd[j][i];
-
 			}
 			// Volemos a setear continuar en true para que se ejecute bien el
-			// for
 			continuar = true;
 			salida[i] = aux;
 		}
@@ -276,8 +262,8 @@ public class TGrafo {
 	 * 
 	 * @param etiqueta
 	 *            etiqueta del vertices
-	 * @return true - si el vertice existe en el grafo; false - si el vertice no
-	 *         existe en el grafo
+	 * @return 	true - si el vertice existe en el grafo; 
+	 * 			false - si el vertice no existe en el grafo
 	 */
 	public boolean existeVertice(String etiqueta) {
 		return vertices.buscarNodo(etiqueta) == null ? false : true;
@@ -310,7 +296,10 @@ public class TGrafo {
 	 */
 	private void inicializarMatriz() {
 		int tamanio = vertices.getTamanio();
-		this.mAdyacencia = new Comparable[tamanio][tamanio];
+		this.mAdyacencia = new Integer[tamanio][tamanio];
+		for(int i = 0; i < tamanio; i++)
+			for(int j = 0; j < tamanio; j++)
+				this.mAdyacencia[i][j] = INFINITO; 
 	}
 
 	/**
@@ -339,8 +328,7 @@ public class TGrafo {
 			for (int j = 0; j < cantAdyacencias; j++) {
 
 				// Guardo la referencia a la arista
-				adyacencia = ((TArista) vertice.getAdyacentes().recuperar(j)
-						.getElemento());
+				adyacencia = ((TArista) vertice.getAdyacentes().recuperar(j).getElemento());
 				mAdyacencia[i][adyacencia.getDestino().getPosMatriz()] = adyacencia.getCosto();
 			}
 		}
@@ -359,8 +347,7 @@ public class TGrafo {
 	private int getPosMatriz(Comparable etiqueta) {
 		int salida = -1;
 		// Buscamos el vertice
-		TVertice vertice = (TVertice) vertices.buscarNodo(etiqueta)
-				.getElemento();
+		TVertice vertice = (TVertice) vertices.buscarNodo(etiqueta).getElemento();
 		// Si el vertice existe guardamos la posici�n que tiene en la matriz
 		salida = vertice != null ? vertice.getPosMatriz() : salida;
 
@@ -374,47 +361,34 @@ public class TGrafo {
 	 *         hasta un Destino
 	 */
 	@SuppressWarnings("unchecked")
-	private Comparable[][] implementacionFloyd() {
+	private Integer[][] implementacionFloyd() {
 		// Si la matriz fue marcada para regeneracion se la genera otra vez
-		if (regenMatriz)
+		//if (regenMatriz)
 			cargarMatrizDeAdyacencia();
 
-		Comparable[][] salida = new Comparable[this.mAdyacencia.length][this.mAdyacencia.length];
+		Integer[][] salida = new Integer[this.mAdyacencia.length][this.mAdyacencia.length];
 		for(int i = 0; i < salida.length; i++)
 			for(int j = 0; j < salida.length; j++)
 				salida[i][j] = mAdyacencia[i][j];
 		
 		
 		
-		Integer aIJ;
-		Integer aIK;
-		Integer aKJ;
+		Integer aIJ, aIK, aKJ, suma;
+
 
 		for (int k = 0; k < salida.length; k++) {
 			for (int i = 0; i < salida.length; i++) {
 				for (int j = 0; j < salida.length; j++) {
-					// Si ninguno de los dos es infinito(NULL)
-					if (salida[i][k] != INFINITO && salida[k][j] != INFINITO) {
+					aIJ = salida[i][j];
+					
+					aIK = salida[i][k];
+					aKJ = salida[k][j];
 
-						aIK = (Integer) salida[i][k];
-						aKJ = (Integer) salida[k][j];
-						// Si el costo inicial no es INFINITO
-						if (salida[i][j] != INFINITO) {
-							// Para poder realizar la comparacion o la suma de
-							// los costos se tiene que pasar las variables de
-							// Comparable a otro Objeto que soporte estas
-							// operaciones
-							aIJ = (Integer) salida[i][j];
-							if (aIJ > aIK + aKJ) {
-								salida[i][j] = aIK + aKJ;
-							}
-						} else {
-							// Si resulta que el costo inicial era INFINITO tomo
-							// el costo de ir de I hasta K y luego desde K hasta
-							// el destino J
-							salida[i][j] = aIK + aKJ;
-						}
-					}
+					//Es necesario hacer esto porque con solo sumar 1 a infinto este toma un valor negativo acausa del  
+					suma = aIK == INFINITO || aKJ == INFINITO?INFINITO:aIK + aKJ;
+					
+					if(aIJ > suma)
+						salida[i][j] = suma;
 				}
 			}
 		}
@@ -462,13 +436,11 @@ public class TGrafo {
 			TVertice w = null;
 
 			// Variables usadas a la hora de buscar el w minimo
-			Comparable distACTUAL, distAUX;
+			Integer distACTUAL, distAUX;
 			TVertice v;
 
 			// Variables usadas en la busqueda de caminos mas cortos
 			Integer sumaDeCostos = null;
-			boolean costosValidos;
-
 			// Lista de vertices
 			TLista conjuntoV = new TLista();
 
@@ -487,21 +459,17 @@ public class TGrafo {
 				// Distancia minima actual es la del primer elemento del
 				// conjunto V de vertices
 				w = ((TVertice) conjuntoV.recuperar(0).getElemento());
-				distACTUAL = d[w.getPosMatriz()];
+				distACTUAL = (Integer)d[w.getPosMatriz()];
 
 				for (int i = 1; i < conjuntoV.getTamanio(); i++) {
 					// Guardo el vertice de V sobre el que estoy parado
 					v = ((TVertice) conjuntoV.recuperar(i).getElemento());
-					distAUX = d[v.getPosMatriz()];
+					distAUX = (Integer)d[v.getPosMatriz()];
 
-					// Si distACTUAL es INFINITO, seteo distACTUAL como distAUX
-					// ya que no puede ser peor
-					if (distACTUAL == INFINITO) {
-						distACTUAL = distAUX;
-					} else if (distAUX != INFINITO	&& distACTUAL.compareTo(distAUX) > 0) {
-						distACTUAL = distAUX;
+					if(distACTUAL > distAUX){
 						// Guardo el vertice acutal
 						w = v;
+						distACTUAL = distAUX;
 					}
 				}
 
@@ -511,44 +479,15 @@ public class TGrafo {
 				for (int i = 0; i < conjuntoV.getTamanio(); i++) {
 					v = (TVertice) conjuntoV.recuperar(i).getElemento();
 
-					// Permite saber si los costos de D[v] y C[w,v] son
-					// validos(no son infinitos), para asi poder sumarlos
-					costosValidos = (d[w.getPosMatriz()] != INFINITO) && 
-									(mAdyacencia[w.getPosMatriz()][v.getPosMatriz()] != INFINITO);
-
-					if (costosValidos)
-						// Se hace el casteo porque sino no puede realizarse la
-						// suma de los costos ya que Comparable no soporta esa
-						// operacion
-						sumaDeCostos = (Integer) d[w.getPosMatriz()] + (Integer) mAdyacencia[w.getPosMatriz()][v.getPosMatriz()];
-
-					//Si la la distancia al vertice es inifito
-					if (d[v.getPosMatriz()] == INFINITO) {
-						//Y los costos son validos
-						if (costosValidos) {
-
-							d[v.getPosMatriz()] = sumaDeCostos;
-							//Parche
-							//Se guarda el predecesor del vetice
-							p[v.getPosMatriz()] =  w.getEtiqueta();
-						}
-						// Si el costo actual no es INFINITO y los costos de
-						// D[w] y C[w,v] no son INFINITOS ninguno de los dos
-					} else if (costosValidos) {
-						boolean esMenor = d[v.getPosMatriz()].compareTo(sumaDeCostos) > 0;
-						// Si la suma de costos es menor que el costo ya
-						// ingresado, nos quedamos con la suma de costos
-						
-						d[v.getPosMatriz()] =  esMenor? sumaDeCostos:d[v.getPosMatriz()];
-						
-						//Si era una arista valida y menor guardamos el predecesor de ese vertice
-						if(esMenor){
-							p[v.getPosMatriz()] =  w.getEtiqueta();
-							
-						}
-						
+					sumaDeCostos = d[w.getPosMatriz()]==INFINITO || mAdyacencia[w.getPosMatriz()][v.getPosMatriz()] == INFINITO?INFINITO : (Integer)d[w.getPosMatriz()] + mAdyacencia[w.getPosMatriz()][v.getPosMatriz()];
+					
+					//Si la ruta d[v] + C[v,w] es menor que la ruta D[w]
+					if((Integer)d[v.getPosMatriz()] > sumaDeCostos){
+						//nos quedamos con la nueva distancia
+						d[v.getPosMatriz()] = sumaDeCostos;
+						//Se guarda el predecesor del vetice
+						p[v.getPosMatriz()] =  w.getEtiqueta();
 					}
-
 				}
 			}
 			if(retornarCaminos){
@@ -568,7 +507,7 @@ public class TGrafo {
 	private void imprimirMatrizGrafo(Comparable[][] matriz) {
 		for (int i = 0; i < matriz.length; i++) {
 			for (int j = 0; j < matriz[i].length; j++) {
-				System.out.print(matriz[i][j] + "\t");
+				System.out.print(matriz[i][j] + "\t\t");
 			}
 			System.out.println();
 		}
