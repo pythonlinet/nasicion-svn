@@ -9,24 +9,24 @@ package uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo;
  */
 public class TArista {
 	@SuppressWarnings("unchecked")
-	private Comparable costo;
+	private Integer costo;
 	private TVertice destino;
 	
 	
 	@SuppressWarnings("unchecked")
-	public TArista(Comparable costo, TVertice destino) {
+	public TArista(Integer costo, TVertice destino) {
 		super();
 		this.costo = costo;
 		this.destino = destino;
 	}
 
 
-	public Comparable getCosto() {
+	public Integer getCosto() {
 		return costo;
 	}
 
 
-	public void setCosto(Comparable costo) {
+	public void setCosto(Integer costo) {
 		this.costo = costo;
 	}
 
