@@ -1,2 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<PROCESS model-entity="JSFProcess"/>
+<PROCESS model-entity="JSFProcess">
+ <PROCESS-ITEM NAME="rules:*" PATH="*" SHAPE="56,72,53,26" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:0" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="goMain::#pages#main.xhtml" NAME="output"
+    PATH="/pages/main.xhtml" TARGET="rules:#pages#main.xhtml"
+    TITLE="goMain" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="goAltaUsuario::#pages#usuarios#altaUsuario.xhtml" NAME="output2"
+    PATH="/pages/usuarios/altaUsuario.xhtml"
+    TARGET="rules:#pages#usuarios#altaUsuario.xhtml"
+    TITLE="goAltaUsuario" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="goIndex::#index.html" NAME="output1"
+    PATH="/index.html" TARGET="rules:#index.html" TITLE="goIndex" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#index.html" PATH="/index.html"
+  SHAPE="269,219,0,0" model-entity="JSFProcessGroup" persistent="true"/>
+ <PROCESS-ITEM NAME="rules:#pages#usuarios#altaUsuario.xhtml"
+  PATH="/pages/usuarios/altaUsuario.xhtml" SHAPE="157,385,0,0"
+  model-entity="JSFProcessGroup" persistent="true"/>
+ <PROCESS-ITEM NAME="rules:#pages#main.xhtml" PATH="/pages/main.xhtml"
+  SHAPE="352,112,50,25" model-entity="JSFProcessGroup" persistent="true"/>
+</PROCESS>

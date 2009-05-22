@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.DiscriminatorValue;
+import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
@@ -15,6 +16,8 @@ import org.hibernate.annotations.Entity;
 @DiscriminatorColumn(name="persona_type", discriminatorType=DiscriminatorType.STRING)
 @DiscriminatorValue("person")
 public class Person {
+	
+	@Id
 	private Long id;
 	private String firstName;
 	private String middleName;

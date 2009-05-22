@@ -7,6 +7,21 @@
   <managed-bean-class>com.gnasi.webapp.beans.LoginBean</managed-bean-class>
   <managed-bean-scope>session</managed-bean-scope>
  </managed-bean>
+ <navigation-rule>
+  <from-view-id>*</from-view-id>
+  <navigation-case>
+   <from-outcome>goMain</from-outcome>
+   <to-view-id>/pages/main.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>goAltaUsuario</from-outcome>
+   <to-view-id>/pages/usuarios/altaUsuario.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>goIndex</from-outcome>
+   <to-view-id>/index.html</to-view-id>
+  </navigation-case>
+ </navigation-rule>
  <application>
   <view-handler>com.sun.facelets.FaceletViewHandler</view-handler>
   <locale-config>
