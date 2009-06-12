@@ -37,6 +37,17 @@ public class TGrafo {
 	 */
 	private int cantVertices = 0;
 
+	
+	
+	
+	private TLista getVertices() {
+		return vertices;
+	}
+
+	private void setVertices(TLista vertices) {
+		this.vertices = vertices;
+	}
+
 	public int getCantVertices() {
 		return cantVertices;
 	}
@@ -70,7 +81,7 @@ public class TGrafo {
 		// El metodo insertar de TLista no permite insercion de datos
 		// duplicados, por lo tanto no es necesario verificar que 
 		// el elemento no exista
-		boolean salida = vertices.insertar(etiqueta, new TVertice(etiqueta,	cantVertices));
+		boolean salida = vertices.insertar(etiqueta, new TVertice(etiqueta));
 		
 		// Si se realiza la insercion aumentamos la cantidad de vertices en el grafo
 		setCantVertices(salida ? getCantVertices() + 1 : getCantVertices());
@@ -166,7 +177,7 @@ public class TGrafo {
 				Comparable[] arrayPredecesores = implementacionDijkstra(etiquetaOrigen, true);
 				
 				//Obtenemos la posicion que tiene el destino dentro del array
-				int posicionDestino = ((TVertice)existeD.getElemento()).getPosMatriz();
+				int posicionDestino = getVertices().indexOf(existeD.getClave());
 				
 				//Verificamos que exista un camino hasta el destino, si lo hay procedemos a armarlo
 				if(arrayPredecesores[posicionDestino] != INFINITO){
@@ -174,12 +185,18 @@ public class TGrafo {
 					//Inserto el final del camino
 					camino = (String) etiquetaDestino;
 					camino = arrayPredecesores[posicionDestino]+"," + camino;
-					posicionDestino = ((TVertice) vertices.buscarNodo(arrayPredecesores[posicionDestino]).getElemento()).getPosMatriz();
+
+					//posicionDestino = ((TVertice) vertices.buscarNodo(arrayPredecesores[posicionDestino]).getElemento()).getPosMatriz();
+					posicionDestino = getVertices().indexOf(arrayPredecesores[posicionDestino]);
+					
 					TVertice aux;
 					while(arrayPredecesores[posicionDestino].compareTo(etiquetaOrigen) != 0){
 						aux = (TVertice) vertices.buscarNodo(arrayPredecesores[posicionDestino]).getElemento();
 						camino = arrayPredecesores[posicionDestino]+"," + camino;
-						posicionDestino = ((TVertice) vertices.buscarNodo(arrayPredecesores[posicionDestino]).getElemento()).getPosMatriz();
+						
+						//posicionDestino = ((TVertice) vertices.buscarNodo(arrayPredecesores[posicionDestino]).getElemento()).getPosMatriz();
+						posicionDestino =  getVertices().indexOf(arrayPredecesores[posicionDestino]);
+						
 					}
 					
 					//Agrego por ultimo el origen
@@ -329,7 +346,7 @@ public class TGrafo {
 
 				// Guardo la referencia a la arista
 				adyacencia = ((TArista) vertice.getAdyacentes().recuperar(j).getElemento());
-				mAdyacencia[i][adyacencia.getDestino().getPosMatriz()] = adyacencia.getCosto();
+				mAdyacencia[i][getVertices().indexOf(adyacencia.getDestino().getEtiqueta())] = adyacencia.getCosto();
 			}
 		}
 		this.regenMatriz = false;
@@ -349,7 +366,7 @@ public class TGrafo {
 		// Buscamos el vertice
 		TVertice vertice = (TVertice) vertices.buscarNodo(etiqueta).getElemento();
 		// Si el vertice existe guardamos la posici�n que tiene en la matriz
-		salida = vertice != null ? vertice.getPosMatriz() : salida;
+		salida = vertice != null ? getVertices().indexOf(vertice.getEtiqueta()) : salida;
 
 		return salida;
 	}
@@ -420,10 +437,10 @@ public class TGrafo {
 			if (regenMatriz)
 				cargarMatrizDeAdyacencia();
 			// Cargamos D con los valores iniciales
-			d = mAdyacencia[vOrigen.getPosMatriz()];
+			d = mAdyacencia[getVertices().indexOf(vOrigen.getEtiqueta())];
 			
 			// Posicion del ORIGEN dentro de la matriz de adyacencia
-			int x = vOrigen.getPosMatriz();
+			int x = getVertices().indexOf(vOrigen.getEtiqueta());
 
 			
 			//Inicializamos el array de predecesores
@@ -459,12 +476,12 @@ public class TGrafo {
 				// Distancia minima actual es la del primer elemento del
 				// conjunto V de vertices
 				w = ((TVertice) conjuntoV.recuperar(0).getElemento());
-				distACTUAL = (Integer)d[w.getPosMatriz()];
+				distACTUAL = (Integer)d[getVertices().indexOf(w.getEtiqueta())];
 
 				for (int i = 1; i < conjuntoV.getTamanio(); i++) {
 					// Guardo el vertice de V sobre el que estoy parado
 					v = ((TVertice) conjuntoV.recuperar(i).getElemento());
-					distAUX = (Integer)d[v.getPosMatriz()];
+					distAUX = (Integer)d[getVertices().indexOf(v.getEtiqueta())];
 
 					if(distACTUAL > distAUX){
 						// Guardo el vertice acutal
@@ -479,14 +496,15 @@ public class TGrafo {
 				for (int i = 0; i < conjuntoV.getTamanio(); i++) {
 					v = (TVertice) conjuntoV.recuperar(i).getElemento();
 
-					sumaDeCostos = d[w.getPosMatriz()]==INFINITO || mAdyacencia[w.getPosMatriz()][v.getPosMatriz()] == INFINITO?INFINITO : (Integer)d[w.getPosMatriz()] + mAdyacencia[w.getPosMatriz()][v.getPosMatriz()];
+					//TOMA PA VOS Y TU TIA GREGORIA
+					sumaDeCostos = d[getVertices().indexOf(w.getEtiqueta())]==INFINITO || mAdyacencia[getVertices().indexOf(w.getEtiqueta())][getVertices().indexOf(v.getEtiqueta())] == INFINITO?INFINITO : (Integer)d[getVertices().indexOf(w.getEtiqueta())] + mAdyacencia[getVertices().indexOf(w.getEtiqueta())][getVertices().indexOf(v.getEtiqueta())];
 					
 					//Si la ruta d[v] + C[v,w] es menor que la ruta D[w]
-					if((Integer)d[v.getPosMatriz()] > sumaDeCostos){
+					if((Integer)d[getVertices().indexOf(v.getEtiqueta())] > sumaDeCostos){
 						//nos quedamos con la nueva distancia
-						d[v.getPosMatriz()] = sumaDeCostos;
+						d[getVertices().indexOf(v.getEtiqueta())] = sumaDeCostos;
 						//Se guarda el predecesor del vetice
-						p[v.getPosMatriz()] =  w.getEtiqueta();
+						p[getVertices().indexOf(v.getEtiqueta())] =  w.getEtiqueta();
 					}
 				}
 			}
@@ -530,5 +548,13 @@ public class TGrafo {
 		implementacionFloyd();
 
 		imprimirMatrizGrafo(mFloyd);
+	}
+	
+	
+	public boolean eliminarVertice(Comparable etiqueta){
+		boolean salida = false;
+		
+		
+		return salida;
 	}
 }
