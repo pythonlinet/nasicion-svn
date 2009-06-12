@@ -463,4 +463,30 @@ public class TLista {
 
 		return mostrar();
 	}
+	/**
+	 * Metodo para conocer el indice de un elemento en la lista en base a su clave
+	 * @param clave
+	 * @return
+	 */
+	public int indexOf(Comparable clave){
+		int salida = -1;
+		int indice = 0;
+		boolean flag = true;
+		TNodo temp = getPrimero();
+		if(temp!=null){
+			while(temp != null && flag){
+				if(temp.getClave().compareTo(clave) == 0){
+					flag = false;
+					salida = indice;
+				}else{
+					++indice;
+					temp = temp.getSiguiente();
+				}
+			}
+		}
+		
+		
+		
+		return salida;
+	}
 }
