@@ -3,7 +3,7 @@ package uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TLista;
 
 /**
- * <b>Clase diseñada para representar los vertices de un grafo</b>
+ * <b>Clase diseï¿½ada para representar los vertices de un grafo</b>
  * @author <i>Grupo14</i>
  * @version <i>1.0</i>
  * 
@@ -13,7 +13,6 @@ import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TLista;
 public class TVertice {
 	private Comparable etiqueta;
 	private TLista adyacentes;
-	private int posMatriz;
 	private boolean visitado;
 
 	public Comparable getEtiqueta() {
@@ -32,15 +31,6 @@ public class TVertice {
 		this.adyacentes = adyacentes;
 	}
 	
-	
-	public int getPosMatriz() {
-		return posMatriz;
-	}
-
-	public void setPosMatriz(int posMatriz) {
-		this.posMatriz = posMatriz;
-	}
-
 	public boolean isVisitado() {
 		return visitado;
 	}
@@ -49,11 +39,10 @@ public class TVertice {
 		this.visitado = visitado;
 	}
 
-	public TVertice(Comparable etiqueta, int posMatriz) {
+	public TVertice(Comparable etiqueta) {
 		super();
 		this.etiqueta = etiqueta;
 		this.adyacentes = new TLista();
-		this.posMatriz = posMatriz;
 		this.visitado = false;
 	}
 
