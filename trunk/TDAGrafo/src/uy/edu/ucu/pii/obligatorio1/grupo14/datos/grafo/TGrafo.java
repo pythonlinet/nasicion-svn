@@ -1,9 +1,5 @@
 package uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo;
 
-import java.util.Vector;
-
-import org.omg.CORBA.OBJECT_NOT_EXIST;
-
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TLista;
 import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TNodo;
 
