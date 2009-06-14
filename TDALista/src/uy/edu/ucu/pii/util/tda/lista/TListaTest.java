@@ -7,8 +7,8 @@ import java.util.Random;
 import org.junit.Before;
 import org.junit.Test;
 
-import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TLista;
-import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TNodo;
+import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
+import uy.edu.ucu.pii.grupo14.datos.lista.TNodo;
 
 
 /**
