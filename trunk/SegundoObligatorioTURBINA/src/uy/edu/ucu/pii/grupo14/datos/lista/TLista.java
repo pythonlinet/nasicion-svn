@@ -425,9 +425,13 @@ public class TLista {
 	public Comparable[] ordenar(Comparator comparador) {
 		TNodo aux;
 
+		
+		
 		for (int i = getTamanio() - 1; i >= 0; i--) {
 			for (int k = getTamanio() - 1; k >= 0; k--) {
-				if (recuperar(i).getClave().compareTo(recuperar(k).getClave()) > 0)
+//				if (recuperar(i).getClave().compareTo(recuperar(k).getClave()) > 0)
+//					swapNodes(i, k);
+				if (comparador.compare(recuperar(i).getElemento(), recuperar(k).getElemento()) > 0)
 					swapNodes(i, k);
 			}
 		}
