@@ -1,6 +1,6 @@
 package uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo;
 
-import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TLista;
+import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
 
 /**
  * <b>Clase dise�ada para representar los vertices de un grafo</b>
