@@ -1,0 +1,17 @@
+Montevideo;Durazno;200;20;
+Durazno;Montevideo;200;20;
+Montevideo;LaPaloma;200;19;
+LaPaloma;Montevideo;200;19;
+Montevideo;BuenosAires;600;60;
+BuenosAires;Montevideo;600;60;
+BuenosAires;Rosario;500;60;
+Rosario;BuenosAires;550;60;
+BuenosAires;Bariloche;1500;150;
+Bariloche;BuenosAires;1500;150;
+BuenosAires;Santiago;2000;120;
+Santiago;Montevideo;2300;180;
+Montevideo;PortoAlegre;1000;90;
+PortoAlegre;SaoPaulo;2000;120;
+SaoPaulo;Montevideo;3000;270;
+SaoPaulo;RioDeJaneiro;1000;90;
+RioDeJaneiro;SaoPaulo;1000;90;
