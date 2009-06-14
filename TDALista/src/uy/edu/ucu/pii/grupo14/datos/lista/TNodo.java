@@ -1,4 +1,4 @@
-
+package uy.edu.ucu.pii.grupo14.datos.lista;
 
 @SuppressWarnings("unchecked")
 public class TNodo implements Comparable{
