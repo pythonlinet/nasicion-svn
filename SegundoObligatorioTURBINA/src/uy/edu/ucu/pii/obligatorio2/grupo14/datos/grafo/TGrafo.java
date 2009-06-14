@@ -1,9 +1,5 @@
 package uy.edu.ucu.pii.obligatorio2.grupo14.datos.grafo;
 
-import java.util.Vector;
-
-import org.omg.CORBA.OBJECT_NOT_EXIST;
-
 import uy.edu.ucu.pii.obligatorio2.grupo14.datos.lista.TLista;
 import uy.edu.ucu.pii.obligatorio2.grupo14.datos.lista.TNodo;
 
@@ -11,9 +7,9 @@ import uy.edu.ucu.pii.obligatorio2.grupo14.datos.lista.TNodo;
  * <b>Clase para la implementacion de Grafos. Diseniada y Desarrollada por el Grupo14 para la materia Porgarmacion II de la Universidad Catolica del Uruguay Anio 2009</b>
  * 
  * @author <i>Grupo14</i>
- * @version <i>1.0</i>
- * @see uy.edu.ucu.pii.obligatorio2.grupo14.datos.grafo.TVertice
- * @see uy.edu.ucu.pii.obligatorio2.grupo14.datos.grafo.TArista
+ * @version <i>1.5</i>
+ * @see uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo.TVertice
+ * @see uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo.TArista
  */
 public class TGrafo {
 	@SuppressWarnings("unchecked")
@@ -145,6 +141,7 @@ public class TGrafo {
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean existeCamino(Comparable etiquetaOrigen, Comparable etiquetaDestino) {
+		boolean salida = false;
 		if (regenMatriz)
 			implementacionFloyd();
 		
@@ -152,8 +149,11 @@ public class TGrafo {
 		int destino = getPosMatriz(etiquetaDestino);
 		//System.err.println(etiquetaOrigen +" "+etiquetaDestino+" " +!mFloyd[origen][destino].equals(INFINITO));
 		
+		if(origen != -1 && destino != -1)
+			salida = mFloyd[origen][destino].equals(INFINITO)? false : true; 
+		
 
-		return mFloyd[origen][destino].equals(INFINITO)? false : true;
+		return salida; 
 	}
 
 	
@@ -166,10 +166,11 @@ public class TGrafo {
 	 */
 	@SuppressWarnings("unchecked")
 	public Comparable[] mejorCamino(Comparable etiquetaOrigen,	Comparable etiquetaDestino) {
+		
 		Comparable[] salida = null;
 		//Buscamos que exista el ORIGEN
 		TNodo existeO = vertices.buscarNodo(etiquetaOrigen);
-		if(existeO != null){
+		if(existeO != null && existeCamino(etiquetaOrigen, etiquetaDestino)){
 			//Buscamos que exista el DESTINO
 			TNodo existeD = vertices.buscarNodo(etiquetaDestino);
 			if(existeD != null){
@@ -183,7 +184,7 @@ public class TGrafo {
 				if(arrayPredecesores[posicionDestino] != INFINITO){
 					String camino;
 					//Inserto el final del camino
-					camino = (String) etiquetaDestino;
+					camino = etiquetaDestino.toString();
 					camino = arrayPredecesores[posicionDestino]+"," + camino;
 
 					//posicionDestino = ((TVertice) vertices.buscarNodo(arrayPredecesores[posicionDestino]).getElemento()).getPosMatriz();
@@ -199,15 +200,15 @@ public class TGrafo {
 						
 					}
 					
-					//Agrego por ultimo el origen
-					camino = etiquetaOrigen+"," + camino;
+					if(camino.split(",")[0].compareTo(etiquetaOrigen.toString()) != 0)
+						//Agrego por ultimo el origen
+						camino = etiquetaOrigen+"," + camino;
 	
 					salida = camino.split(",");
 				}
 				
 			}
 		}
-		
 		return salida;
 	}
 
@@ -363,8 +364,12 @@ public class TGrafo {
 	@SuppressWarnings("unchecked")
 	private int getPosMatriz(Comparable etiqueta) {
 		int salida = -1;
+		
 		// Buscamos el vertice
-		TVertice vertice = (TVertice) vertices.buscarNodo(etiqueta).getElemento();
+		TVertice vertice = null;
+		TNodo nodo = vertices.buscarNodo(etiqueta);
+		if(nodo != null)
+			vertice = (TVertice) nodo.getElemento(); 
 		// Si el vertice existe guardamos la posici�n que tiene en la matriz
 		salida = vertice != null ? getVertices().indexOf(vertice.getEtiqueta()) : salida;
 
@@ -434,8 +439,9 @@ public class TGrafo {
 			 * Si la matriz de adyacencia no existe o esta marcada para
 			 * regeneracion la generamos
 			 */
-			if (regenMatriz)
+//			if (regenMatriz)
 				cargarMatrizDeAdyacencia();
+			
 			// Cargamos D con los valores iniciales
 			d = mAdyacencia[getVertices().indexOf(vOrigen.getEtiqueta())];
 			
@@ -550,11 +556,58 @@ public class TGrafo {
 		imprimirMatrizGrafo(mFloyd);
 	}
 	
-	
-	public boolean eliminarVertice(Comparable etiqueta){
+	/**
+	 * Elimina una adyacencia de un nodo hacia otro
+	 * @param origen vertice de origen
+	 * @param destino vertice de destino
+	 * @return true - si se elimino la adyacencia
+	 * false - si la adyacencia no existia
+	 */
+	public boolean eliminarAdyacencia(Comparable origen, Comparable destino){
 		boolean salida = false;
 		
+		TVertice vOrigen = (TVertice)getVertices().buscarNodo(origen).getElemento();
+	
+		if(vOrigen != null){
+			salida = vOrigen.getAdyacentes().eliminar(destino);
+			//Marco la matriz para que sea regenerada la proxima vez que se la quiera accesar
+		}
+		this.regenMatriz = salida;
 		
+		return salida;
+	}
+	
+	/**
+	 * Elimina el vertice del grafo y todas las adyacencias hacia este
+	 * @param etiqueta la etiqueta del vertice que se quiere eliminar
+	 * @return true - si se produjo la eliminacion de forma correcta
+	 * false - si el vertie no existe
+	 */
+	public boolean eliminarVertice(Comparable etiqueta){
+		boolean salida = false;
+		TNodo vertice = getVertices().buscarNodo(etiqueta);
+		if(vertice != null){
+			int indexVertice = getVertices().indexOf(vertice.getClave());
+			Comparable[][] floyd = getMFloyd();
+			String adyacentes = new String();
+			String[] arrayAdyacentes;
+			
+			//localizamos los vertices que son adyacentes a al que queremos eliminar
+			for(int i = 0; i< floyd.length; i++){
+				if(floyd[i][indexVertice].compareTo(INFINITO) != 0)
+					adyacentes += i + ";"; 
+			}
+			
+			arrayAdyacentes =  adyacentes.split(";");
+			
+			for(int i = 0; i < arrayAdyacentes.length; i++){
+				((TVertice)getVertices().recuperar(Integer.parseInt(arrayAdyacentes[i])).getElemento()).getAdyacentes().eliminar(etiqueta);
+			}
+			//Eliminamos el vertice de la lista de adyacencias
+			salida = getVertices().eliminar(etiqueta);
+			//Marcamos la regeneracion de la matriz
+			regenMatriz = true;
+		}
 		return salida;
 	}
 }
