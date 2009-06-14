@@ -1,7 +1,7 @@
 package com.ucu.prog2.tdas.listas.mistests;
 
 import static org.junit.Assert.assertFalse;
-import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TLista;
+import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
 
 
 public class miPrueba {

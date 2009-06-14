@@ -2,7 +2,7 @@ package com.ucu.prog2.tdas.listas.mistests;
 
 import org.junit.Test;
 
-import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TLista;
+import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
 
 import junit.framework.TestCase;
 
