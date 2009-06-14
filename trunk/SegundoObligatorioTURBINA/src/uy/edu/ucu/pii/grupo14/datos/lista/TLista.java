@@ -17,23 +17,23 @@ import java.util.Comparator;
  * 	- Se agerga la capacidad de ordenar en base a un comparador
  * 
  */
-public class TLista {
-	private TNodo primero;
+public class TLista <u> {
+	private TNodo <u> primero;
 	private Integer tamanio;
 
 	/*
 	 * Inicio del bloque de getters y setters
 	 */
-	public TNodo getPrimero() {
+	public TNodo <u> getPrimero() {
 		return primero;
 	}
 
 	@SuppressWarnings("unused")
-	protected void setPrimero(TNodo primero) {
+	protected void setPrimero(TNodo <u> primero) {
 		this.primero = primero;
 	}
 
-	public TNodo getUltimo() {
+	public TNodo <u> getUltimo() {
 		return recuperar(this.tamanio - 1);
 	}
 
@@ -64,8 +64,8 @@ public class TLista {
 	 * @return true - si se inserto un elemento; false - si no pudo realizarse la inserci�n.
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean insertar(Comparable clave, Object elemento) {
-		TNodo nuevoNodo = new TNodo(clave, elemento);
+	public boolean insertar(Comparable clave, u elemento) {
+		TNodo <u> nuevoNodo = new TNodo <u>(clave, elemento);
 		boolean salida = false;
 		if (buscarNodo(clave) == null) {
 			if (esVacia()) {
@@ -92,21 +92,21 @@ public class TLista {
 	 * @return true - si se inserto un elemento; false - si no pudo realizarse la inserci�n.
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean insertarOrdenado(Comparable clave, Object elemento) {
+	public boolean insertarOrdenado(Comparable clave, u elemento) {
 		boolean salida = false;
 
 		if (!esVacia()) {
 			// Verificamos que no exista ya un elemento con esa clave
-			TNodo aux = buscarNodo(clave);
+			TNodo <u> aux = buscarNodo(clave);
 			if (aux == null) {
-				aux = new TNodo(clave, elemento);
-				TNodo puntero = getPrimero();
+				aux = new TNodo <u>(clave, elemento);
+				TNodo <u> puntero = getPrimero();
 
 				do {
 					// Comprobamos si aux es menor que el puntero
 					if (puntero.getClave().compareTo(clave) > 0) {
 						if (puntero.equals(getPrimero())) {
-							insertarPrimero(aux.getClave(), aux.getElemento());
+							insertarPrimero(aux.getClave(), (u) aux.getElemento());
 							setTamanio(getTamanio()-1);
 							salida = true;
 						}
@@ -125,7 +125,7 @@ public class TLista {
 
 			}
 		} else {
-			setPrimero(new TNodo(clave, elemento));
+			setPrimero(new TNodo <u>(clave, elemento));
 			salida = true;
 		}
 		// Si se realizo una insercion incrementamos el tamaño de la lista
@@ -141,18 +141,18 @@ public class TLista {
 	 * @return true - si se realizo la insercio; false - si no pudo insertarse el nuevo elemento;
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean insertarPrimero(Comparable clave, Object elemento) {
+	public boolean insertarPrimero(Comparable clave, u elemento) {
 		boolean salida = false;
 		if (!esVacia()) {
 			if (buscarNodo(clave) == null) {
-				TNodo nNodo = new TNodo(clave, elemento);
+				TNodo <u> nNodo = new TNodo <u>(clave, elemento);
 				nNodo.setSiguiente(getPrimero());
 				setPrimero(nNodo);
 				salida = true;
 			}
 		} else {
-			//this.primero = new TNodo(clave, elemento);
-			setPrimero(new TNodo(clave, elemento));
+			//this.primero = new TNodo <u>(clave, elemento);
+			setPrimero(new TNodo <u>(clave, elemento));
 			salida = true;
 		}
 		//this.tamanio += salida?1:0;
@@ -167,8 +167,8 @@ public class TLista {
 	 * @param pos posicion del elemento que deseamos
 	 * @return nodo el nodo en la posicion indicada; null - si no existe un nodo en esa posici�n, si la posici�n es invalida o si la lista esta vacia.
 	 */
-	public TNodo recuperar(Integer pos) {
-		TNodo salida = null;
+	public TNodo <u> recuperar(Integer pos) {
+		TNodo <u> salida = null;
 		if (!esVacia()) {
 			/*
 			 * Controlamos que la posicion sea mayor que cero que no sea mayor
@@ -203,9 +203,9 @@ public class TLista {
 	 * @return nodo - el nodo encotrado; null - si no existe el nodo con dicha clave o la lista esta vac�a
 	 */
 	@SuppressWarnings("unchecked")
-	public TNodo buscarNodo(Comparable clave) {
+	public TNodo <u> buscarNodo(Comparable clave) {
 		if (!esVacia()) {
-			TNodo aux = getPrimero();
+			TNodo <u> aux = getPrimero();
 			do {
 				if (aux.getClave().compareTo(clave) == 0)
 					//TODO Esto no deberia hacerse, va contra buenas practicas de programacion
@@ -235,11 +235,11 @@ public class TLista {
 	 * @return nodo - el nodo que antescede al que tiene la clave que se le pasa al metodo; null - si la clave corresponde al primer elemento de la lista
 	 */
 	@SuppressWarnings("unchecked")
-	public TNodo anterior(Comparable clave) {
-		TNodo salida = null;
+	public TNodo <u> anterior(Comparable clave) {
+		TNodo <u> salida = null;
 
 		if (this.primero.getClave() != clave) {
-			TNodo aux = getPrimero();
+			TNodo <u> aux = getPrimero();
 			do {
 				if (aux.getSiguiente().getClave().compareTo(clave) == 0)
 					salida = aux;
@@ -261,11 +261,11 @@ public class TLista {
 	@SuppressWarnings("unchecked")
 	public boolean eliminar(Comparable clave) {
 		boolean salida = true;
-		TNodo aEliminar = buscarNodo(clave);
+		TNodo <u> aEliminar = buscarNodo(clave);
 		if (aEliminar == null) {
 			salida = false;
 		} else {
-			TNodo anterior = anterior(clave);
+			TNodo <u> anterior = anterior(clave);
 			if(anterior != null)
 				anterior.setSiguiente(aEliminar.getSiguiente());
 			else
@@ -292,9 +292,9 @@ public class TLista {
 			// Creamos una array del tamaño de la lista
 			lista = new Comparable[tamanio];
 			// Guardamos en una varialbe auxiliar el primero
-			TNodo aux = getPrimero();
+			TNodo <u> aux = getPrimero();
 			// Y en una el siguiente
-			TNodo siguiente = aux.getSiguiente();
+			TNodo <u> siguiente = aux.getSiguiente();
 			// Borramos la referencia a primero para dejar la lista vacia
 			//primero = null;
 			setPrimero(null);
@@ -303,7 +303,7 @@ public class TLista {
 			// ahora mientras que la auxiliar no sea nula recorremos la lista
 			while (aux != null) {
 				// Insertamos al principio de la lista los nodos
-				insertarPrimero(aux.getClave(), aux.getElemento());
+				insertarPrimero(aux.getClave(), (u) aux.getElemento());
 				aux = siguiente;
 				/*
 				 * controlamos que aux no sea nulo porque si intentamos obtener
@@ -341,8 +341,8 @@ public class TLista {
 	 * @return nodo - nodo con la clave mas alta de la lista; null - si la lista esta vac�a
 	 */
 	@SuppressWarnings("unchecked")
-	public TNodo getMax() {
-		TNodo max = null;
+	public TNodo <u> getMax() {
+		TNodo <u> max = null;
 		if (!esVacia()) {
 			max = getPrimero();
 			for (int i = 0; i < getTamanio(); i++) {
@@ -358,8 +358,8 @@ public class TLista {
 	 * @return nodo - nodo con la clave mas baja de la lista; null - si la lista esta vac�a.
 	 */
 	@SuppressWarnings("unchecked")
-	public TNodo getMin() {
-		TNodo min = null;
+	public TNodo <u> getMin() {
+		TNodo <u> min = null;
 		if (!esVacia()) {
 			min = getPrimero();
 			for (int i = 0; i < getTamanio(); i++) {
@@ -378,9 +378,9 @@ public class TLista {
 	 */
 	public void swapNodes(int i, int j) {
 		if (!esVacia() && i < getTamanio() && j < getTamanio()) {
-			TNodo nodoA = recuperar(i);
-			TNodo nodoB = recuperar(j);
-			TNodo aux = anterior(nodoB.getClave());
+			TNodo <u> nodoA = recuperar(i);
+			TNodo <u> nodoB = recuperar(j);
+			TNodo <u> aux = anterior(nodoB.getClave());
 
 			if (anterior(nodoA.getClave()) != null)
 				anterior(nodoA.getClave()).setSiguiente(nodoB);
@@ -405,7 +405,7 @@ public class TLista {
 	 */
 	@SuppressWarnings("unchecked")
 	public Comparable[] ordenar() {
-		TNodo aux;
+		TNodo <u> aux;
 
 		for (int i = getTamanio() - 1; i >= 0; i--) {
 			for (int k = getTamanio() - 1; k >= 0; k--) {
@@ -423,10 +423,7 @@ public class TLista {
 	 */
 	@SuppressWarnings("unchecked")
 	public Comparable[] ordenar(Comparator comparador) {
-		TNodo aux;
-
-		
-		
+		TNodo <u> aux;
 		for (int i = getTamanio() - 1; i >= 0; i--) {
 			for (int k = getTamanio() - 1; k >= 0; k--) {
 //				if (recuperar(i).getClave().compareTo(recuperar(k).getClave()) > 0)
@@ -501,7 +498,7 @@ public class TLista {
 		int salida = -1;
 		int indice = 0;
 		boolean flag = true;
-		TNodo temp = getPrimero();
+		TNodo <u> temp = getPrimero();
 		if(temp!=null){
 			while(temp != null && flag){
 				if(temp.getClave().compareTo(clave) == 0){
