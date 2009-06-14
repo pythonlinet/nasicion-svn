@@ -2,8 +2,8 @@ package uy.edu.ucu.pii.obligatorio2.util;
 
 import java.io.*;
 
-import uy.edu.ucu.pii.obligatorio2.grupo14.datos.lista.TLista;
-import uy.edu.ucu.pii.obligatorio2.grupo14.datos.lista.TNodo;
+import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
+import uy.edu.ucu.pii.grupo14.datos.lista.TNodo;
 
 
 

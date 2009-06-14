@@ -1,14 +1,21 @@
-package uy.edu.ucu.pii.obligatorio2.grupo14.datos.lista;
+package uy.edu.ucu.pii.grupo14.datos.lista;
+
+import java.util.Comparator;
 
 /**
  * Implementacion de una array redimenzionable, escrito por Guillermo Nasi para
  * la materia Programaci�n 2 en la Universidad Catolica del Uruguay. Implementa
  * todas los comportamientos tipicos de una lista y se agregaron otros metodos
- * para darle mas funcionalidad a la lista. En proximas versiones se intentara
- * mejorar el algoritmo de ordenamiento entre otros para hacerlo mas eficiente.
+ * para darle mas funcionalidad a la lista. 
+ * En proximas versiones se intentara mejorar el algoritmo de ordenamiento entre otros para hacerlo mas eficiente.
  * 
  * @author Guillermo Nasi
- * @version 1.0
+ * @version 1.5
+ * 
+ * <b>Log</b>
+ * <i>Nuevo en version 1.5</i>
+ * 	- Se agerga la capacidad de ordenar en base a un comparador
+ * 
  */
 public class TLista {
 	private TNodo primero;
@@ -409,6 +416,24 @@ public class TLista {
 		return mostrar();
 	}
 
+	/**
+	 * Metodo que ordena los elementos de la lista de menor a mayor usando un comparador
+	 *  
+	 * @return array de Comparable  con las claves de los elementos en el orden en que se encuentra en la lista ahora ordenada; null - si la lista esta vac�a.
+	 */
+	@SuppressWarnings("unchecked")
+	public Comparable[] ordenar(Comparator comparador) {
+		TNodo aux;
+
+		for (int i = getTamanio() - 1; i >= 0; i--) {
+			for (int k = getTamanio() - 1; k >= 0; k--) {
+				if (recuperar(i).getClave().compareTo(recuperar(k).getClave()) > 0)
+					swapNodes(i, k);
+			}
+		}
+		return mostrar();
+	}
+	
 	/*
 	 * Metodos usados para el quicksort
 	 */
