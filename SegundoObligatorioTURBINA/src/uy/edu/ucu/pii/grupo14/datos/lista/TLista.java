@@ -388,7 +388,8 @@ public class TLista <u> {
 				//this.primero = nodoB;
 				setPrimero(nodoB);
 
-			aux.setSiguiente(nodoA);
+			if(aux != null)
+				aux.setSiguiente(nodoA);
 
 			aux = nodoB.getSiguiente();
 			nodoB.setSiguiente(nodoA.getSiguiente());

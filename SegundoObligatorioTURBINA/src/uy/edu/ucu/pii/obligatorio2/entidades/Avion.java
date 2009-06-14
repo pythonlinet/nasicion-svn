@@ -40,5 +40,9 @@ public class Avion {
 	}
 	
 	
+	@Override
+	public String toString() {
+		return this.nombre + " " + this.rendimiento;
+	}
 	
 }
