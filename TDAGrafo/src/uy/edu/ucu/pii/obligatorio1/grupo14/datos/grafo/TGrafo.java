@@ -11,7 +11,7 @@ import uy.edu.ucu.pii.obligatorio1.grupo14.datos.lista.TNodo;
  * <b>Clase para la implementacion de Grafos. Diseniada y Desarrollada por el Grupo14 para la materia Porgarmacion II de la Universidad Catolica del Uruguay Anio 2009</b>
  * 
  * @author <i>Grupo14</i>
- * @version <i>1.0</i>
+ * @version <i>1.5</i>
  * @see uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo.TVertice
  * @see uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo.TArista
  */
