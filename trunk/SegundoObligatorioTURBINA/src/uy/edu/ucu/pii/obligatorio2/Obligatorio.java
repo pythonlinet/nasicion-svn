@@ -11,26 +11,33 @@ import uy.edu.ucu.pii.obligatorio2.entidades.Avion;
  *
  */
 public class Obligatorio {
+	//Declaro la lista de aviones
 	TLista<Avion> aviones;
 	
 	
 	
+	
+	public TLista<Avion> getAviones() {
+		return aviones;
+	}
+
+
 	public Obligatorio() {
 		aviones = new TLista();
 	}
 
 	/*
-	 * Métodos de carga/mantenimiento de datos
+	 * Mï¿½todos de carga/mantenimiento de datos
 	 */
 	/**
-	 * Utilizado para cargar datos de un nuevo avión
+	 * Utilizado para cargar datos de un nuevo aviï¿½n
 	 * @param nombreAvion
 	 * @param rendimiento
-	 * @return resultado de la operación
+	 * @return resultado de la operaciï¿½n
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean agregarAvion(Comparable nombreAvion, Double rendimiento){
-		
+		System.out.println("Se ingresa el avion  " + nombreAvion);
 		return aviones.insertar(nombreAvion,new Avion(nombreAvion,rendimiento));
 	}
 	
@@ -38,11 +45,11 @@ public class Obligatorio {
 	 * Utilizado para cargar datos de una nueva ciudad
 	 * @param nombre
 	 * @param nombrePais
-	 * @return resultado de la operación
+	 * @return resultado de la operaciï¿½n
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean agregarCiudad(Comparable nombre, Comparable nombrePais){
-		//TODO - Implementar método
+		//TODO - Implementar mï¿½todo
 		return false;
 	}
 	
@@ -52,73 +59,74 @@ public class Obligatorio {
 	 * @param nomCiudadDestino
 	 * @param distanciaEnKm
 	 * @param tiempoEstimadoEnMinutos
-	 * @return resultado de la operación
+	 * @return resultado de la operaciï¿½n
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean agregarTramo(Comparable nomCiudadOrigen, Comparable nomCiudadDestino, Double distanciaEnKm, Double tiempoEstimadoEnMinutos){
-		//TODO - Implementar método
+		//TODO - Implementar mï¿½todo
 		return false;
 	}
 	
 	/**
-	 * Utilizado para asignar un avión a una lista de tramos
+	 * Utilizado para asignar un aviï¿½n a una lista de tramos
 	 * @param nombreAvion
 	 * @param tramoAAsignar array de 2 posiciones, con un par ordenado de ciudades 
-	 * @return resultado de la conjunción de todas las operaciones
+	 * @return resultado de la conjunciï¿½n de todas las operaciones
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean asignarAvionATramo(Comparable nombreAvion, Comparable etiquetaOrigen, Comparable etiquetaDestino){
-		//TODO - Implementar método
+		//TODO - Implementar mï¿½todo
 		return false;
 	}
 	
 	/**
-	 * Utilizado para quitar un tramo de las rutas. En este caso, se quita la asociación de todos los aviones con este tramo
+	 * Utilizado para quitar un tramo de las rutas. En este caso, se quita la asociaciï¿½n de todos los aviones con este tramo
 	 * @param nomCiudadOrigen
 	 * @param nomCiudadDestino
-	 * @return resultado de la operación
+	 * @return resultado de la operaciï¿½n
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean quitarTramo(Comparable nomCiudadOrigen, Comparable nomCiudadDestino){
-		//TODO - Implementar método
+		//TODO - Implementar mï¿½todo
 		return false;		
 	}
 	
 	/**
-	 * Utilizado para quitar un avión de circulación. Se quita la asignación de dicho avión con todos los tramos (itinerarios de vuelo)
+	 * Utilizado para quitar un aviï¿½n de circulaciï¿½n. Se quita la asignaciï¿½n de dicho aviï¿½n con todos los tramos (itinerarios de vuelo)
 	 * @param nombreAvion
-	 * @return resultado de la operación
+	 * @return resultado de la operaciï¿½n
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean quitarAvion(Comparable nombreAvion){
-		//TODO - Implementar método
+		//TODO - Implementar mï¿½todo
 		return false;
 	}
 	
 	/**
 	 * Utilizado para quitar una ciudad de nuestros itinerarios. Se eliminan todos los tramos asociados con la ciudad, y todos los itinerarios
 	 * @param nomCiudad
-	 * @return resultado de la operación
+	 * @return resultado de la operaciï¿½n
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean quitarCiudad(Comparable nomCiudad){
-		//TODO - Implementar método
+		//TODO - Implementar mï¿½todo
 		return false;
 	}
 	
 	/*
-	 * Métodos de consulta
+	 * Mï¿½todos de consulta
 	 */
 	
 	/**
-	 * @return Lista con los nombres de los aviones, ordenados por su rendimiento (descendente según km/l)
+	 * @return Lista con los nombres de los aviones, ordenados por su rendimiento (descendente segï¿½n km/l)
 	 */
 	@SuppressWarnings("unchecked")
 	public Comparable[] listadoAvionesPorRendimiento(){
-		Comparator comparador = new compararAvionesPorRendimiento();
-		Comparable[] salida = aviones.ordenar(comparador);
-		for(Comparable c:salida)
-			System.out.println(c);
+		Comparable[] salida = new Integer[0];
+
+		Comparable[] aux  = aviones.ordenar(new compararAvionesPorRendimiento());
+		salida = aux != null?aux:salida;
+		
 		return salida;
 	}
 	
@@ -129,7 +137,7 @@ public class Obligatorio {
 	 */
 	@SuppressWarnings("unchecked")
 	public Comparable[] mejorItinerarioParaEmpresa(Comparable nomCiudadOrigen, Comparable nomCiudadDestino){
-		//TODO - Implementar método
+		//TODO - Implementar mï¿½todo
 		return null;
 	}
 	
@@ -140,7 +148,7 @@ public class Obligatorio {
 	 */
 	@SuppressWarnings("unchecked")
 	public Comparable[] mejorItinerarioParaCliente(Comparable nomCiudadOrigen, Comparable nomCiudadDestino){
-		//TODO - Implementar método
+		//TODO - Implementar mï¿½todo
 		return null;
 	}
 	
@@ -149,7 +157,7 @@ public class Obligatorio {
 	 */
 	@SuppressWarnings("unchecked")
 	public Comparable obtenerCentroOperaciones(){
-		//TODO - Implementar método
+		//TODO - Implementar mï¿½todo
 		return null;
 	}
 	
@@ -159,7 +167,7 @@ public class Obligatorio {
 	 */
 	@SuppressWarnings("unchecked")
 	public Comparable[] avionesParaCiudad(String nombreCiudad){
-		//TODO - Implementar método
+		//TODO - Implementar mï¿½todo
 		return null;
 	}
 
@@ -169,22 +177,22 @@ public class Obligatorio {
 	}
 
 	public boolean existeTramo(String nombreCiudadOrigen, String nombreCiudadDestino) {
-		//TODO - Implementar método
+		//TODO - Implementar mï¿½todo
 		return false;
 	}
 
 	public Object obtenerDistanciaTramo(String ciudadOrigen, String ciudadDestino) {
-		//TODO - Implementar método
+		//TODO - Implementar mï¿½todo
 		return null;
 	}
 
 	public Object obtenerTiempoEstimadoTramo(String ciudadOrigen, String ciudadDestino) {
-		//TODO - Implementar método
+		//TODO - Implementar mï¿½todo
 		return null;
 	}
 
 	public boolean existeCamino(String ciudadOrigen, String ciudadDestino) {
-		//TODO - Implementar método
+		//TODO - Implementar mï¿½todo
 		return false;
 	}
 }
