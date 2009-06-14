@@ -1,4 +1,4 @@
-package uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo;
+package uy.edu.ucu.pii.grupo14.datos.grafo;
 
 import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
 
@@ -7,8 +7,8 @@ import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
  * @author <i>Grupo14</i>
  * @version <i>1.0</i>
  * 
- * @see uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo.TGrafo
- * @see uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo.TArista
+ * @see uy.edu.ucu.pii.grupo14.datos.grafo.TGrafo
+ * @see uy.edu.ucu.pii.grupo14.datos.grafo.TArista
  */
 public class TVertice {
 	private Comparable etiqueta;

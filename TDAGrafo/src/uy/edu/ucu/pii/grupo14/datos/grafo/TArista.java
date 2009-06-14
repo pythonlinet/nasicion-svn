@@ -1,11 +1,11 @@
-package uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo;
+package uy.edu.ucu.pii.grupo14.datos.grafo;
 
 /**
  * <b>Clase para representar una arista entre dos vertices de un grafo</b>
  * @author <i>Grupo14</i>
  * @version <i>1.0</i>
  * 
- * @see uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo.TGrafo
+ * @see uy.edu.ucu.pii.grupo14.datos.grafo.TGrafo
  */
 public class TArista {
 	@SuppressWarnings("unchecked")

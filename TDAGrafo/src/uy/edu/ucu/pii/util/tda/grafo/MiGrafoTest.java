@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import uy.edu.ucu.pii.obligatorio1.grupo14.datos.grafo.TGrafo;
+import uy.edu.ucu.pii.grupo14.datos.grafo.TGrafo;
 
 public class MiGrafoTest {
 
