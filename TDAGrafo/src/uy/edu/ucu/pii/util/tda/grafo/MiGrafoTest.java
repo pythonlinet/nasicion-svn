@@ -130,4 +130,72 @@ public class MiGrafoTest {
 
 		}
 	}
+	
+	@Test
+	public void testEliminarVertice(){
+		for(int i = 1; i < 8; i++)
+			g.insertarVertice(i);
+		
+		g.insertarAdyacencia(1, 2, 10);
+		g.insertarAdyacencia(1, 6, 11);
+		g.insertarAdyacencia(1, 4, 30);
+		
+		g.insertarAdyacencia(2, 7, 12);
+		g.insertarAdyacencia(2, 6, 15);
+		
+		g.insertarAdyacencia(3, 2, 40);
+		
+		g.insertarAdyacencia(4, 3, 15);
+		g.insertarAdyacencia(4, 5, 21);
+		
+		g.insertarAdyacencia(5, 6, 22);
+		g.insertarAdyacencia(5, 1, 1);
+		
+		g.insertarAdyacencia(6, 7, 8);
+		
+		
+		assertTrue(g.existeCamino(1, 6));
+		
+		for(Comparable c : g.mejorCamino(1, 6))
+			System.out.print(c + " ");
+		System.out.println();
+		
+		assertTrue(g.eliminarAdyacencia(1, 6));
+		System.out.println("Eliminamos la adyacencia 1 - 6");
+		
+		
+		for(Comparable c : g.mejorCamino(1, 6))
+			System.out.print(c + " ");
+		System.out.println();
+
+		assertTrue(g.eliminarAdyacencia(1, 2));
+		System.out.println("Eliminamos la adyacencia 1 - 2");
+		
+		for(Comparable c : g.mejorCamino(1, 6))
+			System.out.print(c + " ");
+		System.out.println();
+		
+		
+	
+		System.out.println();
+		System.out.println("Camino de 1 a 7");
+		assertTrue(g.existeCamino(1, 7));
+		for(Comparable c : g.mejorCamino(1, 7))
+			System.out.print(c + " ");
+		System.out.println();
+		
+		assertTrue(g.eliminarVertice(6));
+		System.out.println("Eliminamos el vertice 6");
+		for(Comparable c : g.mejorCamino(1, 7))
+			System.out.print(c + " ");
+		System.out.println();
+		
+		System.out.println("Volvemos a ingresar la adyacencia 1 - 2");
+		g.insertarAdyacencia(1, 2, 10);
+		for(Comparable c : g.mejorCamino(1, 7))
+			System.out.print(c + " ");
+		System.out.println();
+		
+	}
+	
 }
