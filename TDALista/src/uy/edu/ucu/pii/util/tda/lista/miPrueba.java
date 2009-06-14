@@ -1,4 +1,4 @@
-package com.ucu.prog2.tdas.listas.mistests;
+package uy.edu.ucu.pii.util.tda.lista;
 
 import static org.junit.Assert.assertFalse;
 import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
