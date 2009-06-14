@@ -9,7 +9,7 @@ public class TNodo <u> implements Comparable{
 	/*
 	 * Inicio bloque getters y setters
 	 */
-	public TNodo getSiguiente() {
+	public TNodo<u> getSiguiente() {
 		return siguiente;
 	}
 	public void setSiguiente(TNodo siguiente) {
@@ -43,7 +43,11 @@ public class TNodo <u> implements Comparable{
 		// TODO Auto-generated method stub
 		return this.clave.compareTo(((TNodo)o).getClave());
 	}
-	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return this.clave.toString();
+	}
 
 }
 	

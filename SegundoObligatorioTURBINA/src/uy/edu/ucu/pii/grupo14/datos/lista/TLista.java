@@ -378,23 +378,53 @@ public class TLista <u> {
 	 */
 	public void swapNodes(int i, int j) {
 		if (!esVacia() && i < getTamanio() && j < getTamanio()) {
+			
 			TNodo <u> nodoA = recuperar(i);
 			TNodo <u> nodoB = recuperar(j);
-			TNodo <u> aux = anterior(nodoB.getClave());
+			
+			TNodo <u> siguienteA = nodoA.getSiguiente();
+			TNodo <u> anteriorA = anterior(nodoA.getClave());
+				
+			TNodo <u> siguienteB = nodoB.getSiguiente();
+			TNodo <u> anteriorB = anterior(nodoB.getClave());
+			
+			boolean swaped = false;
+			
+			if(siguienteA != null && siguienteA.getClave().compareTo(nodoB.getClave()) == 0 && !swaped){
+				if(anteriorA != null)
+					anteriorA.setSiguiente(nodoB);
+				else
+					setPrimero(nodoB);
+				nodoB.setSiguiente(nodoA);
+				nodoA.setSiguiente(siguienteB);
+				swaped = true;
+			}else if(siguienteB != null && siguienteB.getClave().compareTo(nodoA.getClave()) == 0 && !swaped ){
+				if(anteriorB != null)
+					anteriorB.setSiguiente(nodoA);
+				else
+					setPrimero(nodoA);
+				nodoA.setSiguiente(nodoB);
+				nodoB.setSiguiente(siguienteA);
+				swaped = true;
+			}else{
+				//Si el anterior de B no es nulo
+				if(anteriorB != null)
+					anteriorB.setSiguiente(nodoA);
+				//Si el anterior de B era nulo, significa que B era el primero
+				else
+					setPrimero(nodoA);
+				nodoA.setSiguiente(siguienteB);
+				
+				//Si el anterior de A no es nulo
+				if(anteriorA != null)
+					anteriorA.setSiguiente(nodoB);
+				else
+					setPrimero(nodoB);			
+				nodoB.setSiguiente(siguienteA);
+			}
 
-			if (anterior(nodoA.getClave()) != null)
-				anterior(nodoA.getClave()).setSiguiente(nodoB);
-			else
-				//this.primero = nodoB;
-				setPrimero(nodoB);
-
-			if(aux != null)
-				aux.setSiguiente(nodoA);
-
-			aux = nodoB.getSiguiente();
-			nodoB.setSiguiente(nodoA.getSiguiente());
-			nodoA.setSiguiente(aux);
-
+			
+			
 		}
 
 	}
