@@ -1,10 +1,24 @@
 package uy.edu.ucu.pii.obligatorio2;
 
+import java.util.Comparator;
+
+import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
+import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararAvionesPorRendimiento;
+import uy.edu.ucu.pii.obligatorio2.entidades.Avion;
+
 /**
  * @author catedraPII
  *
  */
 public class Obligatorio {
+	TLista<Avion> aviones;
+	
+	
+	
+	public Obligatorio() {
+		aviones = new TLista();
+	}
+
 	/*
 	 * Métodos de carga/mantenimiento de datos
 	 */
@@ -16,8 +30,8 @@ public class Obligatorio {
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean agregarAvion(Comparable nombreAvion, Double rendimiento){
-		//TODO - Implementar método
-		return false;
+		
+		return aviones.insertar(nombreAvion,new Avion(nombreAvion,rendimiento));
 	}
 	
 	/**	 
@@ -101,8 +115,11 @@ public class Obligatorio {
 	 */
 	@SuppressWarnings("unchecked")
 	public Comparable[] listadoAvionesPorRendimiento(){
-		//TODO - Implementar método
-		return null;
+		Comparator comparador = new compararAvionesPorRendimiento();
+		Comparable[] salida = aviones.ordenar(comparador);
+		for(Comparable c:salida)
+			System.out.println(c);
+		return salida;
 	}
 	
 	/**
@@ -148,8 +165,7 @@ public class Obligatorio {
 
 	@SuppressWarnings("unchecked")
 	public Comparable obtenerRendimientoAvion(String nombreAvion) {
-		//TODO - Implementar método
-		return null;
+		return aviones.buscarNodo(nombreAvion).getElemento().getRendimiento();
 	}
 
 	public boolean existeTramo(String nombreCiudadOrigen, String nombreCiudadDestino) {

@@ -3,7 +3,7 @@ package uy.edu.ucu.pii.grupo14.datos.lista;
 @SuppressWarnings("unchecked")
 public class TNodo <u> implements Comparable{
 	protected Comparable clave;
-	private TNodo siguiente;
+	private TNodo<u> siguiente;
 	protected u elemento;
 	
 	/*

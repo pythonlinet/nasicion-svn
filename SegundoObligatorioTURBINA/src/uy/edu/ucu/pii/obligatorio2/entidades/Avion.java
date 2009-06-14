@@ -3,13 +3,13 @@ package uy.edu.ucu.pii.obligatorio2.entidades;
 import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
 
 public class Avion {
-	private String nombre;
+	private Comparable nombre;
 	private Double rendimiento;
 	
 	TLista itinerarios;
 
 	
-	public String getNombre() {
+	public Comparable getNombre() {
 		return nombre;
 	}
 
@@ -33,9 +33,9 @@ public class Avion {
 		this.itinerarios = itinerarios;
 	}
 
-	public Avion(String nombre, Double rendimiento) {
+	public Avion(Comparable nombreAvion, Double rendimiento) {
 		super();
-		this.nombre = nombre;
+		this.nombre = nombreAvion;
 		this.rendimiento = rendimiento;
 	}
 	
