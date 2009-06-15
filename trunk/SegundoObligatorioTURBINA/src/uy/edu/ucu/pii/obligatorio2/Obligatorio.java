@@ -3,6 +3,8 @@ package uy.edu.ucu.pii.obligatorio2;
 import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
 import uy.edu.ucu.pii.grupo14.datos.lista.TNodo;
 import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararAvionesPorRendimiento;
+import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararCostoPorDistancia;
+import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararCostoPorTiempo;
 import uy.edu.ucu.pii.obligatorio2.entidades.Avion;
 import uy.edu.ucu.pii.obligatorio2.entidades.Ciudad;
 import uy.edu.ucu.pii.obligatorio2.entidades.Ciudades;
@@ -221,7 +223,7 @@ public class Obligatorio {
 	 */
 	@SuppressWarnings("unchecked")
 	public Comparable obtenerCentroOperaciones(){
-		return getCiudades().centroDelGrafo();
+		return getCiudades().centroDelGrafo(new compararCostoPorTiempo());
 	}
 	
 	/**
