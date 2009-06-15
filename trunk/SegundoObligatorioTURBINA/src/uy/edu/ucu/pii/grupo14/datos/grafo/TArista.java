@@ -20,7 +20,9 @@ public class TArista {
 		this.costo = costo;
 		this.destino = destino;
 	}
-
+	public TArista(){
+		
+	}
 
 	public Integer getCosto() {
 		return costo;
