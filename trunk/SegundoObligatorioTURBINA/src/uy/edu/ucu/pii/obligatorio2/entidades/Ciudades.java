@@ -7,14 +7,14 @@ public class Ciudades{
 
 	
 
-	private static final Object INFINITO = Double.MAX_VALUE;
+	private static final Double INFINITO = Double.MAX_VALUE;
 
 	private TLista<Ciudad> ciudades;
 
 	@SuppressWarnings("unchecked")
-	private Integer[][] mAdyacencia;
+	private Costo[][] mAdyacencia;
 	@SuppressWarnings("unchecked")
-	private Integer[][] mFloyd;
+	private Double[][] mFloyd;
 	
 	/**
 	 * Indica a varios metodos si es necesario regenerar las matrices
@@ -51,6 +51,13 @@ public class Ciudades{
 		return mFloyd;
 	}
 
+	public Costo[][] getMAdyacencia(){
+		if(this.mAdyacencia == null || regenMatriz)
+			cargarMatrizDeAdyacencia();
+		return this.mAdyacencia;
+	}
+	
+	
 	public Ciudades() {
 		this.ciudades = new TLista<Ciudad>();
 		this.cantVertices = 0;
@@ -136,7 +143,7 @@ public class Ciudades{
 	public boolean existeCamino(Comparable etiquetaOrigen, Comparable etiquetaDestino) {
 		boolean salida = false;
 		if (regenMatriz)
-			implementacionFloyd();
+			implementacionFloydPorDistancia();
 		
 		int origen = getPosMatriz(etiquetaOrigen);
 		int destino = getPosMatriz(etiquetaDestino);
@@ -171,7 +178,7 @@ public class Ciudades{
 				Comparable[] arrayPredecesores = implementacionDijkstra(etiquetaOrigen, true);
 				
 				//Obtenemos la posicion que tiene el destino dentro del array
-				int posicionDestino = getVertices().indexOf(existeD.getClave());
+				int posicionDestino = getCiudades().indexOf(existeD.getClave());
 				
 				//Verificamos que exista un camino hasta el destino, si lo hay procedemos a armarlo
 				if(arrayPredecesores[posicionDestino] != INFINITO){
@@ -181,15 +188,15 @@ public class Ciudades{
 					camino = arrayPredecesores[posicionDestino]+"," + camino;
 
 					//posicionDestino = ((TVertice) vertices.buscarNodo(arrayPredecesores[posicionDestino]).getElemento()).getPosMatriz();
-					posicionDestino = getVertices().indexOf(arrayPredecesores[posicionDestino]);
+					posicionDestino = getCiudades().indexOf(arrayPredecesores[posicionDestino]);
 					
-					TVertice aux;
+					Ciudad aux;
 					while(arrayPredecesores[posicionDestino].compareTo(etiquetaOrigen) != 0){
-						aux = (TVertice) ciudades.buscarNodo(arrayPredecesores[posicionDestino]).getElemento();
+						aux = getCiudades().buscarNodo(arrayPredecesores[posicionDestino]).getElemento();
 						camino = arrayPredecesores[posicionDestino]+"," + camino;
 						
 						//posicionDestino = ((TVertice) vertices.buscarNodo(arrayPredecesores[posicionDestino]).getElemento()).getPosMatriz();
-						posicionDestino =  getVertices().indexOf(arrayPredecesores[posicionDestino]);
+						posicionDestino =  getCiudades().indexOf(arrayPredecesores[posicionDestino]);
 						
 					}
 					
@@ -234,17 +241,52 @@ public class Ciudades{
 	}
 
 	
+//	/**
+//	 * Metodo para obtener la excentricidad del grafo
+//	 * 
+//	 * @return array de Comparable
+//	 */
+//	@SuppressWarnings("unchecked")
+//	public Integer[] excentricidad() {
+//		if (regenMatriz)
+//			implementacionFloyd();
+//
+//		Integer[] salida = new Integer[mFloyd.length];
+//
+//		boolean continuar = true;
+//		Integer aux;
+//		for (int i = 0; i < mFloyd.length; i++) {
+//			aux = 0;
+//			for (int j = 0; j < mFloyd.length && continuar; j++) {
+//				// Si el costo es infinito, seteamos aux como INFINITO,
+//				// porque no va a haber un costo mayor a ese
+//				if (mFloyd[j][i] == INFINITO) {
+//					aux = INFINITO;
+//					// Cortamos la ejecucion ya que no va a haber un valor mayor
+//					// que INFINITO
+//					continuar = false;
+//				} else if (mFloyd[j][i] > (aux))
+//					aux = mFloyd[j][i];
+//			}
+//			// Volemos a setear continuar en true para que se ejecute bien el
+//			continuar = true;
+//			salida[i] = aux;
+//		}
+//		return salida;
+//	}
+
 	/**
-	 * Metodo para obtener la excentricidad del grafo
+	 * Metodo para obtener la excentricidad en base a la distancia entre ciudades
 	 * 
-	 * @return array de Comparable
+	 * @return array de Double
 	 */
 	@SuppressWarnings("unchecked")
-	public Integer[] excentricidad() {
+	public Double[] excentricidadPorDistancia() {
+		//FIXME
 		if (regenMatriz)
 			implementacionFloyd();
 
-		Integer[] salida = new Integer[mFloyd.length];
+		Double[] salida = new Double[mFloyd.length];
 
 		boolean continuar = true;
 		Integer aux;
@@ -283,21 +325,19 @@ public class Ciudades{
 	/**
 	 * Metodo para saber si dos vectores ORIGEN y DESTINO son adyacentes
 	 * 
-	 * @param etiquetaOrigen
+	 * @param nombreCiudadOrigen
 	 *            etiqueta del nodo origen
-	 * @param etiquetaDestino
+	 * @param nombreCiudadDestino
 	 *            etiqueta del nodo destino
 	 * @return true - si existe la adyacencia; false - si no existe una
 	 *         adyacencia entre ambos vertices
 	 */
-	public boolean existeAdyacencia(String etiquetaOrigen,
-			String etiquetaDestino) {
+	public boolean existeTramo(String nombreCiudadOrigen,	String nombreCiudadDestino) {
 		boolean salida = false;
-		TNodo origen = ciudades.buscarNodo(etiquetaOrigen);
+		Ciudad ciudadOrigen = getCiudades().buscarNodo(nombreCiudadOrigen).getElemento();
 		// Si existe el origen
-		if (origen != null) {
-			salida = ((TVertice) origen.getElemento())
-					.existeAdyacencia(etiquetaDestino);
+		if (ciudadOrigen != null) {
+			salida = ciudadOrigen.existeTramo(nombreCiudadDestino);
 		}
 		return salida;
 	}
@@ -307,10 +347,10 @@ public class Ciudades{
 	 */
 	private void inicializarMatriz() {
 		int tamanio = ciudades.getTamanio();
-		this.mAdyacencia = new Integer[tamanio][tamanio];
+		this.mAdyacencia = new Costo[tamanio][tamanio];
 		for(int i = 0; i < tamanio; i++)
 			for(int j = 0; j < tamanio; j++)
-				this.mAdyacencia[i][j] = INFINITO; 
+				this.mAdyacencia[i][j] = new Costo(INFINITO, INFINITO); 
 	}
 
 	/**
@@ -322,32 +362,32 @@ public class Ciudades{
 	private void cargarMatrizDeAdyacencia() {
 		inicializarMatriz();
 		int cantVertices = ciudades.getTamanio();
-		TVertice vertice;
+		Ciudad ciudad;
 		// Usado para guardar las aristas
-		TArista adyacencia;
-		int cantAdyacencias;
+		Tramo tramo;
+		int cantDestinos;
 		for (int i = 0; i < cantVertices; i++) {
-			vertice = (TVertice) ciudades.recuperar(i).getElemento();
-			// Cantida de adyacencias del vertice
-			cantAdyacencias = vertice.getAdyacentes().getTamanio();
+			ciudad = getCiudades().recuperar(i).getElemento();
+			// Cantida de destinos desde la ciudad
+			cantDestinos = ciudad.getTramos().getTamanio();
 
 			// Cuando sea el costo de un vertice x hacia el mismo, seteamos el
 			// costo en 0
-			mAdyacencia[i][i] = 0;
+			mAdyacencia[i][i] = new Costo(0.0,0.0);
 
 			// Recorremos las adyacencias del vertice
-			for (int j = 0; j < cantAdyacencias; j++) {
+			for (int j = 0; j < cantDestinos; j++) {
 
 				// Guardo la referencia a la arista
-				adyacencia = ((TArista) vertice.getAdyacentes().recuperar(j).getElemento());
-				mAdyacencia[i][getVertices().indexOf(adyacencia.getDestino().getEtiqueta())] = adyacencia.getCosto();
+				tramo = ciudad.getTramos().recuperar(j).getElemento();
+				mAdyacencia[i][getCiudades().indexOf(tramo.getCiudadDestino().getNombre())] = tramo.getCostoTramo();
 			}
 		}
 		this.regenMatriz = false;
 	}
 
 	/**
-	 * Metodo para saber la posicion que tiene un vertice en la matriz
+	 * Metodo para saber la posicion que tiene una ciudad en la matriz
 	 * 
 	 * @param etiqueta
 	 *            etiqueta del vertice del que se quiere saber la posicion
@@ -358,13 +398,13 @@ public class Ciudades{
 	private int getPosMatriz(Comparable etiqueta) {
 		int salida = -1;
 		
-		// Buscamos el vertice
-		TVertice vertice = null;
-		TNodo nodo = ciudades.buscarNodo(etiqueta);
+		// Buscamos la ciudad
+		Ciudad ciudad = null;
+		TNodo<Ciudad> nodo = getCiudades().buscarNodo(etiqueta);
 		if(nodo != null)
-			vertice = (TVertice) nodo.getElemento(); 
+			ciudad = nodo.getElemento(); 
 		// Si el vertice existe guardamos la posici�n que tiene en la matriz
-		salida = vertice != null ? getVertices().indexOf(vertice.getEtiqueta()) : salida;
+		salida = ciudad != null ? getCiudades().indexOf(ciudad.getNombre()) : salida;
 
 		return salida;
 	}
@@ -376,19 +416,19 @@ public class Ciudades{
 	 *         hasta un Destino
 	 */
 	@SuppressWarnings("unchecked")
-	private Integer[][] implementacionFloyd() {
+	private Double[][] implementacionFloydPorDistancia() {
 		// Si la matriz fue marcada para regeneracion se la genera otra vez
 		//if (regenMatriz)
 			cargarMatrizDeAdyacencia();
 
-		Integer[][] salida = new Integer[this.mAdyacencia.length][this.mAdyacencia.length];
+		Double[][] salida = new Double[this.mAdyacencia.length][this.mAdyacencia.length];
 		for(int i = 0; i < salida.length; i++)
 			for(int j = 0; j < salida.length; j++)
-				salida[i][j] = mAdyacencia[i][j];
+				salida[i][j] = mAdyacencia[i][j].getDistanciaEnKm();
 		
 		
 		
-		Integer aIJ, aIK, aKJ, suma;
+		Double aIJ, aIK, aKJ, suma;
 
 
 		for (int k = 0; k < salida.length; k++) {
@@ -521,7 +561,7 @@ public class Ciudades{
 	 * @param matriz
 	 *            - matriz que se quiere imprimir en consola
 	 */
-	private void imprimirMatrizGrafo(Comparable[][] matriz) {
+	private void imprimirMatrizGrafo(Object[][] matriz) {
 		for (int i = 0; i < matriz.length; i++) {
 			for (int j = 0; j < matriz[i].length; j++) {
 				System.out.print(matriz[i][j] + "\t\t");
@@ -571,33 +611,38 @@ public class Ciudades{
 	}
 	
 	/**
-	 * Elimina el vertice del grafo y todas las adyacencias hacia este
-	 * @param etiqueta la etiqueta del vertice que se quiere eliminar
+	 * Elimina el vertice(ciudad) del grafo de ciudades y todas las adyacencias hacia este
+	 * @param nomCiudad la etiqueta del vertice que se quiere eliminar
 	 * @return true - si se produjo la eliminacion de forma correcta
 	 * false - si el vertie no existe
 	 */
-	public boolean eliminarVertice(Comparable etiqueta){
+	public boolean quitarCiudad(Comparable nomCiudad){
 		boolean salida = false;
-		TNodo vertice = getVertices().buscarNodo(etiqueta);
-		if(vertice != null){
-			int indexVertice = getVertices().indexOf(vertice.getClave());
-			Comparable[][] floyd = getMFloyd();
+		TNodo<Ciudad> nodoCiudad = getCiudades().buscarNodo(nomCiudad);
+		
+		//Si la ciudad existe
+		if(nodoCiudad != null){
+			int indexVertice = getCiudades().indexOf(nodoCiudad.getClave());
+			
+			Costo[][] mAdyacencia = getMAdyacencia();
 			String adyacentes = new String();
 			String[] arrayAdyacentes;
 			
 			//localizamos los vertices que son adyacentes a al que queremos eliminar
-			for(int i = 0; i< floyd.length; i++){
-				if(floyd[i][indexVertice].compareTo(INFINITO) != 0)
+			for(int i = 0; i< mAdyacencia.length; i++){
+				if(mAdyacencia[i][indexVertice].getTiempoEstimadoEnMinutos() != INFINITO)
 					adyacentes += i + ";"; 
 			}
 			
 			arrayAdyacentes =  adyacentes.split(";");
-			
+			Ciudad ciudadAdyacente;
+			//Borro los tramos hacia esta ciudad
 			for(int i = 0; i < arrayAdyacentes.length; i++){
-				((TVertice)getVertices().recuperar(Integer.parseInt(arrayAdyacentes[i])).getElemento()).getAdyacentes().eliminar(etiqueta);
+				ciudadAdyacente = getCiudades().recuperar(Integer.parseInt(arrayAdyacentes[i])).getElemento();
+				
 			}
 			//Eliminamos el vertice de la lista de adyacencias
-			salida = getVertices().eliminar(etiqueta);
+			salida = getCiudades().eliminar(nomCiudad);
 			//Marcamos la regeneracion de la matriz
 			regenMatriz = true;
 		}

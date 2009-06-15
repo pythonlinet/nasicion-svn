@@ -238,7 +238,7 @@ public class TLista <u> {
 	public TNodo <u> anterior(Comparable clave) {
 		TNodo <u> salida = null;
 
-		if (this.primero.getClave() != clave) {
+		if (this.primero.getClave().compareTo(clave) != 0) {
 			TNodo <u> aux = getPrimero();
 			do {
 				if (aux.getSiguiente().getClave().compareTo(clave) == 0)
