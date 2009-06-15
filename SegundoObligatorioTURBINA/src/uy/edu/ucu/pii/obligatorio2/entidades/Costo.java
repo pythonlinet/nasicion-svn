@@ -22,10 +22,15 @@ public class Costo {
 		this.distanciaEnKm = distanciaEnKm;
 	}
 	
+	
+	public Costo() {
+	}
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
 		return tiempoEstimadoEnMinutos + "Mins " + distanciaEnKm + "Km";
 	}
+	
+	
 	
 }

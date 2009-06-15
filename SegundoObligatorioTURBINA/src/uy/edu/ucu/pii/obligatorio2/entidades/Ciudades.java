@@ -1,20 +1,26 @@
 package uy.edu.ucu.pii.obligatorio2.entidades;
 
+import java.util.Comparator;
+
 import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
 import uy.edu.ucu.pii.grupo14.datos.lista.TNodo;
+import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararAvionesPorRendimiento;
+import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararCostoPorDistancia;
+import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararCostoPorTiempo;
 
 public class Ciudades{
 
 	
 
 	private static final Double INFINITO = Double.MAX_VALUE;
+	private static final Costo COSTO_INFINITO = new Costo(Double.MAX_VALUE,Double.MAX_VALUE);
 
 	private TLista<Ciudad> ciudades;
 
 	@SuppressWarnings("unchecked")
 	private Costo[][] mAdyacencia;
 	@SuppressWarnings("unchecked")
-	private Double[][] mFloyd;
+	private Costo[][] mFloyd;
 	
 	/**
 	 * Indica a varios metodos si es necesario regenerar las matrices
@@ -45,9 +51,14 @@ public class Ciudades{
 		this.cantVertices = cantVertices;
 	}
 
-	public Comparable[][] getMFloyd() {
+	public Costo[][] getMFloydPorDistancias() {
 		if(mFloyd == null)
-			implementacionFloyd();
+			implementacionFloyd(new compararCostoPorDistancia());
+		return mFloyd;
+	}
+	public Costo[][] getMFloydPorTiempo() {
+		if(mFloyd == null)
+			implementacionFloyd(new compararCostoPorTiempo());
 		return mFloyd;
 	}
 
@@ -142,8 +153,7 @@ public class Ciudades{
 	@SuppressWarnings("unchecked")
 	public boolean existeCamino(Comparable etiquetaOrigen, Comparable etiquetaDestino) {
 		boolean salida = false;
-		if (regenMatriz)
-			implementacionFloydPorDistancia();
+		implementacionFloyd(new compararCostoPorTiempo());
 		
 		int origen = getPosMatriz(etiquetaOrigen);
 		int destino = getPosMatriz(etiquetaDestino);
@@ -218,18 +228,18 @@ public class Ciudades{
 	 * @return Etiqueta del centro del grafo
 	 */
 	@SuppressWarnings("unchecked")
-	public Object centroDelGrafo() {
+	public Comparable centroDelGrafo(Comparator comparador) {
 
 		int pos = 0;
-		Integer[] excentricidad = excentricidad();
-		Integer aux = excentricidad[0];
+		Costo[] excentricidad = excentricidad(comparador);
+		Costo aux = excentricidad[0];
 
 		// Recorro el array de excentricidad del Grafo buscando la menor de las
 		// excentricidades, que por definicion deberia se el centro del grafo
 		for (int i = 1; i < excentricidad.length; i++) {
 			
 			//Si la excentricidad del nodo actual es menor que la guardada
-			if(aux > excentricidad[i]){
+			if(comparador.compare(aux , excentricidad[i]) > 0){
 				//Guardamos la nueva excentricidad
 				aux = excentricidad[i];
 				// Guardamos la posicion del vertice
@@ -237,7 +247,7 @@ public class Ciudades{
 			}
 		}
 		// Devolvemos la etiqueta del vertice
-		return ciudades.recuperar(pos).getClave();
+		return getCiudades().recuperar(pos).getClave();
 	}
 
 	
@@ -281,26 +291,27 @@ public class Ciudades{
 	 * @return array de Double
 	 */
 	@SuppressWarnings("unchecked")
-	public Double[] excentricidadPorDistancia() {
-		//FIXME
-		if (regenMatriz)
-			implementacionFloyd();
+	public Costo[] excentricidad(Comparator comparador) {
 
-		Double[] salida = new Double[mFloyd.length];
+//		if (regenMatriz)
+			implementacionFloyd(comparador);
+
+		Costo[] salida = new Costo[mFloyd.length];
 
 		boolean continuar = true;
-		Integer aux;
+		Costo aux;
 		for (int i = 0; i < mFloyd.length; i++) {
-			aux = 0;
+			aux = new Costo(0.0,0.0);
 			for (int j = 0; j < mFloyd.length && continuar; j++) {
 				// Si el costo es infinito, seteamos aux como INFINITO,
 				// porque no va a haber un costo mayor a ese
-				if (mFloyd[j][i] == INFINITO) {
-					aux = INFINITO;
+				if (mFloyd[j][i] == COSTO_INFINITO) {
+					aux = COSTO_INFINITO;
 					// Cortamos la ejecucion ya que no va a haber un valor mayor
 					// que INFINITO
 					continuar = false;
-				} else if (mFloyd[j][i] > (aux))
+//				} else if (mFloyd[j][i] > (aux))
+				} else if (comparador.compare(mFloyd[j][i], aux) > 0)
 					aux = mFloyd[j][i];
 			}
 			// Volemos a setear continuar en true para que se ejecute bien el
@@ -411,24 +422,26 @@ public class Ciudades{
 
 	/**
 	 * Implementacion del algoritmo de Floyd
+	 * @param comparador 
 	 * 
 	 * @return Comparable[][] - con los costos minimos de ir desde un Origen
 	 *         hasta un Destino
 	 */
 	@SuppressWarnings("unchecked")
-	private Double[][] implementacionFloydPorDistancia() {
+	private Costo[][] implementacionFloyd(Comparator comparador) {
 		// Si la matriz fue marcada para regeneracion se la genera otra vez
 		//if (regenMatriz)
 			cargarMatrizDeAdyacencia();
 
-		Double[][] salida = new Double[this.mAdyacencia.length][this.mAdyacencia.length];
+			Costo[][] salida = new Costo[this.mAdyacencia.length][this.mAdyacencia.length];
 		for(int i = 0; i < salida.length; i++)
 			for(int j = 0; j < salida.length; j++)
-				salida[i][j] = mAdyacencia[i][j].getDistanciaEnKm();
+				salida[i][j] = mAdyacencia[i][j];
 		
 		
 		
-		Double aIJ, aIK, aKJ, suma;
+		Costo aIJ, aIK, aKJ;
+		Costo suma = new Costo();
 
 
 		for (int k = 0; k < salida.length; k++) {
@@ -440,9 +453,15 @@ public class Ciudades{
 					aKJ = salida[k][j];
 
 					//Es necesario hacer esto porque con solo sumar 1 a infinto este toma un valor negativo acausa del  
-					suma = aIK == INFINITO || aKJ == INFINITO?INFINITO:aIK + aKJ;
+//					suma = aIK == INFINITO || aKJ == INFINITO?INFINITO:aIK + aKJ;
+					if(comparador.compare(aIK, COSTO_INFINITO)  == 0 || comparador.compare(aKJ, COSTO_INFINITO)  == 0 )
+						suma = COSTO_INFINITO;
+					else{
+						suma.setDistanciaEnKm(aIK.getDistanciaEnKm() + aKJ.getDistanciaEnKm());
+						suma.setTiempoEstimadoEnMinutos(aIK.getTiempoEstimadoEnMinutos() + aKJ.getTiempoEstimadoEnMinutos());
+					}
 					
-					if(aIJ > suma)
+					if(comparador.compare(aIJ, suma) > 0)
 						salida[i][j] = suma;
 				}
 			}
