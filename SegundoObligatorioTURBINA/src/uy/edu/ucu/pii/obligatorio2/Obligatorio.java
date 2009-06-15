@@ -1,13 +1,13 @@
 package uy.edu.ucu.pii.obligatorio2;
 
-import java.util.Comparator;
-
 import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
+import uy.edu.ucu.pii.grupo14.datos.lista.TNodo;
 import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararAvionesPorRendimiento;
 import uy.edu.ucu.pii.obligatorio2.entidades.Avion;
 import uy.edu.ucu.pii.obligatorio2.entidades.Ciudad;
 import uy.edu.ucu.pii.obligatorio2.entidades.Ciudades;
 import uy.edu.ucu.pii.obligatorio2.entidades.Costo;
+import uy.edu.ucu.pii.obligatorio2.entidades.Tramo;
 
 /**
  * @author catedraPII
@@ -17,6 +17,9 @@ public class Obligatorio {
 	//Declaro la lista de aviones
 	TLista<Avion> aviones;
 	Ciudades grafo;
+	public Ciudades getCiudades(){
+		return this.grafo;
+	}
 	
 	
 	
@@ -76,8 +79,29 @@ public class Obligatorio {
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean asignarAvionATramo(Comparable nombreAvion, Comparable etiquetaOrigen, Comparable etiquetaDestino){
-		//TODO - Implementar m�todo
-		return false;
+		boolean salida = false;
+		TNodo<Avion> nodoAvion = getAviones().buscarNodo(nombreAvion);
+		//Si existe el avion
+		if(nodoAvion != null){
+			Avion avion = nodoAvion.getElemento();
+			TNodo<Ciudad> nodoCiudadOrigen = grafo.getCiudades().buscarNodo(etiquetaOrigen);
+			//Si existe el origen
+			if(nodoCiudadOrigen != null){
+				Ciudad cOrigen = nodoCiudadOrigen.getElemento();
+				TNodo<Tramo> nodoTramo = cOrigen.getTramos().buscarNodo(etiquetaDestino);
+				//Si existe un tramo entre ambas ciudades
+				if(nodoTramo != null){
+					Tramo tramo = nodoTramo.getElemento();
+					//Asigno el avion al tramo
+					salida = tramo.getAvionesAsignados().insertar(avion.getNombre(), avion);
+					if(salida){
+						salida = avion.getTramosAsignados().insertar(cOrigen.getNombre().toString()+ tramo.getCiudadDestino().getNombre(), tramo);
+					}
+				}
+					
+			}
+		}
+		return salida;
 	}
 	
 	/**
@@ -109,8 +133,48 @@ public class Obligatorio {
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean quitarCiudad(Comparable nomCiudad){
-		//TODO - Implementar m�todo
-		return false;
+//		para cada ciudad, que tenga un tramo a esta
+//		obtener el tramo
+//		con ese tramo
+//			para cada avion asignado a este tramo	
+//				borrar el tramo del avion
+//			borrar el tramo
+//
+//		borrar la ciudad de la lista
+		
+		
+		boolean salida = false;
+		salida = getCiudades().getCiudades().eliminar(nomCiudad);
+		//si existia la ciudad y la pude eliminar, entonces procedo a borrar las referencias (tramos)
+		if(salida){
+			TNodo<Ciudad> aux = getCiudades().getCiudades().getPrimero();
+			Ciudad ciudadAux;
+			TNodo<Tramo> tramoAux;
+			TLista<Avion> avionesAsignados;
+			TNodo<Avion> avionAux;
+			Avion avion;
+			while(aux != null){
+				ciudadAux = aux.getElemento();
+				//Buscamos si hay un tramo desde esta ciudad hacia la que queremos borrar
+				tramoAux = ciudadAux.getTramos().buscarNodo(nomCiudad);
+				//Borrarmos los tramos de los aviones
+				if(tramoAux != null){
+					//Obtengo los aviones asignados
+					avionesAsignados = tramoAux.getElemento().getAvionesAsignados();
+					avionAux = avionesAsignados.getPrimero();
+					//Para cada avion asignado a este tramo, elimino el tramo de la lista del avion				
+					while(avionAux != null){
+						avionAux.getElemento().getTramosAsignados().eliminar(ciudadAux.getNombre().toString()+nomCiudad);
+						avionAux = avionAux.getSiguiente();
+					}
+					
+				}
+				ciudadAux.getTramos().eliminar(nomCiudad);
+				aux = aux.getSiguiente();
+			}
+		}
+		
+		return salida;
 	}
 	
 	/*
@@ -157,18 +221,46 @@ public class Obligatorio {
 	 */
 	@SuppressWarnings("unchecked")
 	public Comparable obtenerCentroOperaciones(){
-		//TODO - Implementar m�todo
-		return null;
+		return getCiudades().centroDelGrafo();
 	}
 	
 	/**
+	 * Retorna una lista con los aviones que van hacia una ciudad
 	 * @param nombreCiudad
 	 * @return Listado de nombres de aviones que pasan por dicha ciudad
 	 */
 	@SuppressWarnings("unchecked")
 	public Comparable[] avionesParaCiudad(String nombreCiudad){
-		//TODO - Implementar m�todo
-		return null;
+//		si existe la ciudad
+//			para cada avion
+//			obtener lista de tramos
+//				para cada tramo
+//					si tiene destino == DESTINO
+//						GUARDO EL NOMBRE DEL AVION
+//		
+		Comparable[] salida = null;
+		TNodo<Ciudad> ciudad = getCiudades().getCiudades().buscarNodo(nombreCiudad);
+		//Si existe la ciudad
+		if(ciudad != null){
+			String aviones = new String();
+			TNodo<Avion> nodoAvion = getAviones().getPrimero();
+			
+			//Para cada avion
+			while(nodoAvion != null){
+				TNodo<Tramo> nodoTramo = nodoAvion.getElemento().getTramosAsignados().getPrimero();
+				
+				//Para cada tramo que tenga el avion
+				while(nodoTramo != null){
+					if(nodoTramo.getElemento().getCiudadDestino().getNombre().compareTo(nombreCiudad) == 0)
+						aviones = aviones + nodoAvion.getElemento().getNombre().toString() + ";";
+					nodoTramo = nodoTramo.getSiguiente();
+				}
+				
+				nodoAvion = nodoAvion.getSiguiente();
+			}
+			salida = aviones.split(";");
+		}
+		return salida;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -177,22 +269,53 @@ public class Obligatorio {
 	}
 
 	public boolean existeTramo(String nombreCiudadOrigen, String nombreCiudadDestino) {
-		//TODO - Implementar m�todo
-		return false;
+		
+		return grafo.existeTramo(nombreCiudadOrigen, nombreCiudadDestino);
 	}
 
+	/**
+	 * Metodo para conocer la distancia entre dos ciudades
+	 * @param ciudadOrigen nombre de la ciudad de origen
+	 * @param ciudadDestino nombre de la ciudad de destino
+	 * @return null - si no existe el tramo que las una
+	 * unNumero - la distancia entre las dos ciudades
+	 */
 	public Object obtenerDistanciaTramo(String ciudadOrigen, String ciudadDestino) {
-		//TODO - Implementar m�todo
-		return null;
+		Double distancia = null;
+		TNodo<Ciudad> nodoOrigen = getCiudades().getCiudades().buscarNodo(ciudadOrigen);
+		//SI existe el origen
+		if(nodoOrigen != null){
+			TNodo<Tramo> nodoTramo = nodoOrigen.getElemento().getTramos().buscarNodo(ciudadDestino);
+			//SI existe un tramo que las una
+			if(nodoTramo != null){
+				distancia = nodoTramo.getElemento().getCostoTramo().getDistanciaEnKm();
+			}
+		}
+		return distancia;
 	}
 
+	/**
+	 * Metodo para conocer el tiempo entre dos ciudades
+	 * @param ciudadOrigen nombre de la ciudad de origen
+	 * @param ciudadDestino nombre de la ciudad de destino
+	 * @return null - si no existe el tramo que las una
+	 * unNumero - tiempo de viaje entre las dos ciudades
+	 */
 	public Object obtenerTiempoEstimadoTramo(String ciudadOrigen, String ciudadDestino) {
-		//TODO - Implementar m�todo
-		return null;
+		Double tiempo = null;
+		TNodo<Ciudad> nodoOrigen = getCiudades().getCiudades().buscarNodo(ciudadOrigen);
+		//SI existe el origen
+		if(nodoOrigen != null){
+			TNodo<Tramo> nodoTramo = nodoOrigen.getElemento().getTramos().buscarNodo(ciudadDestino);
+			//SI existe un tramo que las una
+			if(nodoTramo != null){
+				tiempo = nodoTramo.getElemento().getCostoTramo().getTiempoEstimadoEnMinutos();
+			}
+		}
+		return tiempo;
 	}
 
 	public boolean existeCamino(String ciudadOrigen, String ciudadDestino) {
-		//TODO - Implementar m�todo
-		return false;
+		return getCiudades().existeCamino(ciudadOrigen, ciudadDestino);
 	}
 }

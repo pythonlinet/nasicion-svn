@@ -6,7 +6,7 @@ public class Avion {
 	private Comparable nombre;
 	private Double rendimiento;
 	
-	TLista itinerarios;
+	TLista<Tramo> tramosAsignados;
 
 	
 	public Comparable getNombre() {
@@ -25,18 +25,15 @@ public class Avion {
 		this.rendimiento = rendimiento;
 	}
 
-	public TLista getItinerarios() {
-		return itinerarios;
-	}
-
-	public void setItinerarios(TLista itinerarios) {
-		this.itinerarios = itinerarios;
+	public TLista<Tramo> getTramosAsignados() {
+		return tramosAsignados;
 	}
 
 	public Avion(Comparable nombreAvion, Double rendimiento) {
 		super();
 		this.nombre = nombreAvion;
 		this.rendimiento = rendimiento;
+		this.tramosAsignados = new TLista<Tramo>();
 	}
 	
 	
