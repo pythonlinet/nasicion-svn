@@ -1,23 +1,15 @@
-package uy.edu.ucu.pii.grupo14.datos.grafo;
-
+package uy.edu.ucu.pii.obligatorio2.entidades;
 
 import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
 import uy.edu.ucu.pii.grupo14.datos.lista.TNodo;
 
-/**
- * <b>Clase para la implementacion de Grafos. Diseniada y Desarrollada por el Grupo14 para la materia Porgarmacion II de la Universidad Catolica del Uruguay Anio 2009</b>
- * 
- * @author <i>Grupo14</i>
- * @version <i>1.5</i>
- * @see uy.edu.ucu.pii.grupo14.datos.grafo.TVertice
- * @see uy.edu.ucu.pii.grupo14.datos.grafo.TArista
- */
-public class TGrafo{
-	@SuppressWarnings("unchecked")
-	private static final Integer INFINITO = Integer.MAX_VALUE;
-	private static final Object NULO = null;
+public class Ciudades{
 
-	private TLista vertices;
+	
+
+	private static final Object INFINITO = Double.MAX_VALUE;
+
+	private TLista<Ciudad> ciudades;
 
 	@SuppressWarnings("unchecked")
 	private Integer[][] mAdyacencia;
@@ -37,12 +29,12 @@ public class TGrafo{
 	
 	
 	
-	private TLista getVertices() {
-		return vertices;
+	public TLista<Ciudad> getCiudades() {
+		return ciudades;
 	}
 
-	private void setVertices(TLista vertices) {
-		this.vertices = vertices;
+	private void setCiudades(TLista<Ciudad> vertices) {
+		this.ciudades = vertices;
 	}
 
 	public int getCantVertices() {
@@ -59,26 +51,25 @@ public class TGrafo{
 		return mFloyd;
 	}
 
-	public TGrafo() {
-		this.vertices = new TLista();
+	public Ciudades() {
+		this.ciudades = new TLista<Ciudad>();
 		this.cantVertices = 0;
 		this.regenMatriz = true;
-
 	}
 
 	/**
-	 * Metodo para insertar un nuevo vertice en el grafo
+	 * Metodo para insertar una nueva ciudad en el grafo de ciudades
 	 * 
 	 * @param etiqueta
 	 * @return true - si el vertice se inserto correctamente; false - si el
 	 *         vertice ya existe
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean insertarVertice(Comparable etiqueta) {
+	public boolean insertarCiudad(Comparable nombre, Comparable pais) {
 		// El metodo insertar de TLista no permite insercion de datos
 		// duplicados, por lo tanto no es necesario verificar que 
 		// el elemento no exista
-		boolean salida = vertices.insertar(etiqueta, new TVertice(etiqueta));
+		boolean salida = ciudades.insertar(nombre, new Ciudad(nombre, pais));
 		
 		// Si se realiza la insercion aumentamos la cantidad de vertices en el grafo
 		setCantVertices(salida ? getCantVertices() + 1 : getCantVertices());
@@ -94,11 +85,11 @@ public class TGrafo{
 	}
 
 	/**
-	 * Metodo para agregar una adyacencia
+	 * Metodo para agregar un tramo a una ciudad
 	 * 
-	 * @param origen
+	 * @param nomCiudadOrigen
 	 *            vertice de origen
-	 * @param destino
+	 * @param nomCiudadDestino
 	 *            vertice de destino
 	 * @param costo
 	 *            costo desde el origen hasta el destino
@@ -106,20 +97,21 @@ public class TGrafo{
 	 *         una adyacencia o si uno de los
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean insertarAdyacencia(Comparable origen, Comparable destino,
-			Integer costo) {
+	public boolean agregarTramo(Comparable nomCiudadOrigen, Comparable nomCiudadDestino, Costo costo) {
 		boolean salida = false;
 
-		TNodo nodoOrigen = vertices.buscarNodo(origen);
+		Ciudad ciudadOrigen = ciudades.buscarNodo(nomCiudadOrigen).getElemento();
 		// Si el nodo de origen existe
-		if (nodoOrigen != null) {
-			TNodo nodoDestino = vertices.buscarNodo(destino);
+		if (ciudadOrigen != null) {
+			Ciudad ciudadDestino = ciudades.buscarNodo(nomCiudadDestino).getElemento();
 			// Si el nodo destino existe
-			if (nodoDestino != null) {
+			if (ciudadDestino != null) {
 				// Demasiados casteos?? :P
 				// No es necesario hacer un control de si ya existe la
 				// adyacencia porque el insertar de la lista ya lo hace
-				salida = ((TVertice) nodoOrigen.getElemento()).ingresarAdyacencia((TVertice) nodoDestino.getElemento(), costo);
+		
+				//salida = ((TVertice) nodoOrigen.getElemento()).ingresarAdyacencia((TVertice) nodoDestino.getElemento(), costo);
+				salida = ciudadOrigen.agregarTramo(ciudadDestino,costo);
 				// Si se realizo la insercion de adyacencia marcamos que la matriz
 				// tiene que ser regenerada la proxima vez que se la quiera accesar
 				if (salida) {
@@ -170,10 +162,10 @@ public class TGrafo{
 		
 		Comparable[] salida = null;
 		//Buscamos que exista el ORIGEN
-		TNodo existeO = vertices.buscarNodo(etiquetaOrigen);
+		TNodo existeO = ciudades.buscarNodo(etiquetaOrigen);
 		if(existeO != null && existeCamino(etiquetaOrigen, etiquetaDestino)){
 			//Buscamos que exista el DESTINO
-			TNodo existeD = vertices.buscarNodo(etiquetaDestino);
+			TNodo existeD = ciudades.buscarNodo(etiquetaDestino);
 			if(existeD != null){
 				//Obtenemos la lista de predecesores
 				Comparable[] arrayPredecesores = implementacionDijkstra(etiquetaOrigen, true);
@@ -193,7 +185,7 @@ public class TGrafo{
 					
 					TVertice aux;
 					while(arrayPredecesores[posicionDestino].compareTo(etiquetaOrigen) != 0){
-						aux = (TVertice) vertices.buscarNodo(arrayPredecesores[posicionDestino]).getElemento();
+						aux = (TVertice) ciudades.buscarNodo(arrayPredecesores[posicionDestino]).getElemento();
 						camino = arrayPredecesores[posicionDestino]+"," + camino;
 						
 						//posicionDestino = ((TVertice) vertices.buscarNodo(arrayPredecesores[posicionDestino]).getElemento()).getPosMatriz();
@@ -238,7 +230,7 @@ public class TGrafo{
 			}
 		}
 		// Devolvemos la etiqueta del vertice
-		return vertices.recuperar(pos).getClave();
+		return ciudades.recuperar(pos).getClave();
 	}
 
 	
@@ -285,7 +277,7 @@ public class TGrafo{
 	 * 			false - si el vertice no existe en el grafo
 	 */
 	public boolean existeVertice(String etiqueta) {
-		return vertices.buscarNodo(etiqueta) == null ? false : true;
+		return ciudades.buscarNodo(etiqueta) == null ? false : true;
 	}
 
 	/**
@@ -301,7 +293,7 @@ public class TGrafo{
 	public boolean existeAdyacencia(String etiquetaOrigen,
 			String etiquetaDestino) {
 		boolean salida = false;
-		TNodo origen = vertices.buscarNodo(etiquetaOrigen);
+		TNodo origen = ciudades.buscarNodo(etiquetaOrigen);
 		// Si existe el origen
 		if (origen != null) {
 			salida = ((TVertice) origen.getElemento())
@@ -314,7 +306,7 @@ public class TGrafo{
 	 * Inicializa la matriz de adyacencia
 	 */
 	private void inicializarMatriz() {
-		int tamanio = vertices.getTamanio();
+		int tamanio = ciudades.getTamanio();
 		this.mAdyacencia = new Integer[tamanio][tamanio];
 		for(int i = 0; i < tamanio; i++)
 			for(int j = 0; j < tamanio; j++)
@@ -329,13 +321,13 @@ public class TGrafo{
 	 */
 	private void cargarMatrizDeAdyacencia() {
 		inicializarMatriz();
-		int cantVertices = vertices.getTamanio();
+		int cantVertices = ciudades.getTamanio();
 		TVertice vertice;
 		// Usado para guardar las aristas
 		TArista adyacencia;
 		int cantAdyacencias;
 		for (int i = 0; i < cantVertices; i++) {
-			vertice = (TVertice) vertices.recuperar(i).getElemento();
+			vertice = (TVertice) ciudades.recuperar(i).getElemento();
 			// Cantida de adyacencias del vertice
 			cantAdyacencias = vertice.getAdyacentes().getTamanio();
 
@@ -368,7 +360,7 @@ public class TGrafo{
 		
 		// Buscamos el vertice
 		TVertice vertice = null;
-		TNodo nodo = vertices.buscarNodo(etiqueta);
+		TNodo nodo = ciudades.buscarNodo(etiqueta);
 		if(nodo != null)
 			vertice = (TVertice) nodo.getElemento(); 
 		// Si el vertice existe guardamos la posici�n que tiene en la matriz
@@ -431,7 +423,7 @@ public class TGrafo{
 	 */
 	public Comparable[] implementacionDijkstra(Comparable origen, boolean retornarCaminos) {
 		Comparable[] d = null;
-		TNodo existeOrigen = vertices.buscarNodo(origen);
+		TNodo existeOrigen = ciudades.buscarNodo(origen);
 		// Compruebo que exista el origen
 		if (existeOrigen != null) {
 			TVertice vOrigen = (TVertice) existeOrigen.getElemento();
@@ -451,7 +443,7 @@ public class TGrafo{
 
 			
 			//Inicializamos el array de predecesores
-			Comparable[] p = new Comparable[vertices.getTamanio()];
+			Comparable[] p = new Comparable[ciudades.getTamanio()];
 			for(int i = 0; i < p.length; i++)
 				p[i] = origen;
 			p[x] = origen;
@@ -469,8 +461,8 @@ public class TGrafo{
 			TLista conjuntoV = new TLista();
 
 			// Cargo la lista de vertices v
-			for (Comparable etiquetaV : vertices.mostrar())
-				conjuntoV.insertar(etiquetaV, vertices.buscarNodo(etiquetaV).getElemento());
+			for (Comparable etiquetaV : ciudades.mostrar())
+				conjuntoV.insertar(etiquetaV, ciudades.buscarNodo(etiquetaV).getElemento());
 
 			// Quito el vertice origen
 			conjuntoV.eliminar(origen);
@@ -564,13 +556,13 @@ public class TGrafo{
 	 * @return true - si se elimino la adyacencia
 	 * false - si la adyacencia no existia
 	 */
-	public boolean eliminarAdyacencia(Comparable origen, Comparable destino){
+	public boolean quitarTramo(Comparable origen, Comparable destino){
 		boolean salida = false;
 		
-		TVertice vOrigen = (TVertice)getVertices().buscarNodo(origen).getElemento();
+		Ciudad ciudadOrigen = getCiudades().buscarNodo(origen).getElemento();
 	
-		if(vOrigen != null){
-			salida = vOrigen.getAdyacentes().eliminar(destino);
+		if(ciudadOrigen != null){
+			salida = ciudadOrigen.getTramos().eliminar(destino);
 			//Marco la matriz para que sea regenerada la proxima vez que se la quiera accesar
 		}
 		this.regenMatriz = salida;
@@ -611,4 +603,6 @@ public class TGrafo{
 		}
 		return salida;
 	}
+	
+	
 }

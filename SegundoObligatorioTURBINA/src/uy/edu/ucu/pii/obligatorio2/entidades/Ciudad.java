@@ -1,26 +1,41 @@
 package uy.edu.ucu.pii.obligatorio2.entidades;
 
-public class Ciudad {
-	private String nombre;
-	private String pais;
+import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
 
-	public String getNombre() {
+public class Ciudad{
+	private Comparable nombre;
+	private Comparable pais;
+
+	TLista<Tramo> tramos;
+	
+	public Comparable getNombre() {
 		return nombre;
 	}
-	public void setNombre(String nombre) {
+	public void setNombre(Comparable nombre) {
 		this.nombre = nombre;
 	}
-	public String getPais() {
+	public Comparable getPais() {
 		return pais;
 	}
-	public void setPais(String pais) {
+	public void setPais(Comparable pais) {
 		this.pais = pais;
 	}
 	
-	public Ciudad(String nombre, String pais) {
-		super();
+	
+	public TLista<Tramo> getTramos() {
+		return tramos;
+	}
+	public void setTramos(TLista<Tramo> tramos) {
+		this.tramos = tramos;
+	}
+	public Ciudad(Comparable nombre, Comparable pais) {
 		this.nombre = nombre;
 		this.pais = pais;
+		tramos = new TLista<Tramo>();
+	}
+	public boolean agregarTramo(Ciudad destino,	Costo costo) {
+		// TODO Auto-generated method stub
+		return tramos.insertar(destino.getNombre(), new Tramo(destino,costo));
 	}
 	
 	

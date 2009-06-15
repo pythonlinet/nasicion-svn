@@ -5,6 +5,9 @@ import java.util.Comparator;
 import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
 import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararAvionesPorRendimiento;
 import uy.edu.ucu.pii.obligatorio2.entidades.Avion;
+import uy.edu.ucu.pii.obligatorio2.entidades.Ciudad;
+import uy.edu.ucu.pii.obligatorio2.entidades.Ciudades;
+import uy.edu.ucu.pii.obligatorio2.entidades.Costo;
 
 /**
  * @author catedraPII
@@ -13,7 +16,7 @@ import uy.edu.ucu.pii.obligatorio2.entidades.Avion;
 public class Obligatorio {
 	//Declaro la lista de aviones
 	TLista<Avion> aviones;
-	
+	Ciudades grafo;
 	
 	
 	
@@ -23,7 +26,8 @@ public class Obligatorio {
 
 
 	public Obligatorio() {
-		aviones = new TLista();
+		aviones = new TLista<Avion>();
+		grafo = new Ciudades();
 	}
 
 	/*
@@ -37,7 +41,6 @@ public class Obligatorio {
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean agregarAvion(Comparable nombreAvion, Double rendimiento){
-		System.out.println("Se ingresa el avion  " + nombreAvion);
 		return aviones.insertar(nombreAvion,new Avion(nombreAvion,rendimiento));
 	}
 	
@@ -49,8 +52,7 @@ public class Obligatorio {
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean agregarCiudad(Comparable nombre, Comparable nombrePais){
-		//TODO - Implementar m�todo
-		return false;
+		return grafo.insertarCiudad(nombre, nombrePais);
 	}
 	
 	/**
@@ -63,8 +65,7 @@ public class Obligatorio {
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean agregarTramo(Comparable nomCiudadOrigen, Comparable nomCiudadDestino, Double distanciaEnKm, Double tiempoEstimadoEnMinutos){
-		//TODO - Implementar m�todo
-		return false;
+		return grafo.agregarTramo(nomCiudadOrigen, nomCiudadDestino, new Costo(tiempoEstimadoEnMinutos,distanciaEnKm));
 	}
 	
 	/**
@@ -87,8 +88,7 @@ public class Obligatorio {
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean quitarTramo(Comparable nomCiudadOrigen, Comparable nomCiudadDestino){
-		//TODO - Implementar m�todo
-		return false;		
+		return grafo.quitarTramo(nomCiudadOrigen, nomCiudadDestino);		
 	}
 	
 	/**
