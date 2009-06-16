@@ -89,7 +89,6 @@ public class TestObligatorio  extends TestCase{
 		assertFalse(obliga.existeTramo(nombreCiudadOrigen,nombreCiudadDestino));
 		assertTrue("Debe ser posible ingresar un tramo inexistente",obliga.agregarTramo(nombreCiudadOrigen, nombreCiudadDestino, distancia, tiempoEstimadoVuelo));
 		assertFalse("No debe ser posible ingresar un tramo existente",obliga.agregarTramo(nombreCiudadOrigen, nombreCiudadDestino, distancia, tiempoEstimadoVuelo));
-//		System.out.println("ExisteTramo " + nombreCiudadOrigen + " " + nombreCiudadDestino);
 		assertTrue(obliga.existeTramo(nombreCiudadOrigen,nombreCiudadDestino));
 	}
 	
@@ -118,7 +117,7 @@ public class TestObligatorio  extends TestCase{
 		
 		assertFalse("Es imposible asignar aviones a conexiones inexistentes",obliga.asignarAvionATramo(nombreAvion, nombreCiudadOrigen, nombreCiudadFicta));
 		assertFalse("Es imposible asignar aviones a conexiones inexistentes",obliga.asignarAvionATramo(nombreAvion, nombreCiudadFicta, nombreCiudadDestino));
-
+		
 		assertTrue("Es necesario poder asignar aviones válidos a conexiones válidas",obliga.asignarAvionATramo(nombreAvion, nombreCiudadOrigen, nombreCiudadDestino));
 		assertFalse("Es imposible volver a asignar un mismo avión a una conexión",obliga.asignarAvionATramo(nombreAvion, nombreCiudadOrigen, nombreCiudadDestino));
 		
@@ -167,8 +166,7 @@ public class TestObligatorio  extends TestCase{
 		//Estoy seguro que existe un camino de ida, y de vuelta
 		assertTrue(obliga.existeCamino(ciudadOrigen, ciudadDestino));
 		assertTrue(obliga.existeCamino(ciudadDestino, ciudadOrigen));
-		
-		System.out.println(ciudadOrigen);
+
 		assertTrue(obliga.quitarCiudad(ciudadOrigen));
 		assertFalse("Acabo de eliminar uno de los vértices, el camino dejó de existir",obliga.existeCamino(ciudadOrigen, ciudadDestino));
 
