@@ -214,8 +214,8 @@ public class Obligatorio {
 	 */
 	@SuppressWarnings("unchecked")
 	public Comparable[] mejorItinerarioParaCliente(Comparable nomCiudadOrigen, Comparable nomCiudadDestino){
-		//TODO - Implementar m�todo
-		return null;
+		
+		return getCiudades().mejorCamino(nomCiudadOrigen, nomCiudadDestino);
 	}
 	
 	/**
