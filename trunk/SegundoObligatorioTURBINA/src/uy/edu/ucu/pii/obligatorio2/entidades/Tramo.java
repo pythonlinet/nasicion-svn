@@ -38,6 +38,30 @@ public class Tramo{
 		this.aviones = new TLista<Avion>();
 	}
 	
+	public Tramo() {
+		super();
+		this.costo = new Costo();
+		this.aviones = new TLista<Avion>();
+	}
 	
+	/**
+	 * Constructor que genera un nuevo tramo apartir de otro, se utiliza principalmente para generar las nuevas matrices y que no haya problemas de referncia.
+	 * @param tramo tramo que se quiere duplicar
+	 */
+	public Tramo(Tramo tramo) {
+		this.costo = new Costo(); 
+		this.costo.setDistanciaEnKm(tramo.getCostoTramo().getDistanciaEnKm().doubleValue());
+		this.costo.setTiempoEstimadoEnMinutos(tramo.getCostoTramo().getTiempoEstimadoEnMinutos().doubleValue());
+	}
+
+	
+	public boolean agregarAvion(Avion avion){
+		return aviones.insertarOrdenado(avion.getNombre(),avion);
+	}
+	
+	@Override
+	public String toString() {
+		return this.getCostoTramo().getTiempoEstimadoEnMinutos()+"Mins"  + " " + this.getCostoTramo().getDistanciaEnKm()+"Km";
+	}
 	
 }

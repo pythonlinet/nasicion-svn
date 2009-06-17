@@ -31,6 +31,13 @@ public class Costo {
 		return tiempoEstimadoEnMinutos + "Mins " + distanciaEnKm + "Km";
 	}
 	
-	
+	@Override
+	public boolean equals(Object arg0) {
+		boolean salida = false;
+		if(arg0 instanceof Costo){
+			salida = ((Costo)arg0).getDistanciaEnKm().equals(this.distanciaEnKm) && ((Costo)arg0).getTiempoEstimadoEnMinutos().equals(this.tiempoEstimadoEnMinutos);
+		}
+		return salida;
+	}
 	
 }

@@ -134,6 +134,58 @@ public class TLista <u> {
 	}
 
 	/**
+	 * Inserta un nuevo elemento/nodo de forma ordenada en la lista, para esto
+	 * recorre la lista hasta encontrar una posicion donde el siguiente sea
+	 * mayor que al nodo a insertar y se menor al anterior.
+	 *  
+	 * @param clave clave del elemnto
+	 * @param elemento objeto a insertar
+	 * @return true - si se inserto un elemento; false - si no pudo realizarse la inserci�n.
+	 */
+	@SuppressWarnings("unchecked")
+	public boolean insertarOrdenado(Comparable clave, u elemento, Comparator comparador) {
+		boolean salida = false;
+
+		if (!esVacia()) {
+			// Verificamos que no exista ya un elemento con esa clave
+			TNodo <u> aux = buscarNodo(clave);
+			if (aux == null) {
+				aux = new TNodo <u>(clave, elemento);
+				TNodo <u> puntero = getPrimero();
+
+				do {
+					// Comprobamos si aux es menor que el puntero
+					if (comparador.compare(puntero.getElemento(), elemento) > 0) {
+						if (puntero.equals(getPrimero())) {
+							insertarPrimero(aux.getClave(), (u) aux.getElemento());
+							setTamanio(getTamanio()-1);
+							salida = true;
+						}
+					} else {
+						if (puntero.getSiguiente() == null) {
+							puntero.setSiguiente(aux);
+							salida = true;
+						}else if (comparador.compare(puntero.getSiguiente().getElemento(), elemento) > 0) {
+							aux.setSiguiente(puntero.getSiguiente());
+							puntero.setSiguiente(aux);
+							salida = true;
+						}
+					}
+					puntero = puntero.getSiguiente();
+				} while (!salida);
+
+			}
+		} else {
+			setPrimero(new TNodo <u>(clave, elemento));
+			salida = true;
+		}
+		// Si se realizo una insercion incrementamos el tamaño de la lista
+		setTamanio(getTamanio() +(salida ? 1 : 0));
+		return salida;
+	}
+
+	
+	/**
 	 * Inserta un nuevo elemento/nodo al principio de la lista
 	 *  
 	 * @param clave clave del nuevo nodo

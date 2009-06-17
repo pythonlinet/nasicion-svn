@@ -4,6 +4,7 @@ import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
 import uy.edu.ucu.pii.grupo14.datos.lista.TNodo;
 import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararAvionesPorRendimiento;
 import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararCostoPorDistancia;
+import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararCostoPorRendimiento;
 import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararCostoPorTiempo;
 import uy.edu.ucu.pii.obligatorio2.entidades.Avion;
 import uy.edu.ucu.pii.obligatorio2.entidades.Ciudad;
@@ -95,7 +96,7 @@ public class Obligatorio {
 				if(nodoTramo != null){
 					Tramo tramo = nodoTramo.getElemento();
 					//Asigno el avion al tramo
-					salida = tramo.getAvionesAsignados().insertar(avion.getNombre(), avion);
+					salida = tramo.getAvionesAsignados().insertarOrdenado(avion.getNombre(), avion,new compararAvionesPorRendimiento());
 					if(salida){
 						salida = avion.getTramosAsignados().insertar(cOrigen.getNombre().toString()+ tramo.getCiudadDestino().getNombre(), tramo);
 					}
@@ -203,8 +204,7 @@ public class Obligatorio {
 	 */
 	@SuppressWarnings("unchecked")
 	public Comparable[] mejorItinerarioParaEmpresa(Comparable nomCiudadOrigen, Comparable nomCiudadDestino){
-		//TODO - Implementar m�todo
-		return null;
+		return getCiudades().mejorCamino(nomCiudadOrigen, nomCiudadDestino, new compararCostoPorRendimiento());
 	}
 	
 	/**
@@ -215,7 +215,7 @@ public class Obligatorio {
 	@SuppressWarnings("unchecked")
 	public Comparable[] mejorItinerarioParaCliente(Comparable nomCiudadOrigen, Comparable nomCiudadDestino){
 		
-		return getCiudades().mejorCamino(nomCiudadOrigen, nomCiudadDestino);
+		return getCiudades().mejorCamino(nomCiudadOrigen, nomCiudadDestino, new compararCostoPorTiempo());
 	}
 	
 	/**
@@ -223,7 +223,7 @@ public class Obligatorio {
 	 */
 	@SuppressWarnings("unchecked")
 	public Comparable obtenerCentroOperaciones(){
-		return getCiudades().centroDelGrafo(new compararCostoPorTiempo());
+		return getCiudades().centroDelGrafo(new compararCostoPorDistancia());
 	}
 	
 	/**
