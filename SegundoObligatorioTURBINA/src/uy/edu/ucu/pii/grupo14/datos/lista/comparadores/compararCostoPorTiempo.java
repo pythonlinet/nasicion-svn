@@ -2,13 +2,13 @@ package uy.edu.ucu.pii.grupo14.datos.lista.comparadores;
 
 import java.util.Comparator;
 
-import uy.edu.ucu.pii.obligatorio2.entidades.Costo;
+import uy.edu.ucu.pii.obligatorio2.entidades.Tramo;
 
-public class compararCostoPorTiempo implements Comparator<Costo> {
+public class compararCostoPorTiempo implements Comparator<Tramo> {
 
 	@Override
-	public int compare(Costo costo1, Costo costo2) {
-		return costo1.getTiempoEstimadoEnMinutos().compareTo(costo2.getTiempoEstimadoEnMinutos());
+	public int compare(Tramo tramo1, Tramo tramo2) {
+		return tramo1.getCostoTramo().getTiempoEstimadoEnMinutos().compareTo(tramo2.getCostoTramo().getTiempoEstimadoEnMinutos());
 	}
 
 }

@@ -389,6 +389,7 @@ public class TGrafo{
 		//if (regenMatriz)
 			cargarMatrizDeAdyacencia();
 
+		
 		Integer[][] salida = new Integer[this.mAdyacencia.length][this.mAdyacencia.length];
 		for(int i = 0; i < salida.length; i++)
 			for(int j = 0; j < salida.length; j++)

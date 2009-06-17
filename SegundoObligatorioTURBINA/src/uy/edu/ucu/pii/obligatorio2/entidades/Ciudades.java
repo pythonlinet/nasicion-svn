@@ -14,13 +14,14 @@ public class Ciudades{
 
 	private static final Double INFINITO = Double.MAX_VALUE;
 	private static final Costo COSTO_INFINITO = new Costo(Double.MAX_VALUE,Double.MAX_VALUE);
-
+	private static final Costo COSTO_CERO = new Costo(0.0,0.0);
+	
 	private TLista<Ciudad> ciudades;
 
 	@SuppressWarnings("unchecked")
-	private Costo[][] mAdyacencia;
+	private Tramo[][] mAdyacencia;
 	@SuppressWarnings("unchecked")
-	private Costo[][] mFloyd;
+	private Tramo[][] mFloyd;
 	
 	/**
 	 * Indica a varios metodos si es necesario regenerar las matrices
@@ -51,18 +52,18 @@ public class Ciudades{
 		this.cantVertices = cantVertices;
 	}
 
-	public Costo[][] getMFloydPorDistancias() {
+	public Tramo[][] getMFloydPorDistancias() {
 		if(mFloyd == null)
 			implementacionFloyd(new compararCostoPorDistancia());
 		return mFloyd;
 	}
-	public Costo[][] getMFloydPorTiempo() {
+	public Tramo[][] getMFloydPorTiempo() {
 		if(mFloyd == null)
 			implementacionFloyd(new compararCostoPorTiempo());
 		return mFloyd;
 	}
 
-	public Costo[][] getMAdyacencia(){
+	public Tramo[][] getMAdyacencia(){
 		if(this.mAdyacencia == null || regenMatriz)
 			cargarMatrizDeAdyacencia();
 		return this.mAdyacencia;
@@ -152,15 +153,16 @@ public class Ciudades{
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean existeCamino(Comparable etiquetaOrigen, Comparable etiquetaDestino) {
+		
 		boolean salida = false;
 		implementacionFloyd(new compararCostoPorTiempo());
-		
+	
 		int origen = getPosMatriz(etiquetaOrigen);
 		int destino = getPosMatriz(etiquetaDestino);
 		//System.err.println(etiquetaOrigen +" "+etiquetaDestino+" " +!mFloyd[origen][destino].equals(INFINITO));
 		
 		if(origen != -1 && destino != -1)
-			salida = mFloyd[origen][destino].equals(INFINITO)? false : true; 
+			salida = mFloyd[origen][destino].getCostoTramo().equals(COSTO_INFINITO)? false : true; 
 		
 
 		return salida; 
@@ -175,17 +177,19 @@ public class Ciudades{
 	 * 			Comparable[] - lista ordenada de los nodos que forman el camino
 	 */
 	@SuppressWarnings("unchecked")
-	public Comparable[] mejorCamino(Comparable etiquetaOrigen,	Comparable etiquetaDestino) {
+	public Comparable[] mejorCamino(Comparable etiquetaOrigen,	Comparable etiquetaDestino, Comparator comparador) {
 		
+		//Lista de ciudades
 		Comparable[] salida = null;
 		//Buscamos que exista el ORIGEN
-		TNodo existeO = ciudades.buscarNodo(etiquetaOrigen);
+		TNodo existeO = getCiudades().buscarNodo(etiquetaOrigen);
+		
 		if(existeO != null && existeCamino(etiquetaOrigen, etiquetaDestino)){
 			//Buscamos que exista el DESTINO
-			TNodo existeD = ciudades.buscarNodo(etiquetaDestino);
+			TNodo existeD = getCiudades().buscarNodo(etiquetaDestino);
 			if(existeD != null){
 				//Obtenemos la lista de predecesores
-				Comparable[] arrayPredecesores = implementacionDijkstra(etiquetaOrigen, true);
+				Comparable[] arrayPredecesores = implementacionDijkstra(etiquetaOrigen, true, comparador);
 				
 				//Obtenemos la posicion que tiene el destino dentro del array
 				int posicionDestino = getCiudades().indexOf(existeD.getClave());
@@ -226,28 +230,38 @@ public class Ciudades{
 	 * Metodo que retorna el vertice que sea el centro del grafo
 	 * 
 	 * @return Etiqueta del centro del grafo
+	 * null - si el grafo no tiene centro, es decir, que es conexo
 	 */
 	@SuppressWarnings("unchecked")
 	public Comparable centroDelGrafo(Comparator comparador) {
-
+		Comparable salida = null;
 		int pos = 0;
-		Costo[] excentricidad = excentricidad(comparador);
-		Costo aux = excentricidad[0];
-
-		// Recorro el array de excentricidad del Grafo buscando la menor de las
-		// excentricidades, que por definicion deberia se el centro del grafo
-		for (int i = 1; i < excentricidad.length; i++) {
-			
-			//Si la excentricidad del nodo actual es menor que la guardada
-			if(comparador.compare(aux , excentricidad[i]) > 0){
-				//Guardamos la nueva excentricidad
-				aux = excentricidad[i];
-				// Guardamos la posicion del vertice
-				pos = i;
+		Tramo[] excentricidad = excentricidad(comparador);
+		Tramo aux = excentricidad[0];
+		
+		boolean conexo = false; 
+		//Nos cercioramos que el grafo sea conexo
+		for (int i = 0; i < excentricidad.length && !conexo; i++) {
+			if(!excentricidad[i].getCostoTramo().equals(COSTO_INFINITO))
+				conexo = true;
+		}
+		if(conexo){
+			// Recorro el array de excentricidad del Grafo buscando la menor de las
+			// excentricidades, que por definicion deberia se el centro del grafo
+			for (int i = 1; i < excentricidad.length; i++) {
+				
+				//Si la excentricidad del nodo actual es menor que la guardada
+				if(comparador.compare(aux , excentricidad[i]) > 0){
+					//Guardamos la nueva excentricidad
+					aux = excentricidad[i];
+					// Guardamos la posicion del vertice
+					pos = i;
+				}
 			}
+			salida = getCiudades().recuperar(pos).getClave();
 		}
 		// Devolvemos la etiqueta del vertice
-		return getCiudades().recuperar(pos).getClave();
+		return salida;
 	}
 
 	
@@ -291,33 +305,33 @@ public class Ciudades{
 	 * @return array de Double
 	 */
 	@SuppressWarnings("unchecked")
-	public Costo[] excentricidad(Comparator comparador) {
+	public Tramo[] excentricidad(Comparator comparador) {
 
-//		if (regenMatriz)
-			implementacionFloyd(comparador);
+		implementacionFloyd(comparador);
 
-		Costo[] salida = new Costo[mFloyd.length];
+		Tramo[] salida = new Tramo[mFloyd.length];
 
 		boolean continuar = true;
-		Costo aux;
+		Tramo aux;
 		for (int i = 0; i < mFloyd.length; i++) {
-			aux = new Costo(0.0,0.0);
+			aux = new Tramo(null, new Costo(COSTO_CERO.getTiempoEstimadoEnMinutos().doubleValue(),COSTO_CERO.getDistanciaEnKm().doubleValue()));
 			for (int j = 0; j < mFloyd.length && continuar; j++) {
 				// Si el costo es infinito, seteamos aux como INFINITO,
 				// porque no va a haber un costo mayor a ese
-				if (mFloyd[j][i] == COSTO_INFINITO) {
-					aux = COSTO_INFINITO;
+				if (mFloyd[j][i].getCostoTramo().equals(COSTO_INFINITO)) {
+					aux.setCostoTramo(COSTO_INFINITO);
 					// Cortamos la ejecucion ya que no va a haber un valor mayor
 					// que INFINITO
 					continuar = false;
-//				} else if (mFloyd[j][i] > (aux))
 				} else if (comparador.compare(mFloyd[j][i], aux) > 0)
-					aux = mFloyd[j][i];
+					aux = new Tramo(mFloyd[j][i]);
 			}
 			// Volemos a setear continuar en true para que se ejecute bien el
 			continuar = true;
 			salida[i] = aux;
 		}
+		
+		
 		return salida;
 	}
 
@@ -357,11 +371,20 @@ public class Ciudades{
 	 * Inicializa la matriz de adyacencia
 	 */
 	private void inicializarMatriz() {
-		int tamanio = ciudades.getTamanio();
-		this.mAdyacencia = new Costo[tamanio][tamanio];
+		int tamanio = getCiudades().getTamanio();
+		this.mAdyacencia = new Tramo[tamanio][tamanio];
 		for(int i = 0; i < tamanio; i++)
-			for(int j = 0; j < tamanio; j++)
-				this.mAdyacencia[i][j] = new Costo(INFINITO, INFINITO); 
+			for(int j = 0; j < tamanio; j++){
+				if(j != i){
+					this.mAdyacencia[i][j] = new Tramo();
+					this.mAdyacencia[i][j].setCostoTramo(COSTO_INFINITO);
+				}else{
+					this.mAdyacencia[i][j] = new Tramo();
+					this.mAdyacencia[i][j].setCostoTramo(COSTO_CERO);
+				}
+			}
+
+		
 	}
 
 	/**
@@ -373,27 +396,49 @@ public class Ciudades{
 	private void cargarMatrizDeAdyacencia() {
 		inicializarMatriz();
 		int cantVertices = ciudades.getTamanio();
-		Ciudad ciudad;
+		
 		// Usado para guardar las aristas
-		Tramo tramo;
 		int cantDestinos;
-		for (int i = 0; i < cantVertices; i++) {
-			ciudad = getCiudades().recuperar(i).getElemento();
-			// Cantida de destinos desde la ciudad
-			cantDestinos = ciudad.getTramos().getTamanio();
-
-			// Cuando sea el costo de un vertice x hacia el mismo, seteamos el
-			// costo en 0
-			mAdyacencia[i][i] = new Costo(0.0,0.0);
-
-			// Recorremos las adyacencias del vertice
-			for (int j = 0; j < cantDestinos; j++) {
-
-				// Guardo la referencia a la arista
-				tramo = ciudad.getTramos().recuperar(j).getElemento();
-				mAdyacencia[i][getCiudades().indexOf(tramo.getCiudadDestino().getNombre())] = tramo.getCostoTramo();
+		Ciudad ciudad;
+		Tramo tramo;
+		TNodo<Ciudad> nodoCiudad = getCiudades().getPrimero();
+		TNodo<Tramo> nodoTramo;
+		int posX, posY;
+		
+		while(nodoCiudad != null){
+			ciudad = nodoCiudad.getElemento();
+			//Posicion del origen en la matriz
+			posX = getCiudades().indexOf(ciudad.getNombre());
+			nodoTramo = ciudad.getTramos().getPrimero();
+			while(nodoTramo != null){
+				tramo = nodoTramo.getElemento();
+				posY = getCiudades().indexOf(tramo.getCiudadDestino().getNombre());
+				
+				this.mAdyacencia[posX][posY] = tramo;
+				nodoTramo = nodoTramo.getSiguiente();
 			}
+			nodoCiudad = nodoCiudad.getSiguiente();
 		}
+		
+		
+//		for (int i = 0; i < cantVertices; i++) {
+//			ciudad = getCiudades().recuperar(i).getElemento();
+//			// Cantida de destinos desde la ciudad
+//			cantDestinos = ciudad.getTramos().getTamanio();
+//
+//			// Cuando sea el costo de un vertice x hacia el mismo, seteamos el
+//			// costo en 0
+//			mAdyacencia[i][i] = new Tramo();
+////			mAdyacencia[i][i].setCostoTramo(COSTO_CERO);
+//
+//			// Recorremos las adyacencias del vertice
+//			for (int j = 0; j < cantDestinos; j++) {
+//
+//				// Guardo la referencia a la arista
+//				tramo = ciudad.getTramos().recuperar(j).getElemento();
+//				mAdyacencia[i][getCiudades().indexOf(tramo.getCiudadDestino().getNombre())] = tramo;
+//			}
+//		}
 		this.regenMatriz = false;
 	}
 
@@ -428,20 +473,19 @@ public class Ciudades{
 	 *         hasta un Destino
 	 */
 	@SuppressWarnings("unchecked")
-	private Costo[][] implementacionFloyd(Comparator comparador) {
-		// Si la matriz fue marcada para regeneracion se la genera otra vez
-		//if (regenMatriz)
-			cargarMatrizDeAdyacencia();
+	private Tramo[][] implementacionFloyd(Comparator comparador) {
+		cargarMatrizDeAdyacencia();
 
-			Costo[][] salida = new Costo[this.mAdyacencia.length][this.mAdyacencia.length];
+		Tramo[][] salida = new Tramo[this.mAdyacencia.length][this.mAdyacencia.length];
+		
+		//Copiamos la matriz de adyacencia en la matriz de salida
 		for(int i = 0; i < salida.length; i++)
-			for(int j = 0; j < salida.length; j++)
-				salida[i][j] = mAdyacencia[i][j];
+			for(int j = 0; j < salida.length; j++){
+				salida[i][j] = new Tramo(mAdyacencia[i][j]);
+			}
 		
-		
-		
-		Costo aIJ, aIK, aKJ;
-		Costo suma = new Costo();
+		Tramo aIJ, aIK, aKJ;
+		Tramo suma = new Tramo();
 
 
 		for (int k = 0; k < salida.length; k++) {
@@ -454,19 +498,21 @@ public class Ciudades{
 
 					//Es necesario hacer esto porque con solo sumar 1 a infinto este toma un valor negativo acausa del  
 //					suma = aIK == INFINITO || aKJ == INFINITO?INFINITO:aIK + aKJ;
-					if(comparador.compare(aIK, COSTO_INFINITO)  == 0 || comparador.compare(aKJ, COSTO_INFINITO)  == 0 )
-						suma = COSTO_INFINITO;
-					else{
-						suma.setDistanciaEnKm(aIK.getDistanciaEnKm() + aKJ.getDistanciaEnKm());
-						suma.setTiempoEstimadoEnMinutos(aIK.getTiempoEstimadoEnMinutos() + aKJ.getTiempoEstimadoEnMinutos());
+//					if(comparador.compare(aIK, COSTO_INFINITO)  == 0 || comparador.compare(aKJ, COSTO_INFINITO)  == 0 )
+					if(aIK.getCostoTramo().equals(COSTO_INFINITO) || aKJ.getCostoTramo().equals(COSTO_INFINITO)){
+						suma.setCostoTramo(COSTO_INFINITO);
+					}else{
+						Costo nuevoCosto = new Costo(aIK.getCostoTramo().getTiempoEstimadoEnMinutos() + aKJ.getCostoTramo().getTiempoEstimadoEnMinutos(), aIK.getCostoTramo().getDistanciaEnKm() + aKJ.getCostoTramo().getDistanciaEnKm());
+						
+						suma.setCostoTramo(nuevoCosto);
 					}
 					
+					//si el aIJ es mayor que la suma y la suma no es el costo 0
 					if(comparador.compare(aIJ, suma) > 0)
-						salida[i][j] = suma;
+						salida[i][j] = new Tramo(suma);
 				}
 			}
 		}
-
 		this.mFloyd = salida;
 		return salida;
 	}
@@ -480,44 +526,40 @@ public class Ciudades{
 	 * @return array de Comparable - los costos desde el vertice origen hasta
 	 *         los demas vertices; null - si el nodo origen no existe
 	 */
-	public Comparable[] implementacionDijkstra(Comparable origen, boolean retornarCaminos) {
-		Comparable[] d = null;
-		TNodo existeOrigen = ciudades.buscarNodo(origen);
+	public Comparable[] implementacionDijkstra(Comparable origen, boolean retornarCaminos, Comparator<Tramo> comparador) {
+		Tramo[] d = null;
+		Comparable[] p = null;
+		TNodo<Ciudad> existeOrigen = ciudades.buscarNodo(origen);
 		// Compruebo que exista el origen
 		if (existeOrigen != null) {
-			TVertice vOrigen = (TVertice) existeOrigen.getElemento();
+			Ciudad cOrigen =  existeOrigen.getElemento();
 
-			/*
-			 * Si la matriz de adyacencia no existe o esta marcada para
-			 * regeneracion la generamos
-			 */
-//			if (regenMatriz)
-				cargarMatrizDeAdyacencia();
+			cargarMatrizDeAdyacencia();
 			
 			// Cargamos D con los valores iniciales
-			d = mAdyacencia[getVertices().indexOf(vOrigen.getEtiqueta())];
+			d = mAdyacencia[getCiudades().indexOf(cOrigen.getNombre())];
 			
 			// Posicion del ORIGEN dentro de la matriz de adyacencia
-			int x = getVertices().indexOf(vOrigen.getEtiqueta());
+			int x = getCiudades().indexOf(cOrigen.getNombre());
 
 			
 			//Inicializamos el array de predecesores
-			Comparable[] p = new Comparable[ciudades.getTamanio()];
+			p = new Comparable[getCiudades().getTamanio()];
 			for(int i = 0; i < p.length; i++)
 				p[i] = origen;
 			p[x] = origen;
 			
 			// Vertice Actual
-			TVertice w = null;
+			Ciudad w = null;
 
 			// Variables usadas a la hora de buscar el w minimo
-			Integer distACTUAL, distAUX;
-			TVertice v;
+			Tramo tramoACTUAL, tramoAUX;
+			Ciudad v;
 
 			// Variables usadas en la busqueda de caminos mas cortos
-			Integer sumaDeCostos = null;
+			Tramo sumaDeCostos = null;
 			// Lista de vertices
-			TLista conjuntoV = new TLista();
+			TLista<Ciudad> conjuntoV = new TLista<Ciudad>();
 
 			// Cargo la lista de vertices v
 			for (Comparable etiquetaV : ciudades.mostrar())
@@ -533,45 +575,62 @@ public class Ciudades{
 				// Ahora hay que elegir el vertice mas cerca de X(Origen)
 				// Distancia minima actual es la del primer elemento del
 				// conjunto V de vertices
-				w = ((TVertice) conjuntoV.recuperar(0).getElemento());
-				distACTUAL = (Integer)d[getVertices().indexOf(w.getEtiqueta())];
+				w = conjuntoV.recuperar(0).getElemento();
+				tramoACTUAL = d[getCiudades().indexOf(w.getNombre())];
 
 				for (int i = 1; i < conjuntoV.getTamanio(); i++) {
 					// Guardo el vertice de V sobre el que estoy parado
-					v = ((TVertice) conjuntoV.recuperar(i).getElemento());
-					distAUX = (Integer)d[getVertices().indexOf(v.getEtiqueta())];
+					v = conjuntoV.recuperar(i).getElemento();
+					tramoAUX = d[getCiudades().indexOf(v.getNombre())];
 
-					if(distACTUAL > distAUX){
+//					if(costoACTUAL > costoAUX){
+					if(comparador.compare(tramoACTUAL, tramoAUX) > 0){
 						// Guardo el vertice acutal
 						w = v;
-						distACTUAL = distAUX;
+						tramoACTUAL = tramoAUX;
 					}
 				}
 
 				// Elimino el vertice elegido del conjunto V
-				conjuntoV.eliminar(w.getEtiqueta());
+				conjuntoV.eliminar(w.getNombre());
 
 				for (int i = 0; i < conjuntoV.getTamanio(); i++) {
-					v = (TVertice) conjuntoV.recuperar(i).getElemento();
+					v = conjuntoV.recuperar(i).getElemento();
 
 					//TOMA PA VOS Y TU TIA GREGORIA
-					sumaDeCostos = d[getVertices().indexOf(w.getEtiqueta())]==INFINITO || mAdyacencia[getVertices().indexOf(w.getEtiqueta())][getVertices().indexOf(v.getEtiqueta())] == INFINITO?INFINITO : (Integer)d[getVertices().indexOf(w.getEtiqueta())] + mAdyacencia[getVertices().indexOf(w.getEtiqueta())][getVertices().indexOf(v.getEtiqueta())];
+//					sumaDeCostos = d[getCiudades().indexOf(w.getNombre())].equals(COSTO_INFINITO)|| mAdyacencia[getCiudades().indexOf(w.getNombre())][getCiudades().indexOf(v.getNombre())].equals(COSTO_INFINITO)?COSTO_INFINITO : d[getCiudades().indexOf(w.getNombre())] + mAdyacencia[getCiudades().indexOf(w.getNombre())][getCiudades().indexOf(v.getNombre())];
+					
+					if(d[getCiudades().indexOf(w.getNombre())].equals(COSTO_INFINITO)|| mAdyacencia[getCiudades().indexOf(w.getNombre())][getCiudades().indexOf(v.getNombre())].equals(COSTO_INFINITO)){
+						sumaDeCostos.setCostoTramo(COSTO_INFINITO);
+					}else{
+						sumaDeCostos = new Tramo();
+						sumaDeCostos.setCostoTramo(new Costo(
+								d[getCiudades().indexOf(w.getNombre())].getCostoTramo().getTiempoEstimadoEnMinutos() + mAdyacencia[getCiudades().indexOf(w.getNombre())][getCiudades().indexOf(v.getNombre())].getCostoTramo().getTiempoEstimadoEnMinutos()
+								,d[getCiudades().indexOf(w.getNombre())].getCostoTramo().getDistanciaEnKm() + mAdyacencia[getCiudades().indexOf(w.getNombre())][getCiudades().indexOf(v.getNombre())].getCostoTramo().getDistanciaEnKm()));
+					}
 					
 					//Si la ruta d[v] + C[v,w] es menor que la ruta D[w]
-					if((Integer)d[getVertices().indexOf(v.getEtiqueta())] > sumaDeCostos){
-						//nos quedamos con la nueva distancia
-						d[getVertices().indexOf(v.getEtiqueta())] = sumaDeCostos;
-						//Se guarda el predecesor del vetice
-						p[getVertices().indexOf(v.getEtiqueta())] =  w.getEtiqueta();
-					}
+//					if((Integer)d[getVertices().indexOf(v.getEtiqueta())] > sumaDeCostos){
+//						//nos quedamos con la nueva distancia
+//						d[getVertices().indexOf(v.getEtiqueta())] = sumaDeCostos;
+//						//Se guarda el predecesor del vetice
+//						p[getVertices().indexOf(v.getEtiqueta())] =  w.getEtiqueta();
+//					}
+					if(comparador.compare(d[getCiudades().indexOf(v.getNombre())], sumaDeCostos) > 0){
+					//nos quedamos con la nueva distancia
+					d[getCiudades().indexOf(v.getNombre())] = sumaDeCostos;
+					//Se guarda el predecesor del vetice
+					p[getCiudades().indexOf(v.getNombre())] =  w.getNombre();
+				}
+
 				}
 			}
 			if(retornarCaminos){
-				d = p;
+				return p;
 			}
 		}
 		
-		return d;
+		return p;
 	}
 
 	/**
@@ -583,7 +642,7 @@ public class Ciudades{
 	private void imprimirMatrizGrafo(Object[][] matriz) {
 		for (int i = 0; i < matriz.length; i++) {
 			for (int j = 0; j < matriz[i].length; j++) {
-				System.out.print(matriz[i][j] + "\t\t");
+				System.out.print(matriz[i][j] + "\t");
 			}
 			System.out.println();
 		}
@@ -593,9 +652,9 @@ public class Ciudades{
 	 * Metodo usado para mostrar en consola la matriz de adyacencia
 	 */
 	public void imprimirMatrizAdyacente() {
-		if (regenMatriz)
-			cargarMatrizDeAdyacencia();
+		cargarMatrizDeAdyacencia();
 		imprimirMatrizGrafo(mAdyacencia);
+		System.out.println();
 	}
 
 	/**
@@ -603,9 +662,10 @@ public class Ciudades{
 	 * grafo
 	 */
 	public void imprimirMatrizFloyd() {
-		implementacionFloyd();
+		implementacionFloyd(new compararCostoPorDistancia());
 
 		imprimirMatrizGrafo(mFloyd);
+		System.out.println();
 	}
 	
 	/**
