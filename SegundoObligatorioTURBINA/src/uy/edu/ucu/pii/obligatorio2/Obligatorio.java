@@ -13,8 +13,15 @@ import uy.edu.ucu.pii.obligatorio2.entidades.Costo;
 import uy.edu.ucu.pii.obligatorio2.entidades.Tramo;
 
 /**
- * @author catedraPII
- *
+ * Clase principal del 2do Obligatorio, la mayoria de los metodos son solo llamadas a los metodos de la clase {@link Ciudades}
+ * @author Grupo14
+ *	
+ * @see {@link Ciudades}
+ * @see {@link Ciudad}
+ * @see {@link Avion}
+ * @see {@link TLista}
+ * 
+ * @version 1.0
  */
 public class Obligatorio {
 	//Declaro la lista de aviones
@@ -198,6 +205,8 @@ public class Obligatorio {
 	}
 	
 	/**
+	 * Devuelve la lista de ciudades que componen el mejor itinerario para la empresa entre dos ciudades
+	 * La lista se arma en base las distancias entre las ciudades y el consumo del avion mas barato que recorre ese tramo
 	 * @param nomCiudadOrigen
 	 * @param nomCiudadDestino
 	 * @return array con los nombres de las ciudades por las que se pasa
@@ -208,6 +217,8 @@ public class Obligatorio {
 	}
 	
 	/**
+	 * Devuelve la lista de ciudades que componen el mejor itinerario para el cliente entre dos ciudades
+	 * La lista se arma en base al tiempo entre las ciudades, de forma que el cliente haga el camino mas corto en tiempo
 	 * @param nomCiudadOrigen
 	 * @param nomCiudadDestino
 	 * @return array con los nombres de las ciudades por las que se pasa
@@ -219,7 +230,9 @@ public class Obligatorio {
 	}
 	
 	/**
-	 * @return nombre de la ciudad a ser utilizada como centro de operaciones
+	 * Retorna el centro del grafo (El centro de operaciones) 
+	 * @return nombre de la ciudad a ser utilizada como centro de operaciones;
+	 * null - si no hay centro de operaciones
 	 */
 	@SuppressWarnings("unchecked")
 	public Comparable obtenerCentroOperaciones(){
@@ -228,16 +241,16 @@ public class Obligatorio {
 	
 	/**
 	 * Retorna una lista con los aviones que van hacia una ciudad
-	 * @param nombreCiudad
+	 * @param nombreCiudad 
 	 * @return Listado de nombres de aviones que pasan por dicha ciudad
 	 */
 	@SuppressWarnings("unchecked")
 	public Comparable[] avionesParaCiudad(String nombreCiudad){
-//		si existe la ciudad
+//		si existe la ciudad param{nombreCiudad}
 //			para cada avion
 //			obtener lista de tramos
 //				para cada tramo
-//					si tiene destino == DESTINO
+//					si tiene destino == param{nombreCiudad}
 //						GUARDO EL NOMBRE DEL AVION
 //		
 		Comparable[] salida = null;
@@ -264,10 +277,20 @@ public class Obligatorio {
 		}
 		return salida;
 	}
-
+	
+	/**
+	 * Devuelve el rendimiento de un avion
+	 * @param nombreAvion
+	 * @return numero - el rendmiento de un avion
+	 */
 	@SuppressWarnings("unchecked")
 	public Comparable obtenerRendimientoAvion(String nombreAvion) {
-		return aviones.buscarNodo(nombreAvion).getElemento().getRendimiento();
+		Comparable salida = null;
+		
+		TNodo<Avion> nodoAvion = aviones.buscarNodo(nombreAvion); 
+		salida = nodoAvion!=null?nodoAvion.getElemento().getRendimiento():null;
+		
+		return salida;
 	}
 
 	public boolean existeTramo(String nombreCiudadOrigen, String nombreCiudadDestino) {
@@ -316,7 +339,13 @@ public class Obligatorio {
 		}
 		return tiempo;
 	}
-
+	
+	/**
+	 * Dice si existe un camino entre 2 ciudades
+	 * @param ciudadOrigen ciudad de origen
+	 * @param ciudadDestino ciudad de destino
+	 * @return true - si existe un camino; false - si no existe un camino, o una de las ciudades
+	 */
 	public boolean existeCamino(String ciudadOrigen, String ciudadDestino) {
 		return getCiudades().existeCamino(ciudadOrigen, ciudadDestino);
 	}

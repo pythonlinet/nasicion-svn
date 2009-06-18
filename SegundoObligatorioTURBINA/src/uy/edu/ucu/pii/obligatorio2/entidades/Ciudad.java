@@ -2,6 +2,15 @@ package uy.edu.ucu.pii.obligatorio2.entidades;
 
 import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
 
+/**
+ * Clase para representar una ciudad dentro de la clase simil grafo {@link Ciudades}
+ * @author Grupo14
+ *
+ * @see  {@link Tramo}
+ * @see  {@link Ciudades}
+ * 
+ * @version 1.0
+ */
 public class Ciudad{
 	private Comparable nombre;
 	private Comparable pais;

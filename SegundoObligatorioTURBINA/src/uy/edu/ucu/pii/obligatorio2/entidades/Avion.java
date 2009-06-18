@@ -2,6 +2,11 @@ package uy.edu.ucu.pii.obligatorio2.entidades;
 
 import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
 
+/**
+ * Clase para representar los aviones dentro del programa
+ * @author Grupo14
+ * @version 1.0
+ */
 public class Avion {
 	private Comparable nombre;
 	private Double rendimiento;
