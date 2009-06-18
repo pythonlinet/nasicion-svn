@@ -1,8 +1,18 @@
 package uy.edu.ucu.pii.obligatorio2.entidades;
 
-import uy.edu.ucu.pii.grupo14.datos.grafo.TArista;
 import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
 
+/**
+ * Clase utilizada para representar un tramo entre 2 ciudades junto con su lista de aviones
+ * @author Grupo14
+ * @see {@link Ciudades}
+ * @see {@link Costo}
+ * @see {@link Avion}
+ * @see {@link TLista}
+ * 
+ * @version 1.0
+ *	
+ */
 public class Tramo{
 	private Ciudad destino;
 	

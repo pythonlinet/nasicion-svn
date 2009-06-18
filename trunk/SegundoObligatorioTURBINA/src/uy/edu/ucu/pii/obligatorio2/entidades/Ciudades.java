@@ -8,6 +8,17 @@ import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararAvionesPorRendimi
 import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararCostoPorDistancia;
 import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararCostoPorTiempo;
 
+/**
+ * Clase que reimplementa los metodos utilizados en el trabajo sobre grafos
+ * Como mejora a dicha clase se modificaron los metodos, Floyd y Dijkstra entre otros para que utilizen comparadores para realizar los calculos
+ * @author Grupo14
+ * 
+ * @see {@link Ciudad}
+ * @see {@link Tramo}
+ * @see {@link Costo}
+ * 
+ * @version 1.0
+ */
 public class Ciudades{
 
 	
