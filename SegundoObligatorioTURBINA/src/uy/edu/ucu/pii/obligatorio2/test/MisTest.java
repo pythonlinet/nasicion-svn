@@ -2,6 +2,8 @@ package uy.edu.ucu.pii.obligatorio2.test;
 
 import java.util.Comparator;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararCostoPorDistancia;
@@ -19,21 +21,25 @@ public class MisTest extends TestCase{
 	private Obligatorio obli;
 
 	
-	@Test
-	public void testGenerales(){
+	@After
+	public void setup(){
 		obli = new Obligatorio();
-		obli.agregarAvion("USS 9", 4.0);
-		obli.agregarAvion("USS 3", 1.0);
-		obli.agregarAvion("USS 2", 5.0);
-		obli.agregarAvion("USS 8", 3.0);
-		obli.agregarAvion("USS 1", 2.0);
+	}
+	
+	@Test
+	public void testIngresoAviones(){
+		assertTrue(obli.agregarAvion("USS 9", 4.0));
+		assertTrue(obli.agregarAvion("USS 3", 1.0));
+		assertTrue(obli.agregarAvion("USS 2", 5.0));
+		assertTrue(obli.agregarAvion("USS 8", 3.0));
+		assertTrue(obli.agregarAvion("USS 1", 2.0));
 		
-		obli.getCiudades().imprimirMatrizAdyacente();
+		assertFalse(obli.agregarAvion("USS 9", 4.0));
+		assertFalse(obli.agregarAvion("USS 8", 3.0));
 	}
 
 	@Test
 	public void testMenejoCiudades(){
-		obli = new Obligatorio();
 		assertTrue(obli.agregarCiudad("Montevideo","Uruguay"));
 		assertTrue(obli.agregarCiudad("LaPaloma","Uruguay"));
 		assertTrue(obli.agregarCiudad("Roma","Italia"));
@@ -48,21 +54,24 @@ public class MisTest extends TestCase{
 	}
 	
 	@Test
-	public void testAgregarAviones(){
-
-		obli = new Obligatorio();
-		obli.agregarAvion("747-1", 4.3);
-		obli.agregarAvion("747-2", 4.4);
-		obli.agregarAvion("747-3", 4.4);
+	public void testAgregarListarAvionesPorRendimiento(){
+		assertTrue(obli.agregarAvion("747-1", 4.5));
+		assertTrue(obli.agregarAvion("747-2", 4.3));
+		assertTrue(obli.agregarAvion("747-3", 4.4));
 		
-		obli.getAviones().ordenar();
-//		for(Comparable c: obli.listadoAvionesPorRendimiento())
-//			System.out.println(c);
+		String[] arrayAvionesEsperado = {"747-2","747-3","747-1"};
+		
+		Comparable[] listaAviones = obli.listadoAvionesPorRendimiento();
+		for(int i = 0; i<arrayAvionesEsperado.length; i++){
+			assertEquals(arrayAvionesEsperado[i], listaAviones[i]);
+		}
+		
+		
 		
 	}
 	@Test
 	public void testCompararCostos(){
-		
+
 		Costo costo1 = new Costo(20.0,300.0);
 		Costo costo2 = new Costo(30.0,200.0);
 		
@@ -88,7 +97,7 @@ public class MisTest extends TestCase{
 		//Probamos el comparador de tramos por rendmiento de avion
 		Comparator<Tramo> comparadorTramosXRendimiento = new compararCostoPorRendimiento();
 		comparacion = comparadorTramosXRendimiento.compare(tramo1,tramo2);
-		assertTrue(comparacion == 0);
+		assertTrue(comparacion >0);
 		//Aumentamos el valor del rendimiento del avion1
 		avion1.setRendimiento(4.0);
 		comparacion = comparadorTramosXRendimiento.compare(tramo1,tramo2);
@@ -98,6 +107,6 @@ public class MisTest extends TestCase{
 		Avion avion3 = new Avion("USS Capt Miranda", 1.0);
 		tramo1.agregarAvion(avion3);
 		comparacion = comparadorTramosXRendimiento.compare(tramo1,tramo2);
-		assertTrue(comparacion < 0);
+		assertTrue(comparacion > 0);
 	}
 }

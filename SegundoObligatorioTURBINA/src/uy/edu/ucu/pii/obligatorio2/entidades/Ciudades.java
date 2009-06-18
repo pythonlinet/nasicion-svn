@@ -703,13 +703,13 @@ public class Ciudades{
 		if(nodoCiudad != null){
 			int indexVertice = getCiudades().indexOf(nodoCiudad.getClave());
 			
-			Costo[][] mAdyacencia = getMAdyacencia();
+			Tramo[][] mAdyacencia = getMAdyacencia();
 			String adyacentes = new String();
 			String[] arrayAdyacentes;
 			
 			//localizamos los vertices que son adyacentes a al que queremos eliminar
 			for(int i = 0; i< mAdyacencia.length; i++){
-				if(mAdyacencia[i][indexVertice].getTiempoEstimadoEnMinutos() != INFINITO)
+				if(mAdyacencia[i][indexVertice].getCostoTramo().getTiempoEstimadoEnMinutos() != INFINITO)
 					adyacentes += i + ";"; 
 			}
 			

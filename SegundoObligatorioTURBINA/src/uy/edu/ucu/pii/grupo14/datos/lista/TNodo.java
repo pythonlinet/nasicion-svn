@@ -1,5 +1,20 @@
 package uy.edu.ucu.pii.grupo14.datos.lista;
 
+import sun.reflect.generics.factory.GenericsFactory;
+
+/**
+ * Clase para representar el nodo de una lista encadaenada
+ * @author Grupo14
+ * @version 1.1
+ * @see {@link TLista}
+ *
+ * <b>Change Log</b>
+ * <i>Nuevo en version 1.1</i>
+ * 	- Se agrega el uso de Generics de Java para facilitar el uso de la clase en conjunto con {@link TLista}
+ * 
+ * @param <u>
+ * 
+ */
 @SuppressWarnings("unchecked")
 public class TNodo <u> implements Comparable{
 	protected Comparable clave;
