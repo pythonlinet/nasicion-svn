@@ -10,12 +10,13 @@ import java.util.Comparator;
  * En proximas versiones se intentara mejorar el algoritmo de ordenamiento entre otros para hacerlo mas eficiente.
  * 
  * @author Guillermo Nasi
- * @version 1.5
+ * @version 1.2
  * 
- * <b>Log</b>
- * <i>Nuevo en version 1.5</i>
+ * <b>Change Log</b>
+ * <i>Nuevo en version 1.2</i>
  * 	- Se agerga la capacidad de ordenar en base a un comparador
- * 
+ * <i>Nuevo en version 1.1</i>
+ * 	- Se agrega el uso de Generics de Java para facilitar el uso de la clase
  */
 public class TLista <u> {
 	private TNodo <u> primero;
