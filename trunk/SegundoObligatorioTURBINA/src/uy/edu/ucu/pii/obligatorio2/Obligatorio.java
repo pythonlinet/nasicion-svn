@@ -2,15 +2,15 @@ package uy.edu.ucu.pii.obligatorio2;
 
 import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
 import uy.edu.ucu.pii.grupo14.datos.lista.TNodo;
-import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararAvionesPorRendimiento;
-import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararCostoPorDistancia;
-import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararCostoPorRendimiento;
-import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararCostoPorTiempo;
 import uy.edu.ucu.pii.obligatorio2.entidades.Avion;
 import uy.edu.ucu.pii.obligatorio2.entidades.Ciudad;
 import uy.edu.ucu.pii.obligatorio2.entidades.Ciudades;
 import uy.edu.ucu.pii.obligatorio2.entidades.Costo;
 import uy.edu.ucu.pii.obligatorio2.entidades.Tramo;
+import uy.edu.ucu.pii.obligatorio2.grupo14.comparadores.compararAvionesPorRendimiento;
+import uy.edu.ucu.pii.obligatorio2.grupo14.comparadores.compararCostoPorDistancia;
+import uy.edu.ucu.pii.obligatorio2.grupo14.comparadores.compararCostoPorRendimiento;
+import uy.edu.ucu.pii.obligatorio2.grupo14.comparadores.compararCostoPorTiempo;
 
 /**
  * Clase principal del 2do Obligatorio, la mayoria de los metodos son solo llamadas a los metodos de la clase {@link Ciudades}
