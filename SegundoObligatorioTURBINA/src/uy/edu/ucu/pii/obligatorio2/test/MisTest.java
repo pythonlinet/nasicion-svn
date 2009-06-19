@@ -4,16 +4,17 @@ import java.util.Comparator;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararCostoPorDistancia;
-import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararCostoPorRendimiento;
-import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararCostoPorTiempo;
 import uy.edu.ucu.pii.obligatorio2.Obligatorio;
 import uy.edu.ucu.pii.obligatorio2.entidades.Avion;
 import uy.edu.ucu.pii.obligatorio2.entidades.Ciudad;
 import uy.edu.ucu.pii.obligatorio2.entidades.Costo;
 import uy.edu.ucu.pii.obligatorio2.entidades.Tramo;
+import uy.edu.ucu.pii.obligatorio2.grupo14.comparadores.compararCostoPorDistancia;
+import uy.edu.ucu.pii.obligatorio2.grupo14.comparadores.compararCostoPorRendimiento;
+import uy.edu.ucu.pii.obligatorio2.grupo14.comparadores.compararCostoPorTiempo;
 
 import junit.framework.TestCase;
 
@@ -21,8 +22,7 @@ public class MisTest extends TestCase{
 	private Obligatorio obli;
 
 	
-	@After
-	public void setup(){
+	public void setUp(){
 		obli = new Obligatorio();
 	}
 	
@@ -72,8 +72,8 @@ public class MisTest extends TestCase{
 	@Test
 	public void testCompararCostos(){
 
-		Costo costo1 = new Costo(20.0,300.0);
-		Costo costo2 = new Costo(30.0,200.0);
+		Costo costo1 = new Costo(20.0,400.0);
+		Costo costo2 = new Costo(30.0,800.0);
 		
 		Tramo tramo1 = new Tramo(new Ciudad("Mvd","Uru"), costo1);
 		Tramo tramo2 = new Tramo(new Ciudad("BsAs","Arg"), costo2);
@@ -85,7 +85,7 @@ public class MisTest extends TestCase{
 		//Probamos el comparador de tramos por distancia
 		Comparator<Tramo> comparadorXDistancia = new compararCostoPorDistancia();
 		comparacion = comparadorXDistancia.compare(tramo1, tramo2);
-		assertTrue(comparacion > 0);
+		assertTrue(comparacion < 0);
 		
 		
 		Avion avion1 = new Avion("USS Enterpries", 2.0);
@@ -97,7 +97,8 @@ public class MisTest extends TestCase{
 		//Probamos el comparador de tramos por rendmiento de avion
 		Comparator<Tramo> comparadorTramosXRendimiento = new compararCostoPorRendimiento();
 		comparacion = comparadorTramosXRendimiento.compare(tramo1,tramo2);
-		assertTrue(comparacion >0);
+		assertTrue(comparacion > 0);
+		
 		//Aumentamos el valor del rendimiento del avion1
 		avion1.setRendimiento(4.0);
 		comparacion = comparadorTramosXRendimiento.compare(tramo1,tramo2);
@@ -108,5 +109,7 @@ public class MisTest extends TestCase{
 		tramo1.agregarAvion(avion3);
 		comparacion = comparadorTramosXRendimiento.compare(tramo1,tramo2);
 		assertTrue(comparacion > 0);
-	}
+		
+		
+		}
 }

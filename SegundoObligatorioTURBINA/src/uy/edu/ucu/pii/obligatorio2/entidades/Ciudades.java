@@ -4,9 +4,9 @@ import java.util.Comparator;
 
 import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
 import uy.edu.ucu.pii.grupo14.datos.lista.TNodo;
-import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararAvionesPorRendimiento;
-import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararCostoPorDistancia;
-import uy.edu.ucu.pii.grupo14.datos.lista.comparadores.compararCostoPorTiempo;
+import uy.edu.ucu.pii.obligatorio2.grupo14.comparadores.compararAvionesPorRendimiento;
+import uy.edu.ucu.pii.obligatorio2.grupo14.comparadores.compararCostoPorDistancia;
+import uy.edu.ucu.pii.obligatorio2.grupo14.comparadores.compararCostoPorTiempo;
 
 /**
  * Clase que reimplementa los metodos utilizados en el trabajo sobre grafos

@@ -1,4 +1,4 @@
-package uy.edu.ucu.pii.grupo14.datos.lista.comparadores;
+package uy.edu.ucu.pii.obligatorio2.grupo14.comparadores;
 
 import java.util.Comparator;
 
