@@ -246,6 +246,7 @@ public class TestObligatorio  extends TestCase{
 		assertTrue(obliga.asignarAvionATramo("747-8", nombreCiudadOrigen, nombreCiudadDestino));
 		Comparable[] nuevoMejorItinerarioEsperado = new Comparable[]{"Montevideo","Bariloche"}; //misma distancia, mayor eficiencia global
 		validarArraysIguales(nuevoMejorItinerarioEsperado,obliga.mejorItinerarioParaCliente(nombreCiudadOrigen, nombreCiudadDestino));
+		validarArraysIguales(nuevoMejorItinerarioEsperado,obliga.mejorItinerarioParaEmpresa(nombreCiudadOrigen, nombreCiudadDestino));
 	}
 
 	

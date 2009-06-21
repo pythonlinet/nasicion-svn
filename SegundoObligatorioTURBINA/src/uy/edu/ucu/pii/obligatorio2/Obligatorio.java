@@ -128,12 +128,20 @@ public class Obligatorio {
 	/**
 	 * Utilizado para quitar un avi�n de circulaci�n. Se quita la asignaci�n de dicho avi�n con todos los tramos (itinerarios de vuelo)
 	 * @param nombreAvion
-	 * @return resultado de la operaci�n
+	 * @return true - si se elmino satisfactoriamente el avion; false - si no se pudo elimnar el avion o el avion no existe
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean quitarAvion(Comparable nombreAvion){
-		//TODO - Implementar m�todo
-		return false;
+		boolean salida = false;	
+		TNodo<Avion> nodoAvion = getAviones().buscarNodo(nombreAvion);
+			if(nodoAvion != null){
+				for(Tramo tramo : nodoAvion.getElemento().getTramosAsignados()){
+					tramo.getAvionesAsignados().eliminar(nombreAvion);
+				}
+				salida = getAviones().eliminar(nombreAvion);
+			}
+			
+		return salida;
 	}
 	
 	/**
