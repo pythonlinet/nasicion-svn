@@ -1,6 +1,8 @@
 package uy.edu.ucu.pii.grupo14.datos.lista;
 
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Implementacion de una array redimenzionable, escrito por Guillermo Nasi para
@@ -18,7 +20,7 @@ import java.util.Comparator;
  * <i>Nuevo en version 1.1</i>
  * 	- Se agrega el uso de Generics de Java para facilitar el uso de la clase
  */
-public class TLista <u> {
+public class TLista <u> implements Iterable<u>, Iterator<u>{
 	private TNodo <u> primero;
 	private Integer tamanio;
 
@@ -598,5 +600,49 @@ public class TLista <u> {
 		
 		
 		return salida;
+	}
+
+	
+	
+	private TNodo<u> iterador = primero;
+	
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Iterable#iterator()
+	 */
+	@Override
+	public Iterator<u> iterator() {
+		return this;
+	}
+	/*
+	 * (non-Javadoc)
+	 * @see java.util.Iterator#hasNext()
+	 */
+	@Override
+	public boolean hasNext() {
+		return iterador.getSiguiente() == null?false:true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.util.Iterator#next()
+	 */
+	@Override
+	public u next() {
+	    if(iterador.getSiguiente() == null)  
+	        throw new NoSuchElementException(); 
+	   u elemento = iterador.getElemento();
+	   iterador = iterador.getSiguiente();
+	   return elemento;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.util.Iterator#remove()
+	 */
+	@Override
+	public void remove() {
+		 throw new UnsupportedOperationException(); 
+		
 	}
 }
