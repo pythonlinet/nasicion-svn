@@ -15,7 +15,7 @@ public class Ciudad{
 	private Comparable nombre;
 	private Comparable pais;
 
-	TLista<Tramo> tramos;
+	private TLista<Tramo> tramos;
 	
 	public Comparable getNombre() {
 		return nombre;
