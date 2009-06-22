@@ -16,10 +16,10 @@ import uy.edu.ucu.pii.obligatorio2.grupo14.comparadores.compararCostoPorTiempo;
  * Clase principal del 2do Obligatorio, la mayoria de los metodos son solo llamadas a los metodos de la clase {@link Ciudades}
  * @author Grupo14
  *	
- * @see {@link Ciudades}
- * @see {@link Ciudad}
- * @see {@link Avion}
- * @see {@link TLista}
+ * @see Ciudades
+ * @see Ciudad
+ * @see Avion
+ * @see TLista
  * 
  * @version 1.0
  */
@@ -82,10 +82,12 @@ public class Obligatorio {
 	}
 	
 	/**
-	 * Utilizado para asignar un avi�n a una lista de tramos
-	 * @param nombreAvion
-	 * @param tramoAAsignar array de 2 posiciones, con un par ordenado de ciudades 
-	 * @return resultado de la conjunci�n de todas las operaciones
+	 * 
+	 * @param nombreAvion nombre del avion
+	 * @param etiquetaOrigen origen del tramo
+	 * @param etiquetaDestino destino del tramo
+	 * @return true - si se compelta la operacion con exito;
+	 * false - en los casos que: el avion no exista o ya este asignado al tramo o los casos en que el origo y/o el destino no existan
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean asignarAvionATramo(Comparable nombreAvion, Comparable etiquetaOrigen, Comparable etiquetaDestino){

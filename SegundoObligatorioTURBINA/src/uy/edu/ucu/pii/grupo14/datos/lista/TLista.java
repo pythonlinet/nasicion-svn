@@ -578,7 +578,8 @@ public class TLista <u> implements Iterable<u>, Iterator<u>{
 	/**
 	 * Metodo para conocer el indice de un elemento en la lista en base a su clave
 	 * @param clave
-	 * @return
+	 * @return entero - posicion del elemento dentro de la lista;
+	 * -1 - si no existe el elemento dentro de la lista
 	 */
 	public int indexOf(Comparable clave){
 		int salida = -1;
