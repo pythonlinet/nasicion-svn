@@ -6,8 +6,8 @@ import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
  * Clase para representar una ciudad dentro de la clase simil grafo {@link Ciudades}
  * @author Grupo14
  *
- * @see  {@link Tramo}
- * @see  {@link Ciudades}
+ * @see  Tramo
+ * @see  Ciudades
  * 
  * @version 1.0
  */

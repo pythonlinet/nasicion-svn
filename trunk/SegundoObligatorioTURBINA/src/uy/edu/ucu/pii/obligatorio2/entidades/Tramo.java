@@ -5,10 +5,10 @@ import uy.edu.ucu.pii.grupo14.datos.lista.TLista;
 /**
  * Clase utilizada para representar un tramo entre 2 ciudades junto con su lista de aviones
  * @author Grupo14
- * @see {@link Ciudades}
- * @see {@link Costo}
- * @see {@link Avion}
- * @see {@link TLista}
+ * @see Ciudades
+ * @see Costo
+ * @see Avion
+ * @see TLista
  * 
  * @version 1.0
  *	

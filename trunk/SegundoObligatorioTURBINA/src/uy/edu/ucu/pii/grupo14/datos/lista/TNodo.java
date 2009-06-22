@@ -1,12 +1,10 @@
 package uy.edu.ucu.pii.grupo14.datos.lista;
 
-import sun.reflect.generics.factory.GenericsFactory;
-
 /**
  * Clase para representar el nodo de una lista encadaenada
  * @author Grupo14
  * @version 1.1
- * @see {@link TLista}
+ * @see TLista
  *
  * <b>Change Log</b>
  * <i>Nuevo en version 1.1</i>

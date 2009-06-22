@@ -13,9 +13,9 @@ import uy.edu.ucu.pii.obligatorio2.grupo14.comparadores.compararCostoPorTiempo;
  * Como mejora a dicha clase se modificaron los metodos, Floyd y Dijkstra entre otros para que utilizen comparadores para realizar los calculos
  * @author Grupo14
  * 
- * @see {@link Ciudad}
- * @see {@link Tramo}
- * @see {@link Costo}
+ * @see Ciudad
+ * @see Tramo
+ * @see Costo
  * 
  * @version 1.0
  */
@@ -87,12 +87,13 @@ public class Ciudades{
 		this.regenMatriz = true;
 	}
 
+
 	/**
 	 * Metodo para insertar una nueva ciudad en el grafo de ciudades
-	 * 
-	 * @param etiqueta
-	 * @return true - si el vertice se inserto correctamente; false - si el
-	 *         vertice ya existe
+	 * @param nombre
+	 * @param pais
+	 * @return true - si el vertice se inserto correctamente; 
+	 * 	false - si el vertice ya existe
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean insertarCiudad(Comparable nombre, Comparable pais) {
