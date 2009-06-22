@@ -4,6 +4,7 @@ package uy.edu.ucu.pii.obligatorio2.entidades;
 public class Costo {
 	private Double tiempoEstimadoEnMinutos;
 	private Double distanciaEnKm;
+	
 	public Double getTiempoEstimadoEnMinutos() {
 		return tiempoEstimadoEnMinutos;
 	}

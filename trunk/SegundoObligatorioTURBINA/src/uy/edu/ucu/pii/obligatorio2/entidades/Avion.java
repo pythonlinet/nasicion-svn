@@ -11,7 +11,7 @@ public class Avion {
 	private Comparable nombre;
 	private Double rendimiento;
 	
-	TLista<Tramo> tramosAsignados;
+	private TLista<Tramo> tramosAsignados;
 
 	
 	public Comparable getNombre() {
