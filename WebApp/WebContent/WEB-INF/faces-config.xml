@@ -11,15 +11,23 @@
   <from-view-id>*</from-view-id>
   <navigation-case>
    <from-outcome>goMain</from-outcome>
-   <to-view-id>/pages/main.xhtml</to-view-id>
+   <to-view-id>/faces/main.xhtml</to-view-id>
+   <redirect/>
   </navigation-case>
   <navigation-case>
    <from-outcome>goAltaUsuario</from-outcome>
-   <to-view-id>/pages/usuarios/altaUsuario.xhtml</to-view-id>
+   <to-view-id>/faces/usuarios/altaUsuario.xhtml</to-view-id>
+   <redirect/>
   </navigation-case>
   <navigation-case>
-   <from-outcome>goIndex</from-outcome>
-   <to-view-id>/index.html</to-view-id>
+   <from-outcome>goLogin</from-outcome>
+   <to-view-id>/faces/login.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>goMyTasks</from-outcome>
+   <to-view-id>/faces/tareas/myTasks.xhtml</to-view-id>
+   <redirect/>
   </navigation-case>
  </navigation-rule>
  <application>
@@ -30,4 +38,7 @@
   </locale-config>
   <message-bundle>com.gnasi.webapp.messages.messages</message-bundle>
  </application>
+ <lifecycle>
+  <phase-listener>com.gnasi.webapp.phaseListeners.checkLoginPhaseListener</phase-listener>
+ </lifecycle>
 </faces-config>

@@ -40,13 +40,9 @@
   <url-pattern>*.xhtml</url-pattern>
  </servlet-mapping>
  <welcome-file-list>
-  <welcome-file>/index.xhtml</welcome-file>
+  <welcome-file>faces/main.xhtml</welcome-file>
  </welcome-file-list>
  <login-config>
   <auth-method>BASIC</auth-method>
-  <form-login-config>
-   <form-login-page>/index.html</form-login-page>
-   <form-error-page>/index.html</form-error-page>
-  </form-login-config>
  </login-config>
 </web-app>

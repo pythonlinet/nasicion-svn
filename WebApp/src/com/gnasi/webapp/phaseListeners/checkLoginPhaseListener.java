@@ -1,13 +1,7 @@
 package com.gnasi.webapp.phaseListeners;
 
-import javax.faces.application.NavigationHandler;
-import javax.faces.context.FacesContext;
-import javax.faces.event.PhaseEvent;
-import javax.faces.event.PhaseId;
-import javax.faces.event.PhaseListener;
 import javax.servlet.http.HttpSession;
 
-@SuppressWarnings("serial")
 public class checkLoginPhaseListener implements PhaseListener {
 
 	@Override
