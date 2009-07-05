@@ -1,24 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PROCESS model-entity="JSFProcess">
- <PROCESS-ITEM NAME="rules:*" PATH="*" SHAPE="56,72,53,26" model-entity="JSFProcessGroup">
+ <PROCESS-ITEM NAME="rules:*" PATH="*" SHAPE="24,160,53,74" model-entity="JSFProcessGroup">
   <PROCESS-ITEM ID="rules:*:0" NAME="item" PATH="*" model-entity="JSFProcessItem">
-   <PROCESS-ITEM-OUTPUT ID="goMain::#pages#main.xhtml" NAME="output"
-    PATH="/pages/main.xhtml" TARGET="rules:#pages#main.xhtml"
+   <PROCESS-ITEM-OUTPUT ID="goMain::#faces#main.xhtml" NAME="output"
+    PATH="/faces/main.xhtml" TARGET="rules:#faces#main.xhtml"
     TITLE="goMain" model-entity="JSFProcessItemOutput"/>
    <PROCESS-ITEM-OUTPUT
-    ID="goAltaUsuario::#pages#usuarios#altaUsuario.xhtml" NAME="output2"
-    PATH="/pages/usuarios/altaUsuario.xhtml"
-    TARGET="rules:#pages#usuarios#altaUsuario.xhtml"
+    ID="goAltaUsuario::#faces#usuarios#altaUsuario.xhtml" NAME="output2"
+    PATH="/faces/usuarios/altaUsuario.xhtml"
+    TARGET="rules:#faces#usuarios#altaUsuario.xhtml"
     TITLE="goAltaUsuario" model-entity="JSFProcessItemOutput"/>
-   <PROCESS-ITEM-OUTPUT ID="goIndex::#index.html" NAME="output1"
-    PATH="/index.html" TARGET="rules:#index.html" TITLE="goIndex" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="goLogin::#faces#login.xhtml" NAME="output1"
+    PATH="/faces/login.xhtml" TARGET="rules:#faces#login.xhtml"
+    TITLE="goLogin" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="goMyTasks::#faces#tareas#myTasks.xhtml"
+    NAME="output3" PATH="/faces/tareas/myTasks.xhtml"
+    TARGET="rules:#faces#tareas#myTasks.xhtml" TITLE="goMyTasks" model-entity="JSFProcessItemOutput"/>
   </PROCESS-ITEM>
  </PROCESS-ITEM>
- <PROCESS-ITEM NAME="rules:#index.html" PATH="/index.html"
-  SHAPE="269,219,0,0" model-entity="JSFProcessGroup" persistent="true"/>
- <PROCESS-ITEM NAME="rules:#pages#usuarios#altaUsuario.xhtml"
-  PATH="/pages/usuarios/altaUsuario.xhtml" SHAPE="157,385,0,0"
+ <PROCESS-ITEM NAME="rules:#faces#usuarios#altaUsuario.xhtml"
+  PATH="/faces/usuarios/altaUsuario.xhtml" SHAPE="368,192,50,25"
   model-entity="JSFProcessGroup" persistent="true"/>
- <PROCESS-ITEM NAME="rules:#pages#main.xhtml" PATH="/pages/main.xhtml"
-  SHAPE="352,112,50,25" model-entity="JSFProcessGroup" persistent="true"/>
+ <PROCESS-ITEM NAME="rules:#faces#login.xhtml" PATH="/faces/login.xhtml"
+  SHAPE="368,336,50,25" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#faces#main.xhtml" PATH="/faces/main.xhtml"
+  SHAPE="368,56,50,25" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#faces#tareas#myTasks.xhtml"
+  PATH="/faces/tareas/myTasks.xhtml" SHAPE="252,407,0,0"
+  model-entity="JSFProcessGroup" persistent="true"/>
 </PROCESS>
