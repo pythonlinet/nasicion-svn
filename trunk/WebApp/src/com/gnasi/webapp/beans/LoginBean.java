@@ -1,13 +1,9 @@
 package com.gnasi.webapp.beans;
 
-import javax.ejb.SessionContext;
 import javax.faces.component.html.HtmlInputSecret;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionContext;
 
 import com.gnasi.webapp.datos.Resource;
 
@@ -51,6 +47,7 @@ public class LoginBean {
 		String password = (String) this.password.getValue();
 		this.user.setStyle("");
 		this.password.setStyle("");
+		
 		if(usuario == null || usuario.equals("")){
 			System.out.println("el USUARIO es NULL");
 			this.user.setStyle("background-color: red;");
@@ -60,14 +57,19 @@ public class LoginBean {
 			this.password.setStyle("background-color: red;");
 		}else
 			salida = "goMain";
-		System.out.println(usuario + " " + password);
-
-		//TODO Capacidad De Redireccionar
+		this.userLogin = new Resource();
+		userLogin.setUsuario(usuario);
+		
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		HttpSession session = (HttpSession) ctx.getExternalContext().getSession(true);
+		session.setAttribute("usuario", userLogin);
+		System.out.println(this.getClass().getName() + " Session Id " + session.getId());
+		
 		
 		return salida;
 	}
 	public String logOut(){
-		String salida = "goIndex";
+		String salida = "goLogin";
 		
 		FacesContext ctx = FacesContext.getCurrentInstance();
 		HttpSession session = (HttpSession) ctx.getExternalContext().getSession(true);
@@ -76,5 +78,4 @@ public class LoginBean {
 		
 		return salida;
 	}
-
 }
