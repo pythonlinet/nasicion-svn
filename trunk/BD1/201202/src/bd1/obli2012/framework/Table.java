@@ -59,6 +59,11 @@ public class Table {
     public void setPrimaryKeys(List<String> primaryKeys) {
         this.primaryKeys = primaryKeys;
     }
+
+    @Override
+    public String toString() {
+        return this.nombre;
+    }
     
     
 }

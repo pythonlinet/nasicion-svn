@@ -4,7 +4,19 @@
  */
 package bd1.obli2012.main;
 
+import bd1.obli2012.main.arbol.TableTreeNode;
+import bd1.obli2012.main.arbol.AttributeTreeNode;
+import bd1.obli2012.framework.Attribute;
+import bd1.obli2012.framework.DatabaseManager;
+import bd1.obli2012.framework.Schema;
+import bd1.obli2012.framework.Table;
+import bd1.obli2012.main.arbol.DBTreeCellRenderer;
+import bd1.obli2012.main.arbol.SchemaTreeNode;
+import java.util.List;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
 import javax.swing.UIManager;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
  *
@@ -12,6 +24,7 @@ import javax.swing.UIManager;
  */
 public class MainFrame extends javax.swing.JFrame {
 
+    private JTree arbolBD;
     /**
      * Creates new form MainFrame
      */
@@ -28,7 +41,9 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
+        /* inicializamos el arbol */
+        arbolBD = cargarArbol();
+        treePanel = new JScrollPane(arbolBD);
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -49,14 +64,14 @@ public class MainFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(treePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(416, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 367, Short.MAX_VALUE)
+                .addComponent(treePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 367, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -67,7 +82,6 @@ public class MainFrame extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
@@ -104,6 +118,32 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane treePanel;
     // End of variables declaration//GEN-END:variables
+
+    private JTree cargarArbol() {
+        
+        List<Schema> schemas = DatabaseManager.getInstance().getDataBaseSchemas();
+        DefaultMutableTreeNode dbRoot = new DefaultMutableTreeNode("Schemas");
+        
+        //Vector<DefaultMutableTreeNode> schemasNodes = new Vector<DefaultMutableTreeNode>();
+        for(Schema s : schemas) {
+            SchemaTreeNode schemaNode = 
+                    new SchemaTreeNode(s);
+            
+            
+            for(Table t : s.getTablas()) {
+                TableTreeNode tableNode = new TableTreeNode(s, t);
+                for(Attribute a : t.getAttributes()) {
+                    AttributeTreeNode atn = new AttributeTreeNode(a);
+                    tableNode.add(atn);
+                }
+                schemaNode.add(tableNode);
+            }
+            dbRoot.add(schemaNode);
+        }
+        JTree dbTree = new JTree(dbRoot);
+        dbTree.setCellRenderer(new DBTreeCellRenderer());
+        return dbTree;
+    }
 }

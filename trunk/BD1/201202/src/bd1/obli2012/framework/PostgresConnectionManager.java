@@ -20,6 +20,7 @@ public class PostgresConnectionManager implements ConnectionManager{
 	private static final String baseURL = "jdbc:postgresql://%s:%s/%s";
 	private static ConnectionManager instance;
 	private Connection conn;
+    private String dbHost;
 
 	private PostgresConnectionManager() {
 	}
@@ -54,6 +55,7 @@ public class PostgresConnectionManager implements ConnectionManager{
 				LOGGER.info("Estableciendo conexión");
 				this.conn = DriverManager.getConnection(url, user, passsword);
 				LOGGER.info("Conexión establecida");
+                                this.dbHost = (String) props.get("db.host");
 			} catch (SQLException e) {
 				LOGGER.severe("Ocurrió un error al establecer la conexión");
 				LOGGER.severe(e.getMessage());
@@ -76,4 +78,8 @@ public class PostgresConnectionManager implements ConnectionManager{
 			}
 		}
 	}
+        
+        public String getDbHost() {
+            return this.dbHost;
+        }
 }
