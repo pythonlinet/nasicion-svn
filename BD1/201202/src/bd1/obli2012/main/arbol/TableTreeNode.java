@@ -4,7 +4,7 @@
  */
 package bd1.obli2012.main.arbol;
 
-import bd1.obli2012.framework.Schema;
+import bd1.obli2012.framework.Database;
 import bd1.obli2012.framework.Table;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -14,31 +14,31 @@ import javax.swing.tree.DefaultMutableTreeNode;
  */
 public class TableTreeNode extends DefaultMutableTreeNode {
 
-    private String schema;
+    private String dbName;
     private String tableName;
 
     /**
      *
-     * @param schema
+     * @param db
      * @param tableName
      */
-    public TableTreeNode(Schema schema, Table table) {
-        this.schema = schema.getNombre();
+    public TableTreeNode(Database db, Table table) {
+        this.dbName = db.getDbName();
         this.tableName = table.toString();
         this.setUserObject(table);
     }
     /**
      * @return the schema
      */
-    public String getSchema() {
-        return schema;
+    public String getDatabase() {
+        return dbName;
     }
 
     /**
-     * @param schema the schema to set
+     * @param databaseName the schema to set
      */
-    public void setSchema(String schema) {
-        this.schema = schema;
+    public void setDatabase(String databaseName) {
+        this.dbName = databaseName;
     }
 
     /**

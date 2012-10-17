@@ -40,7 +40,7 @@ public class DBTreeCellRenderer extends DefaultTreeCellRenderer {
             setIcon(tableIcon);
         } else if (value instanceof AttributeTreeNode) {
             setIcon(attributeIcon);
-        } else if (value instanceof SchemaTreeNode) {
+        } else if (value instanceof DBTreeNode) {
             setIcon(dbIcon);
         } else {
             setIcon(dbsIcon);

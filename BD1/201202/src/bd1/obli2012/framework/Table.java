@@ -14,6 +14,7 @@ public class Table {
     private String nombre;
     private List<Attribute> attributes;
     private List<String> primaryKeys;
+    private String database;
 
     public Table(String nombre){
         this.nombre = nombre;
@@ -63,6 +64,20 @@ public class Table {
     @Override
     public String toString() {
         return this.nombre;
+    }
+
+    /**
+     * @return the database
+     */
+    public String getDatabase() {
+        return database;
+    }
+
+    /**
+     * @param database the database to set
+     */
+    public void setDatabase(String database) {
+        this.database = database;
     }
     
     
