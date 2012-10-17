@@ -34,6 +34,11 @@ public class Schema {
     public List<Table> getTablas() {
         return tablas;
     }
+
+    @Override
+    public String toString() {
+        return this.nombre;
+    }
     
     
 }

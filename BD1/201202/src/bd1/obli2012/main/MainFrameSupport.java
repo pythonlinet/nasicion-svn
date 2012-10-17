@@ -9,5 +9,7 @@ package bd1.obli2012.main;
  * @author guillermo
  */
 public class MainFrameSupport {
-    public void 
+    public void generarArbol() {
+        
+    }
 }
