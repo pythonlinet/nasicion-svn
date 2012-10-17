@@ -7,10 +7,12 @@ package bd1.obli2012.main;
 import bd1.obli2012.main.arbol.TableTreeNode;
 import bd1.obli2012.main.arbol.AttributeTreeNode;
 import bd1.obli2012.framework.Attribute;
+import bd1.obli2012.framework.Database;
 import bd1.obli2012.framework.DatabaseManager;
 import bd1.obli2012.framework.Schema;
 import bd1.obli2012.framework.Table;
 import bd1.obli2012.main.arbol.DBTreeCellRenderer;
+import bd1.obli2012.main.arbol.DBTreeNode;
 import bd1.obli2012.main.arbol.SchemaTreeNode;
 import java.util.List;
 import javax.swing.JScrollPane;
@@ -25,6 +27,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 public class MainFrame extends javax.swing.JFrame {
 
     private JTree arbolBD;
+
     /**
      * Creates new form MainFrame
      */
@@ -88,14 +91,14 @@ public class MainFrame extends javax.swing.JFrame {
          */
         try {
             /*
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }*/
+             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+             if ("Nimbus".equals(info.getName())) {
+             javax.swing.UIManager.setLookAndFeel(info.getClassName());
+             break;
+             }
+             }*/
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-          
+
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
@@ -122,28 +125,27 @@ public class MainFrame extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private JTree cargarArbol() {
-        
-        List<Schema> schemas = DatabaseManager.getInstance().getDataBaseSchemas();
-        DefaultMutableTreeNode dbRoot = new DefaultMutableTreeNode("Schemas");
-        
-        //Vector<DefaultMutableTreeNode> schemasNodes = new Vector<DefaultMutableTreeNode>();
-        for(Schema s : schemas) {
-            SchemaTreeNode schemaNode = 
-                    new SchemaTreeNode(s);
-            
-            
-            for(Table t : s.getTablas()) {
-                TableTreeNode tableNode = new TableTreeNode(s, t);
-                for(Attribute a : t.getAttributes()) {
+
+        List<Database> dbs = DatabaseManager.getInstance().getDataBases();
+        DefaultMutableTreeNode dbRoot = new DefaultMutableTreeNode("Bases de datos");
+
+        for (Database db : dbs) {
+            DBTreeNode dbNode = new DBTreeNode(db);
+            for (Table t : db.getTables()) {
+                TableTreeNode tableNode = new TableTreeNode(db, t);
+                for (Attribute a : t.getAttributes()) {
                     AttributeTreeNode atn = new AttributeTreeNode(a);
                     tableNode.add(atn);
                 }
-                schemaNode.add(tableNode);
+                dbNode.add(tableNode);
             }
-            dbRoot.add(schemaNode);
+            dbRoot.add(dbNode);
         }
-        JTree dbTree = new JTree(dbRoot);
-        dbTree.setCellRenderer(new DBTreeCellRenderer());
-        return dbTree;
-    }
+    
+    JTree dbTree = new JTree(dbRoot);
+
+    dbTree.setCellRenderer (
+    new DBTreeCellRenderer());
+        return dbTree ;
+}
 }

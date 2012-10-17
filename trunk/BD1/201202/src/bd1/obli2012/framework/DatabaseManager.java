@@ -82,17 +82,17 @@ public class DatabaseManager {
      * Obtiene los esquemas presentes en la base de datos
      * @return 
      */
-    public List<Schema> getDataBaseSchemas() {
+    public List<Schema> getDataBaseSchemas(String dbName) {
         cm = PostgresConnectionManager.getInstance();
         Connection con = cm.obtenerConexion();
         List<Schema> salida = null;
         try {
             DatabaseMetaData metadata = con.getMetaData();
-            ResultSet rs = metadata.getSchemas();
+            ResultSet rs = metadata.getSchemas(dbName, "%");
             salida = new ArrayList<Schema>();
             while(rs.next()){
                 Schema s = new Schema(rs.getString(1));
-                s.setTablas(getTablesForSchema(s.getNombre()));
+                s.setTablas(getTablesForDB(s.getNombre()));
                 salida.add(s);
             }
             return salida;
@@ -102,14 +102,14 @@ public class DatabaseManager {
         return salida;
     }
     
-    public List<Table> getTablesForSchema(String nombreSchema){
+    public List<Table> getTablesForDB(String nombreDB){
         cm = PostgresConnectionManager.getInstance();
-        Connection con = cm.obtenerConexion();
+        Connection con = cm.obtenerConexion(nombreDB);
         List<Table> salida = null;
         try {
             DatabaseMetaData metadata = con.getMetaData();
             String[] tipoTabla = {"TABLE"};
-            ResultSet rs = metadata.getTables(null, nombreSchema, "%", tipoTabla);
+            ResultSet rs = metadata.getTables(null, "public", "%", tipoTabla);
             salida = new ArrayList<Table>();
             while(rs.next()){
                 /*
@@ -119,28 +119,28 @@ public class DatabaseManager {
                  * Column 4 table_type
                  */
                 Table t = new Table(rs.getString(3));
-                
-                t.setAttributes(getColumsForTable(rs.getString(3)));
+                t.setDatabase(nombreDB);
+                t.setAttributes(getColumsForTable(t));
                 List<String> pk = getPrimaryKeysForTable(rs.getString(3));
                 t.setPrimaryKeys(pk);
                 salida.add(t);
             }
             
         } catch (SQLException ex) {
-            LOGGER.log(Level.SEVERE, "Error obteniendo tablas para el schema: {0}", nombreSchema);
+            LOGGER.log(Level.SEVERE, "Error obteniendo tablas para el schema: {0}", nombreDB);
             LOGGER.severe(ex.getMessage());
         }
         
         return salida;
     }
     
-    public List<Attribute> getColumsForTable(String nombreTabla){
+    public List<Attribute> getColumsForTable(Table tabla){
         cm = PostgresConnectionManager.getInstance();
-        Connection con = cm.obtenerConexion();
+        Connection con = cm.obtenerConexion(tabla.getDatabase());
         List<Attribute> salida = null;
         try {
             DatabaseMetaData metadata = con.getMetaData();
-            ResultSet rs = metadata.getColumns(null, null, nombreTabla, "%");
+            ResultSet rs = metadata.getColumns(tabla.getDatabase(), "public", tabla.getNombre(), "%");
             salida = new ArrayList<Attribute>();
             while(rs.next()){
                 /*
@@ -181,7 +181,7 @@ public class DatabaseManager {
             }
             
         } catch (SQLException ex) {
-            LOGGER.log(Level.SEVERE, "Error obteniendo atributos para la tabla: {0}", nombreTabla);
+            LOGGER.log(Level.SEVERE, "Error obteniendo atributos para la tabla: {0}", tabla);
             LOGGER.severe(ex.getMessage());
         }
         
@@ -204,5 +204,29 @@ public class DatabaseManager {
             LOGGER.severe(ex.getMessage());
         }
         return result;
+    }
+
+    public List<Database> getDataBases() {
+        List<Database> databases = null;
+        cm = PostgresConnectionManager.getInstance();
+        Connection con = cm.obtenerConexion();
+        try {
+            ResultSet res = executeQueryWithResult(PostgresConnectionManager.getInstance().listDBsQuery());
+            databases = new LinkedList<Database>();
+            while(res.next()){
+                Database db = new Database();
+                db.setDbName(res.getString(1));
+                
+                db.setTables(getTablesForDB(db.getDbName()));
+                
+                databases.add(db);
+            }
+            
+        } catch (SQLException ex) {
+            LOGGER.severe("Error obteniendo las bases de datos del sistema");
+            LOGGER.severe(ex.getMessage());
+        }
+        
+        return databases;
     }
 }
