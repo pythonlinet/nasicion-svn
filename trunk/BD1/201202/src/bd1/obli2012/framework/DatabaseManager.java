@@ -15,74 +15,94 @@ import java.util.logging.Logger;
 
 public class DatabaseManager {
 
-	private ConnectionManager cm;
-	private static DatabaseManager instance = null;
-	private static final Logger LOGGER = Logger.getLogger(DatabaseManager.class
-			.getName());
+    private ConnectionManager cm;
+    private static DatabaseManager instance = null;
+    private static final Logger LOGGER = Logger.getLogger(DatabaseManager.class
+            .getName());
 
-	/**
-	 * Constructor por defecto
-	 */
-	private DatabaseManager() {
+    /**
+     * Constructor por defecto
+     */
+    private DatabaseManager() {
+    }
 
-	}
+    /**
+     * Retorna una instancia del DatabaseManager
+     *
+     * @return
+     */
+    public static DatabaseManager getInstance() {
+        if (instance == null) {
+            instance = new DatabaseManager();
+        }
+        return instance;
+    }
 
-	/**
-	 * Retorna una instancia del DatabaseManager
-	 * 
-	 * @return
-	 */
-	public static DatabaseManager getInstance() {
-		if (instance == null) {
-			instance = new DatabaseManager();
-		}
-		return instance;
-	}
+    /**
+     * Ejecuta una consulta en la base de datos que no espere resultados (ej:
+     * creación de tablas)
+     *
+     * @param query - la query a ser ejecutada en la base de datos
+     * @return <code>true</code> si se realizó la consulta correctamente,
+     * <code>false</code> si ocurrió un error al ejecutar la consulta
+     */
+    public boolean executeQuery(String query) {
+        boolean salida = true;
+        cm = PostgresConnectionManager.getInstance();
+        Connection con = cm.obtenerConexion();
+        try {
+            Statement st = con.createStatement();
+            st.execute(query);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error al ejecutar la consulta : {0}", query);
+            LOGGER.severe(e.getMessage());
+            salida = false;
+        }
+        return salida;
+    }
 
-	/**
-	 * Ejecuta una consulta en la base de datos que no espere resultados
-	 * (ej: creación de tablas)
-	 * @param query - la query a ser ejecutada en la base de datos
-	 * @return <code>true</code> si se realizó la consulta correctamente,
-	 *         <code>false</code> si ocurrió un error al ejecutar la consulta
-	 */
-	public boolean executeQuery(String query) {
-		boolean salida = true;
-		cm = PostgresConnectionManager.getInstance();
-		Connection con = cm.obtenerConexion();
-		try {
-			Statement st = con.createStatement();
-			st.execute(query);
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, "Error al ejecutar la consulta : {0}", query);
-			LOGGER.severe(e.getMessage());
-			salida = false;
-		}
-		return salida;
-	}
+    public boolean executeQueryInDB(String dbName, String query) {
+        boolean salida = true;
+        cm = PostgresConnectionManager.getInstance();
+        Connection con = cm.obtenerConexion(dbName);
+        try {
+            Statement st = con.createStatement();
+            st.execute(query);
+            con.close();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error al ejecutar la consulta : {0}", query);
+            LOGGER.severe(e.getMessage());
+            salida = false;
+        }
+        
+        return salida;
+    }
 
-	/**
-	 * Ejecuta una consulta contra la base de datos que espere resultados
-	 * @param query - la query a ser ejecutada en la base de datos
-	 * @return un {@link ResultSet} con el resultado de la consulta
-	 */
-	public ResultSet executeQueryWithResult(String query) {
-		ResultSet rs = null;
-		cm = PostgresConnectionManager.getInstance();
-		Connection con = cm.obtenerConexion();
-		try {
-			Statement st = con.createStatement();
-			rs = st.executeQuery(query);
+    /**
+     * Ejecuta una consulta contra la base de datos que espere resultados
+     *
+     * @param query - la query a ser ejecutada en la base de datos
+     * @return un {@link ResultSet} con el resultado de la consulta
+     */
+    public ResultSet executeQueryWithResult(String query) {
+        ResultSet rs = null;
+        cm = PostgresConnectionManager.getInstance();
+        Connection con = cm.obtenerConexion();
+        try {
+            Statement st = con.createStatement();
+            rs = st.executeQuery(query);
 
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, "Error al ejecutar la consulta : {0}", query);
-			LOGGER.severe(e.getMessage());
-		}
-		return rs;
-	}
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error al ejecutar la consulta : {0}", query);
+            LOGGER.severe(e.getMessage());
+        }
+        return rs;
+    }
+
     /**
      * Obtiene los esquemas presentes en la base de datos
-     * @return 
+     *
+     * @return
      */
     public List<Schema> getDataBaseSchemas(String dbName) {
         cm = PostgresConnectionManager.getInstance();
@@ -92,7 +112,7 @@ public class DatabaseManager {
             DatabaseMetaData metadata = con.getMetaData();
             ResultSet rs = metadata.getSchemas(dbName, "%");
             salida = new ArrayList<Schema>();
-            while(rs.next()){
+            while (rs.next()) {
                 Schema s = new Schema(rs.getString(1));
                 s.setTablas(getTablesForDB(s.getNombre()));
                 salida.add(s);
@@ -103,8 +123,8 @@ public class DatabaseManager {
         }
         return salida;
     }
-    
-    public List<Table> getTablesForDB(String nombreDB){
+
+    public List<Table> getTablesForDB(String nombreDB) {
         cm = PostgresConnectionManager.getInstance();
         Connection con = cm.obtenerConexion(nombreDB);
         List<Table> salida = null;
@@ -113,7 +133,7 @@ public class DatabaseManager {
             String[] tipoTabla = {"TABLE"};
             ResultSet rs = metadata.getTables(null, "public", "%", tipoTabla);
             salida = new ArrayList<Table>();
-            while(rs.next()){
+            while (rs.next()) {
                 /*
                  * Column 1 table_cat
                  * Column 2 table_schem
@@ -124,21 +144,19 @@ public class DatabaseManager {
                 t.setDatabase(nombreDB);
                 t.setAttributes(getColumsForTable(t));
                 List<String> pk = getPrimaryKeysForTable(t);
-                Map<String,String> fk = getForeignKeysForTable(t);
+                Map<String, String> fk = getForeignKeysForTable(t);
                 t.setPrimaryKeys(pk);
                 t.setForeignKeys(fk);
                 salida.add(t);
             }
-            
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Error obteniendo tablas para el schema: {0}", nombreDB);
             LOGGER.severe(ex.getMessage());
-        }
-        
+        } 
         return salida;
     }
-    
-    public List<Attribute> getColumsForTable(Table tabla){
+
+    public List<Attribute> getColumsForTable(Table tabla) {
         cm = PostgresConnectionManager.getInstance();
         Connection con = cm.obtenerConexion(tabla.getDatabase());
         List<Attribute> salida = null;
@@ -146,7 +164,7 @@ public class DatabaseManager {
             DatabaseMetaData metadata = con.getMetaData();
             ResultSet rs = metadata.getColumns(tabla.getDatabase(), "public", tabla.getNombre(), "%");
             salida = new ArrayList<Attribute>();
-            while(rs.next()){
+            while (rs.next()) {
                 /*
                  * Column 1 TABLE_CAT
                  * Column 2 TABLE_SCHEM
@@ -172,25 +190,25 @@ public class DatabaseManager {
                  * Column 22 SOURCE_DATA_TYPE
                  */
                 String nombre = rs.getString(4);
-                Integer codigoTipo  = Integer.parseInt(rs.getString(5));
+                Integer codigoTipo = Integer.parseInt(rs.getString(5));
                 Boolean nullable = Integer.parseInt(rs.getString(11)) == 1 ? true : false;
                 String defaultValue = rs.getString(13);
-                
-                
+
+
                 Attribute attr = new Attribute();
                 attr.setNombre(nombre);
                 attr.setTipo(Type.getTypeForCode(codigoTipo));
                 attr.setNullable(nullable);
                 attr.setDefaultValue(defaultValue);
-                
+
                 salida.add(attr);
             }
-            
+
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Error obteniendo atributos para la tabla: {0}", tabla);
             LOGGER.severe(ex.getMessage());
         }
-        
+
         return salida;
     }
 
@@ -202,7 +220,7 @@ public class DatabaseManager {
             DatabaseMetaData metadata = con.getMetaData();
             ResultSet pKeys = metadata.getPrimaryKeys(null, null, tabla.getNombre());
             result = new LinkedList<String>();
-            while(pKeys.next()) {
+            while (pKeys.next()) {
                 result.add(pKeys.getString("COLUMN_NAME"));
             }
         } catch (SQLException ex) {
@@ -210,7 +228,7 @@ public class DatabaseManager {
         }
         return result;
     }
-    
+
     private Map<String, String> getForeignKeysForTable(Table tabla) {
         cm = PostgresConnectionManager.getInstance();
         Connection con = cm.obtenerConexion(tabla.getDatabase());
@@ -219,17 +237,17 @@ public class DatabaseManager {
             DatabaseMetaData metadata = con.getMetaData();
             ResultSet pKeys = metadata.getImportedKeys(null, null, tabla.getNombre());
             result = new HashMap<String, String>();
-            
-            while(pKeys.next()) {
+
+            while (pKeys.next()) {
 
                 /*
-                for (int i = 1; i <=  pKeys.getMetaData().getColumnCount(); i++) {
-                    System.out.println("Column " + i + " " 
-                            + pKeys.getMetaData().getColumnName(i) + " " +
-                            pKeys.getString(i));
+                 for (int i = 1; i <=  pKeys.getMetaData().getColumnCount(); i++) {
+                 System.out.println("Column " + i + " " 
+                 + pKeys.getMetaData().getColumnName(i) + " " +
+                 pKeys.getString(i));
                     
-                }*/
-                result.put(pKeys.getString("FKCOLUMN_NAME"),pKeys.getString("pktable_name"));
+                 }*/
+                result.put(pKeys.getString("FKCOLUMN_NAME"), pKeys.getString("pktable_name"));
             }
         } catch (SQLException ex) {
             LOGGER.severe(ex.getMessage());
@@ -244,20 +262,27 @@ public class DatabaseManager {
         try {
             ResultSet res = executeQueryWithResult(PostgresConnectionManager.getInstance().listDBsQuery());
             databases = new LinkedList<Database>();
-            while(res.next()){
+            while (res.next()) {
                 Database db = new Database();
                 db.setDbName(res.getString(1));
-                
+
                 db.setTables(getTablesForDB(db.getDbName()));
-                
+
                 databases.add(db);
             }
-            
+
         } catch (SQLException ex) {
             LOGGER.severe("Error obteniendo las bases de datos del sistema");
             LOGGER.severe(ex.getMessage());
-        }
+        }finally {
+            try {   
+                con.close();
+            } catch (SQLException ex) {
+                LOGGER.severe(ex.getMessage());
+            }
         
+        }
+
         return databases;
     }
 
@@ -269,8 +294,8 @@ public class DatabaseManager {
             DatabaseMetaData metadata = con.getMetaData();
             String[] tipoTabla = {"TABLE"};
             ResultSet rs = metadata.getTables(null, "public", tbName, tipoTabla);
-            
-            while(rs.next()){
+
+            while (rs.next()) {
                 /*
                  * Column 1 table_cat
                  * Column 2 table_schem
@@ -281,16 +306,16 @@ public class DatabaseManager {
                 salida.setDatabase(nombreDB);
                 salida.setAttributes(getColumsForTable(salida));
                 List<String> pk = getPrimaryKeysForTable(salida);
-                Map<String,String> fk = getForeignKeysForTable(salida);
+                Map<String, String> fk = getForeignKeysForTable(salida);
                 salida.setPrimaryKeys(pk);
                 salida.setForeignKeys(fk);
             }
-            
+
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Error obteniendo tablas para el schema: {0}", nombreDB);
             LOGGER.severe(ex.getMessage());
         }
-        
+
         return salida;
     }
 }

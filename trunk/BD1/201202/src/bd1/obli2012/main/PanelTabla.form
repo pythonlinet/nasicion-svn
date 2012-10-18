@@ -62,7 +62,7 @@
                 <Column editable="false" title="Nombre" type="java.lang.String"/>
                 <Column editable="false" title="Tipo dato" type="java.lang.Object"/>
                 <Column editable="false" title="Valor por Defecto" type="java.lang.String"/>
-                <Column editable="false" title="Nulo?" type="java.lang.Boolean"/>
+                <Column editable="false" title="Not Null" type="java.lang.Boolean"/>
                 <Column editable="false" title="Primary Key" type="java.lang.Boolean"/>
                 <Column editable="false" title="Foreign Key" type="java.lang.Boolean"/>
                 <Column editable="false" title="Reference" type="java.lang.String"/>

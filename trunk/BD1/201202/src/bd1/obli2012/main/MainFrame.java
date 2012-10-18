@@ -166,7 +166,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
             if(tablePanel != null){
                 this.remove(tablePanel);
             }
-            tablePanel  = new PanelTabla(tn.getDatabase(), tn.getTable().getNombre());
+            tablePanel  = new PanelTabla(tn.getDatabase(), tn.getTable().getNombre(), this);
             this.add(tablePanel, BorderLayout.EAST);
             this.pack();
         }
