@@ -5,6 +5,7 @@
 package bd1.obli2012.framework;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -14,10 +15,38 @@ public class Table {
     private String nombre;
     private List<Attribute> attributes;
     private List<String> primaryKeys;
+    private Map<String, String> foreignKeys;
     private String database;
 
     public Table(String nombre){
         this.nombre = nombre;
+    }
+    
+    /**
+     * Dice si una columna es primaryKey
+     * @param nombreColumna
+     * @return 
+     */
+    public boolean isPrimaryKey(String nombreColumna) {
+        return this.primaryKeys.contains(nombreColumna);
+    }
+    
+    /**
+     * Dice si una columna es foreign key
+     * @param nombreColumna
+     * @return 
+     */
+    public boolean isForeignKey(String nombreColumna) {
+        return this.foreignKeys.containsKey(nombreColumna);
+    }
+    
+    /**
+     * Dado un nombre de columna, si esta es FK obtiene su reference
+     * @param nombreColumna
+     * @return 
+     */
+    public String reference(String nombreColumna) {
+        return this.foreignKeys.get(nombreColumna);
     }
     /**
      * @return the nombre
@@ -81,4 +110,19 @@ public class Table {
     }
     
     
+    
+
+    /**
+     * @return the foreignKeys
+     */
+    public Map<String, String> getForeignKeys() {
+        return foreignKeys;
+    }
+
+    /**
+     * @param foreignKeys the foreignKeys to set
+     */
+    public void setForeignKeys(Map<String, String> foreignKeys) {
+        this.foreignKeys = foreignKeys;
+    }
 }

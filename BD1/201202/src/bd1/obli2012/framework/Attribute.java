@@ -12,6 +12,7 @@ public class Attribute {
     private String nombre;
     private Type tipo;
     private boolean nullable;
+    private String defaultValue;
 
     /**
      * @return the nombre
@@ -55,11 +56,26 @@ public class Attribute {
         this.nullable = nullable;
     }
 
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(this.nombre).append(":").append(this.tipo).append(" NULLABLE ").append(this.nullable);
+        sb.append(this.nombre).append(" : ").append(this.tipo).append(" NULLABLE ").append(this.nullable);
         return sb.toString();
+    }
+
+    /**
+     * @return the defaultValue
+     */
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    /**
+     * @param defaultValue the defaultValue to set
+     */
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
     }
     
     
