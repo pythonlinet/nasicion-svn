@@ -19,6 +19,7 @@ public class PanelTabla extends javax.swing.JPanel {
     private DefaultTableModel tableModel;
     private String dbName;
     private String tbName;
+    private MainFrame parent;
 
     /**
      * Creates new form TablePanel
@@ -26,6 +27,7 @@ public class PanelTabla extends javax.swing.JPanel {
     public PanelTabla(String dbName, String tbName, MainFrame parent) {
         this.dbName = dbName;
         this.tbName = tbName;
+        this.parent = parent;
         initComponents();
         cargarInformacionTabla();
 
@@ -149,7 +151,7 @@ public class PanelTabla extends javax.swing.JPanel {
      *
      * @param tabla
      */
-    public void cargarInformacionTabla() {
+    private void cargarInformacionTabla() {
         DefaultTableModel model = (DefaultTableModel)tablaAtributos.getModel();
         
         //vaciar tabla
@@ -179,5 +181,10 @@ public class PanelTabla extends javax.swing.JPanel {
                     });
         }
 
+    }
+    
+    public void actualizarDatos() {
+        cargarInformacionTabla();
+        this.parent.cargarArbol();
     }
 }

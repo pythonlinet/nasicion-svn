@@ -318,4 +318,18 @@ public class DatabaseManager {
 
         return salida;
     }
+
+    public boolean addColumn(String dbName, String tbName, String nombre, String type, String largo, boolean notNull, String defaultValue) {
+        String query = "ALTER TABLE %s ADD %s %s %s";
+        if(largo.trim().length() > 0) {
+            type+="(" + largo.trim() + ")";
+        }
+        String notNullStr = notNull ? "NOT NULL" : "NULL";
+        query = String.format(query, tbName, nombre, type, notNullStr);
+        if(defaultValue.trim().length() > 0) {
+            query+= " default '"+ defaultValue.trim() +"'";
+        }
+        query+= ";";
+        return executeQueryInDB(dbName, query);
+    }
 }
