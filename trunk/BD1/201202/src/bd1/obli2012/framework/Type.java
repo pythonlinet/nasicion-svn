@@ -31,30 +31,32 @@ public enum Type {
      93	TIMESTAMP
      1111 	OTHER*/
 
-    BIT(-7),
-    TINYINT(-6),
-    BIGINT(-5),
-    LONGVARBINARY(-4),
-    VARBINARY(-3),
-    BINARY(-2),
-    LONGVARCHAR(-1),
-    NULL(0),
-    CHAR(1),
-    NUMERIC(2),
-    DECIMAL(3),
-    INTEGER(4),
-    SMALLINT(5),
-    FLOAT(6),
-    REAL(7),
-    DOUBLE(8),
-    VARCHAR(12),
-    DATE(91),
-    TIME(92),
-    TIMESTAMP(93);
+    BIT(-7,true),
+    TINYINT(-6,false),
+    BIGINT(-5,false),
+    LONGVARBINARY(-4,false),
+    VARBINARY(-3,false),
+    BINARY(-2,false),
+    LONGVARCHAR(-1,true),
+    NULL(0,false),
+    CHAR(1,false),
+    NUMERIC(2,true),
+    DECIMAL(3,false),
+    INTEGER(4,false),
+    SMALLINT(5,false),
+    FLOAT(6,false),
+    REAL(7,false),
+    DOUBLE(8,false),
+    VARCHAR(12,true),
+    DATE(91,false),
+    TIME(92,false),
+    TIMESTAMP(93,false);
     
     private int codigo;
-    private Type(int codigo){
+    private boolean hasLenght;
+    private Type(int codigo, boolean hasLenght){
         this.codigo = codigo;
+        this.hasLenght = hasLenght;
     }
 
     /**
@@ -64,6 +66,9 @@ public enum Type {
         return codigo;
     }
     
+    public boolean hasLenght() {
+        return this.hasLenght;
+    }
     /**
      * Obtiene el Type para un codigo dado
      * @param codigo - codigo del Type requerido;

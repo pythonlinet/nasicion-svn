@@ -15,7 +15,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 public class TableTreeNode extends DefaultMutableTreeNode {
 
     private String dbName;
-    private String tableName;
+    private Table table;
 
     /**
      *
@@ -24,7 +24,7 @@ public class TableTreeNode extends DefaultMutableTreeNode {
      */
     public TableTreeNode(Database db, Table table) {
         this.dbName = db.getDbName();
-        this.tableName = table.toString();
+        this.table = table;
         this.setUserObject(table);
     }
     /**
@@ -42,16 +42,16 @@ public class TableTreeNode extends DefaultMutableTreeNode {
     }
 
     /**
-     * @return the tableName
+     * @return the table
      */
-    public String getTableName() {
-        return tableName;
+    public Table getTable() {
+        return table;
     }
 
     /**
-     * @param tableName the tableName to set
+     * @param table the table to set
      */
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
+    public void setTable(Table table) {
+        this.table = table;
     }
 }

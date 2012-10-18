@@ -9,31 +9,38 @@ import bd1.obli2012.main.arbol.AttributeTreeNode;
 import bd1.obli2012.framework.Attribute;
 import bd1.obli2012.framework.Database;
 import bd1.obli2012.framework.DatabaseManager;
-import bd1.obli2012.framework.Schema;
 import bd1.obli2012.framework.Table;
 import bd1.obli2012.main.arbol.DBTreeCellRenderer;
 import bd1.obli2012.main.arbol.DBTreeNode;
-import bd1.obli2012.main.arbol.SchemaTreeNode;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.util.List;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.UIManager;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
  *
  * @author guillermo
  */
-public class MainFrame extends javax.swing.JFrame {
+public class MainFrame extends javax.swing.JFrame implements TreeSelectionListener{
 
     private JTree arbolBD;
-
+    private JPanel tablePanel;
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
         initComponents();
+        //Colocamos el nuevo tipo de layout que queremos que tenga nuestro JFrame
+        this.setLayout(new FlowLayout());
+        this.pack();
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -52,6 +59,9 @@ public class MainFrame extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
+
+        treePanel.setMinimumSize(new java.awt.Dimension(120, 90));
 
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
@@ -66,16 +76,15 @@ public class MainFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(treePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(416, Short.MAX_VALUE))
+                .addGap(12, 12, 12)
+                .addComponent(treePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(123, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(treePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 367, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(12, 12, 12)
+                .addComponent(treePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -143,9 +152,26 @@ public class MainFrame extends javax.swing.JFrame {
         }
     
     JTree dbTree = new JTree(dbRoot);
-
+    dbTree.addTreeSelectionListener(this);
     dbTree.setCellRenderer (
     new DBTreeCellRenderer());
         return dbTree ;
 }
+
+    public void valueChanged(TreeSelectionEvent tse) {
+        Object selectedNode = arbolBD.getLastSelectedPathComponent();
+        if(selectedNode instanceof TableTreeNode) {
+            TableTreeNode tn = (TableTreeNode)selectedNode;
+            
+            if(tablePanel != null){
+                this.remove(tablePanel);
+            }
+            tablePanel  = new PanelTabla(tn.getDatabase(), tn.getTable().getNombre());
+            this.add(tablePanel, BorderLayout.EAST);
+            this.pack();
+        }
+        
+        
+       
+    }
 }

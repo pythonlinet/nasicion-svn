@@ -6,8 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -121,8 +123,10 @@ public class DatabaseManager {
                 Table t = new Table(rs.getString(3));
                 t.setDatabase(nombreDB);
                 t.setAttributes(getColumsForTable(t));
-                List<String> pk = getPrimaryKeysForTable(rs.getString(3));
+                List<String> pk = getPrimaryKeysForTable(t);
+                Map<String,String> fk = getForeignKeysForTable(t);
                 t.setPrimaryKeys(pk);
+                t.setForeignKeys(fk);
                 salida.add(t);
             }
             
@@ -170,13 +174,15 @@ public class DatabaseManager {
                 String nombre = rs.getString(4);
                 Integer codigoTipo  = Integer.parseInt(rs.getString(5));
                 Boolean nullable = Integer.parseInt(rs.getString(11)) == 1 ? true : false;
-                
+                String defaultValue = rs.getString(13);
                 
                 
                 Attribute attr = new Attribute();
                 attr.setNombre(nombre);
                 attr.setTipo(Type.getTypeForCode(codigoTipo));
                 attr.setNullable(nullable);
+                attr.setDefaultValue(defaultValue);
+                
                 salida.add(attr);
             }
             
@@ -188,17 +194,42 @@ public class DatabaseManager {
         return salida;
     }
 
-    private List<String> getPrimaryKeysForTable(String nombreTabla) {
+    private List<String> getPrimaryKeysForTable(Table tabla) {
         cm = PostgresConnectionManager.getInstance();
-        Connection con = cm.obtenerConexion();
+        Connection con = cm.obtenerConexion(tabla.getDatabase());
         List<String> result = null;
         try {
             DatabaseMetaData metadata = con.getMetaData();
-            ResultSet pKeys = metadata.getPrimaryKeys(null, null, nombreTabla);
+            ResultSet pKeys = metadata.getPrimaryKeys(null, null, tabla.getNombre());
             result = new LinkedList<String>();
             while(pKeys.next()) {
-                System.out.println(pKeys.getString("COLUMN_NAME"));
                 result.add(pKeys.getString("COLUMN_NAME"));
+            }
+        } catch (SQLException ex) {
+            LOGGER.severe(ex.getMessage());
+        }
+        return result;
+    }
+    
+    private Map<String, String> getForeignKeysForTable(Table tabla) {
+        cm = PostgresConnectionManager.getInstance();
+        Connection con = cm.obtenerConexion(tabla.getDatabase());
+        Map<String, String> result = null;
+        try {
+            DatabaseMetaData metadata = con.getMetaData();
+            ResultSet pKeys = metadata.getImportedKeys(null, null, tabla.getNombre());
+            result = new HashMap<String, String>();
+            
+            while(pKeys.next()) {
+
+                /*
+                for (int i = 1; i <=  pKeys.getMetaData().getColumnCount(); i++) {
+                    System.out.println("Column " + i + " " 
+                            + pKeys.getMetaData().getColumnName(i) + " " +
+                            pKeys.getString(i));
+                    
+                }*/
+                result.put(pKeys.getString("FKCOLUMN_NAME"),pKeys.getString("pktable_name"));
             }
         } catch (SQLException ex) {
             LOGGER.severe(ex.getMessage());
@@ -228,5 +259,38 @@ public class DatabaseManager {
         }
         
         return databases;
+    }
+
+    public Table getTable(String nombreDB, String tbName) {
+        cm = PostgresConnectionManager.getInstance();
+        Connection con = cm.obtenerConexion(nombreDB);
+        Table salida = null;
+        try {
+            DatabaseMetaData metadata = con.getMetaData();
+            String[] tipoTabla = {"TABLE"};
+            ResultSet rs = metadata.getTables(null, "public", tbName, tipoTabla);
+            
+            while(rs.next()){
+                /*
+                 * Column 1 table_cat
+                 * Column 2 table_schem
+                 * Column 3 table_name
+                 * Column 4 table_type
+                 */
+                salida = new Table(rs.getString(3));
+                salida.setDatabase(nombreDB);
+                salida.setAttributes(getColumsForTable(salida));
+                List<String> pk = getPrimaryKeysForTable(salida);
+                Map<String,String> fk = getForeignKeysForTable(salida);
+                salida.setPrimaryKeys(pk);
+                salida.setForeignKeys(fk);
+            }
+            
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Error obteniendo tablas para el schema: {0}", nombreDB);
+            LOGGER.severe(ex.getMessage());
+        }
+        
+        return salida;
     }
 }
