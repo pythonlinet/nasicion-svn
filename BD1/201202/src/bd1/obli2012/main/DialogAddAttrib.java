@@ -39,7 +39,7 @@ public class DialogAddAttrib extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         cmbTipoDato = new javax.swing.JComboBox();
-        notNull = new javax.swing.JCheckBox();
+        chkNotNull = new javax.swing.JCheckBox();
         jLabel3 = new javax.swing.JLabel();
         txtLargo = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
@@ -66,10 +66,10 @@ public class DialogAddAttrib extends javax.swing.JDialog {
             }
         });
 
-        notNull.setText("Not Null");
-        notNull.addActionListener(new java.awt.event.ActionListener() {
+        chkNotNull.setText("Not Null");
+        chkNotNull.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                notNullActionPerformed(evt);
+                chkNotNullActionPerformed(evt);
             }
         });
 
@@ -109,7 +109,7 @@ public class DialogAddAttrib extends javax.swing.JDialog {
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
                             .addComponent(jLabel3)
-                            .addComponent(notNull)
+                            .addComponent(chkNotNull)
                             .addComponent(jLabel4))
                         .addGap(10, 10, 10)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -144,7 +144,7 @@ public class DialogAddAttrib extends javax.swing.JDialog {
                     .addComponent(txtDefault, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(notNull)
+                .addComponent(chkNotNull)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAceptar)
@@ -164,33 +164,31 @@ public class DialogAddAttrib extends javax.swing.JDialog {
         txtLargo.setEnabled(tipo.hasLenght());
     }//GEN-LAST:event_cmbTipoDatoActionPerformed
 
-    private void notNullActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_notNullActionPerformed
+    private void chkNotNullActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkNotNullActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_notNullActionPerformed
+    }//GEN-LAST:event_chkNotNullActionPerformed
 
     private void txtLargoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLargoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtLargoActionPerformed
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-        String query = "ALTER TABLE %s ADD %s %s %s";
+        
+        
         String nombre = txtNombre.getText().trim();
         String type = ((Type)cmbTipoDato.getSelectedItem()).name();
-        if(txtLargo.isEnabled() && txtLargo.getText().trim().length() > 0) {
-            type+="(" + txtLargo.getText() + ")";
-        }
-        String nullable = notNull.isSelected() ? "NOT NULL":"NULL";
-        query = String.format(query, tbName, nombre, type, nullable);
-        if(txtDefault.getText().length() > 0) {
-            query+= " default '"+ txtDefault.getText().trim() +"'";
-        }
-        query+= ";";
-        boolean exitCode = DatabaseManager.getInstance().executeQueryInDB(dbName, query);
+        String largo = txtLargo.getText().trim();
+        boolean notNull = chkNotNull.isSelected();
+        String defaultValue = txtDefault.getText().trim();
+        
+        //boolean exitCode = DatabaseManager.getInstance().executeQueryInDB(dbName, query);
+        boolean exitCode = DatabaseManager.getInstance().addColumn(dbName, tbName, nombre, type, largo, notNull, defaultValue);
         System.out.println("Exitcode: " + exitCode);
         if(exitCode) {
-            parent.cargarInformacionTabla();
+            parent.actualizarDatos();
             this.dispose();
         }
+        
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -202,12 +200,12 @@ public class DialogAddAttrib extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JCheckBox chkNotNull;
     private javax.swing.JComboBox cmbTipoDato;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JCheckBox notNull;
     private javax.swing.JTextField txtDefault;
     private javax.swing.JTextField txtLargo;
     private javax.swing.JTextField txtNombre;

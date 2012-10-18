@@ -27,10 +27,11 @@ import javax.swing.tree.DefaultMutableTreeNode;
  *
  * @author guillermo
  */
-public class MainFrame extends javax.swing.JFrame implements TreeSelectionListener{
+public class MainFrame extends javax.swing.JFrame implements TreeSelectionListener {
 
     private JTree arbolBD;
     private JPanel tablePanel;
+
     /**
      * Creates new form MainFrame
      */
@@ -40,7 +41,6 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         this.setLayout(new FlowLayout());
         this.pack();
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -133,7 +133,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
     private javax.swing.JScrollPane treePanel;
     // End of variables declaration//GEN-END:variables
 
-    private JTree cargarArbol() {
+    public JTree cargarArbol() {
 
         List<Database> dbs = DatabaseManager.getInstance().getDataBases();
         DefaultMutableTreeNode dbRoot = new DefaultMutableTreeNode("Bases de datos");
@@ -150,28 +150,31 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
             }
             dbRoot.add(dbNode);
         }
-    
-    JTree dbTree = new JTree(dbRoot);
-    dbTree.addTreeSelectionListener(this);
-    dbTree.setCellRenderer (
-    new DBTreeCellRenderer());
-        return dbTree ;
-}
 
+        JTree dbTree = new JTree(dbRoot);
+        dbTree.addTreeSelectionListener(this);
+        dbTree.setCellRenderer(
+                new DBTreeCellRenderer());
+        return dbTree;
+    }
+
+    public void repaintTree(){
+        this.treePanel.repaint();
+    }
     public void valueChanged(TreeSelectionEvent tse) {
         Object selectedNode = arbolBD.getLastSelectedPathComponent();
-        if(selectedNode instanceof TableTreeNode) {
-            TableTreeNode tn = (TableTreeNode)selectedNode;
-            
-            if(tablePanel != null){
+        if (selectedNode instanceof TableTreeNode) {
+            TableTreeNode tn = (TableTreeNode) selectedNode;
+
+            if (tablePanel != null) {
                 this.remove(tablePanel);
             }
-            tablePanel  = new PanelTabla(tn.getDatabase(), tn.getTable().getNombre(), this);
+            tablePanel = new PanelTabla(tn.getDatabase(), tn.getTable().getNombre(), this);
             this.add(tablePanel, BorderLayout.EAST);
             this.pack();
         }
-        
-        
-       
+
+
+
     }
 }
