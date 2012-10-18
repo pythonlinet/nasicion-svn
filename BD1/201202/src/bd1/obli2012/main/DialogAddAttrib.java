@@ -4,18 +4,26 @@
  */
 package bd1.obli2012.main;
 
+import bd1.obli2012.framework.DatabaseManager;
+import bd1.obli2012.framework.Type;
+
 /**
  *
- * @author guillermo
+ * @author gnasi
  */
-public class FrameAgregarAtributo extends javax.swing.JFrame {
-    private final String dbName;
-    private final String tbnName;
-
-    FrameAgregarAtributo(String dbName, String tbName) {
+public class DialogAddAttrib extends javax.swing.JDialog {
+    private String dbName;
+    private String tbName;
+    private PanelTabla parent;
+    /**
+     * Creates new form DialogAddAttrib
+     */
+    public DialogAddAttrib(java.awt.Frame parent, boolean modal, String dbName, String tbName, PanelTabla parentPanel) {
+        super(parent, modal);
         initComponents();
         this.dbName = dbName;
-        this.tbnName = tbName;
+        this.tbName = tbName;
+        this.parent = parentPanel;
     }
 
     /**
@@ -39,7 +47,7 @@ public class FrameAgregarAtributo extends javax.swing.JFrame {
         btnAceptar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         txtNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -58,7 +66,7 @@ public class FrameAgregarAtributo extends javax.swing.JFrame {
             }
         });
 
-        notNull.setLabel("Nulo?");
+        notNull.setText("Not Null");
         notNull.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 notNullActionPerformed(evt);
@@ -76,6 +84,11 @@ public class FrameAgregarAtributo extends javax.swing.JFrame {
         jLabel4.setText("Valor por defecto");
 
         btnAceptar.setText("Aceptar");
+        btnAceptar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAceptarActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -100,7 +113,7 @@ public class FrameAgregarAtributo extends javax.swing.JFrame {
                             .addComponent(jLabel4))
                         .addGap(10, 10, 10)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmbTipoDato, javax.swing.GroupLayout.Alignment.TRAILING, 0, 267, Short.MAX_VALUE)
+                            .addComponent(cmbTipoDato, javax.swing.GroupLayout.Alignment.TRAILING, 0, 268, Short.MAX_VALUE)
                             .addComponent(txtLargo)
                             .addComponent(txtNombre)
                             .addComponent(txtDefault)))
@@ -139,31 +152,53 @@ public class FrameAgregarAtributo extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        notNull.getAccessibleContext().setAccessibleName("notNull");
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void notNullActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_notNullActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_notNullActionPerformed
 
     private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNombreActionPerformed
 
+    private void cmbTipoDatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTipoDatoActionPerformed
+        Type tipo = (Type) cmbTipoDato.getSelectedItem();
+        txtLargo.setEnabled(tipo.hasLenght());
+    }//GEN-LAST:event_cmbTipoDatoActionPerformed
+
+    private void notNullActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_notNullActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_notNullActionPerformed
+
     private void txtLargoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLargoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtLargoActionPerformed
 
+    private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
+        String query = "ALTER TABLE %s ADD %s %s %s";
+        String nombre = txtNombre.getText().trim();
+        String type = ((Type)cmbTipoDato.getSelectedItem()).name();
+        if(txtLargo.isEnabled() && txtLargo.getText().trim().length() > 0) {
+            type+="(" + txtLargo.getText() + ")";
+        }
+        String nullable = notNull.isSelected() ? "NOT NULL":"NULL";
+        query = String.format(query, tbName, nombre, type, nullable);
+        if(txtDefault.getText().length() > 0) {
+            query+= " default '"+ txtDefault.getText().trim() +"'";
+        }
+        query+= ";";
+        boolean exitCode = DatabaseManager.getInstance().executeQueryInDB(dbName, query);
+        System.out.println("Exitcode: " + exitCode);
+        if(exitCode) {
+            parent.cargarInformacionTabla();
+            this.dispose();
+        }
+    }//GEN-LAST:event_btnAceptarActionPerformed
+
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+
         this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
-    private void cmbTipoDatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTipoDatoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cmbTipoDatoActionPerformed
-
+   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnCancelar;

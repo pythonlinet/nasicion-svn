@@ -7,8 +7,8 @@ package bd1.obli2012.main;
 import bd1.obli2012.framework.Attribute;
 import bd1.obli2012.framework.DatabaseManager;
 import bd1.obli2012.framework.Table;
+import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 /**
  *
@@ -23,20 +23,10 @@ public class PanelTabla extends javax.swing.JPanel {
     /**
      * Creates new form TablePanel
      */
-    public PanelTabla(String dbName, String tbName) {
+    public PanelTabla(String dbName, String tbName, MainFrame parent) {
         this.dbName = dbName;
         this.tbName = tbName;
-       /*
-        tableModel = 
-            new javax.swing.table.DefaultTableModel(
-                new Object[][]{},
-                new String[]{"Nombre", "Tipo dato", "Valor por Defecto", "Nulo?", "Primary Key", "Foreign Key", "Reference"}
-                
-            );
-        */
         initComponents();
-        //tablaAtributos.setModel(tableModel);
-        
         cargarInformacionTabla();
 
     }
@@ -61,7 +51,7 @@ public class PanelTabla extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Nombre", "Tipo dato", "Valor por Defecto", "Nulo?", "Primary Key", "Foreign Key", "Reference"
+                "Nombre", "Tipo dato", "Valor por Defecto", "Not Null", "Primary Key", "Foreign Key", "Reference"
             }
         ) {
             Class[] types = new Class [] {
@@ -132,9 +122,11 @@ public class PanelTabla extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarAttrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarAttrActionPerformed
-
-        FrameAgregarAtributo addAttrib = new FrameAgregarAtributo(dbName, tbName);
-        addAttrib.setVisible(true);
+        DialogAddAttrib j = new DialogAddAttrib(null, true, dbName, tbName, this);
+        j.setVisible(true);
+        //DialogoAgregarAtributo addAttrib = new DialogoAgregarAtributo(dbName, tbName, this, true);
+        //addAttrib.setVisible(true);
+        
     }//GEN-LAST:event_btnAgregarAttrActionPerformed
 
     private void btnEditarAttrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarAttrActionPerformed
@@ -157,8 +149,13 @@ public class PanelTabla extends javax.swing.JPanel {
      *
      * @param tabla
      */
-    private void cargarInformacionTabla() {
+    public void cargarInformacionTabla() {
         DefaultTableModel model = (DefaultTableModel)tablaAtributos.getModel();
+        
+        //vaciar tabla
+        while(model.getRowCount() > 0){
+            model.removeRow(0);
+        }
         /*
          tableModel.addColumn("Nombre");
          tableModel.addColumn("Tipo dato");
@@ -175,7 +172,7 @@ public class PanelTabla extends javax.swing.JPanel {
                         a.getNombre(),
                         a.getTipo(),
                         a.getDefaultValue(),
-                        a.isNullable(),
+                        !a.isNullable(),
                         tabla.isPrimaryKey(a.getNombre()),
                         tabla.isForeignKey(a.getNombre()),
                         tabla.reference(a.getNombre())
