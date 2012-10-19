@@ -7,7 +7,7 @@ package bd1.obli2012.main;
 import bd1.obli2012.framework.Attribute;
 import bd1.obli2012.framework.DatabaseManager;
 import bd1.obli2012.framework.Table;
-import javax.swing.JFrame;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -126,17 +126,18 @@ public class PanelTabla extends javax.swing.JPanel {
     private void btnAgregarAttrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarAttrActionPerformed
         DialogAddAttrib j = new DialogAddAttrib(null, true, dbName, tbName, this);
         j.setVisible(true);
-        //DialogoAgregarAtributo addAttrib = new DialogoAgregarAtributo(dbName, tbName, this, true);
-        //addAttrib.setVisible(true);
-        
     }//GEN-LAST:event_btnAgregarAttrActionPerformed
 
     private void btnEditarAttrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarAttrActionPerformed
-        // TODO add your handling code here:
+        DialogModAttrib j = new DialogModAttrib(null, true, dbName, tbName, getSelectedColumnName() ,this);
+        j.setVisible(true);
     }//GEN-LAST:event_btnEditarAttrActionPerformed
 
     private void btnQuitarAttr1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarAttr1ActionPerformed
-        // TODO add your handling code here:
+        
+        String colName = getSelectedColumnName();
+        DatabaseManager.getInstance().removeColumn(dbName, tbName, colName);
+        actualizarDatos();
     }//GEN-LAST:event_btnQuitarAttr1ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarAttr;
@@ -185,6 +186,17 @@ public class PanelTabla extends javax.swing.JPanel {
     
     public void actualizarDatos() {
         cargarInformacionTabla();
+        //FIXME
         this.parent.cargarArbol();
+    }
+    
+    /**
+     * Obtiene el nombre del atributo seleccionado de la tabla
+     * 
+     * @return 
+     */
+    private String getSelectedColumnName() {
+        Integer row = tablaAtributos.getSelectedRow();
+        return tablaAtributos.getValueAt(row, 0).toString();
     }
 }
