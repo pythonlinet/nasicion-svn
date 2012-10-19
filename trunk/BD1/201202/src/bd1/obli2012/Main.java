@@ -51,6 +51,6 @@ public class Main {
         } catch (SQLException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }*/
-        DatabaseManager.getInstance().dumpTable("bd201202", "usuario");
+        DatabaseManager.getInstance().dumpTable("alquiler", "arrendador");
     }
 }

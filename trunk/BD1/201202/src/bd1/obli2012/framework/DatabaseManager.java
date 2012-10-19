@@ -1,16 +1,21 @@
 package bd1.obli2012.framework;
 
+import bd1.obli2012.Util;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -75,7 +80,7 @@ public class DatabaseManager {
             LOGGER.severe(e.getMessage());
             salida = false;
         }
-        
+
         return salida;
     }
 
@@ -153,7 +158,7 @@ public class DatabaseManager {
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Error obteniendo tablas para el schema: {0}", nombreDB);
             LOGGER.severe(ex.getMessage());
-        } 
+        }
         return salida;
     }
 
@@ -275,13 +280,13 @@ public class DatabaseManager {
         } catch (SQLException ex) {
             LOGGER.severe("Error obteniendo las bases de datos del sistema");
             LOGGER.severe(ex.getMessage());
-        }finally {
-            try {   
+        } finally {
+            try {
                 con.close();
             } catch (SQLException ex) {
                 LOGGER.severe(ex.getMessage());
             }
-        
+
         }
 
         return databases;
@@ -322,31 +327,79 @@ public class DatabaseManager {
 
     public boolean addColumn(String dbName, String tbName, String nombre, String type, String largo, boolean notNull, String defaultValue) {
         String query = "ALTER TABLE %s ADD %s %s %s";
-        if(largo.trim().length() > 0) {
-            type+="(" + largo.trim() + ")";
+        if (largo.trim().length() > 0) {
+            type += "(" + largo.trim() + ")";
         }
         String notNullStr = notNull ? "NOT NULL" : "NULL";
         query = String.format(query, tbName, nombre, type, notNullStr);
-        if(defaultValue.trim().length() > 0) {
-            query+= " default '"+ defaultValue.trim() +"'";
+        if (defaultValue.trim().length() > 0) {
+            query += " default '" + defaultValue.trim() + "'";
         }
-        query+= ";";
+        query += ";";
         return executeQueryInDB(dbName, query);
     }
-    
+
+    /**
+     * Realiza un dump de la tabla de base de datos especificada
+     * @param dbName
+     * @param tbName
+     * @return 
+     */
     public boolean dumpTable(String dbName, String tbName) {
-        Runtime.getRuntime().exec("pg_dump");
-        
-        cm = PostgresConnectionManager.getInstance();
-        Connection con = cm.obtenerConexion(dbName);
+        Properties props = Util.getProperties();
+        String host = (String) props.get("db.host");
+        String port = (String) props.get("db.port");
+        String username  = (String) props.get("db.user");
+        String password  = (String) props.get("db.userPassword");
+        String path = "./versiones/"+tbName+new Date().getTime() + ".sql";
+
+        final List<String> baseCmds = new ArrayList<String>();
+        //baseCmds.add("/usr/bin/pg_dump");
+        baseCmds.add("pg_dump");
+        baseCmds.add("-h");
+
+        baseCmds.add(host);
+        baseCmds.add("-p");
+
+        baseCmds.add(port);
+        baseCmds.add("-U");
+
+        baseCmds.add(username);
+        baseCmds.add("-b");
+        baseCmds.add("-v");
+        baseCmds.add("-f");
+
+        baseCmds.add(path);
+        baseCmds.add("-t");
+        baseCmds.add(tbName);
+        baseCmds.add(dbName);
+        final ProcessBuilder pb = new ProcessBuilder(baseCmds);
+
+        // Set the password
+        final Map<String, String> env = pb.environment();
+        env.put("PGPASSWORD", password);
+
         try {
-            PreparedStatement statement2 = con.prepareStatement("SELECT * FROM " + tbName);
-            statement2.executeQuery();
-            PreparedStatement statement = con.prepareStatement("copy (SELECT * FROM " + tbName + ") to '/home/shared/export.csv' delimiter ','");
-            //statement.executeQuery();
-        } catch (SQLException ex) {
-            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+            final Process process = pb.start();
+
+            final BufferedReader r = new BufferedReader(
+                    new InputStreamReader(process.getErrorStream()));
+            String line = r.readLine();
+            while (line != null) {
+                System.err.println(line);
+                line = r.readLine();
+            }
+            r.close();
+
+            final int dcertExitCode = process.waitFor();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
+            return false;
         }
-        return false;
+        return true;
     }
 }

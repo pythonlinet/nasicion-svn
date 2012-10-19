@@ -5,6 +5,7 @@
 package bd1.obli2012.main;
 
 import bd1.obli2012.framework.DatabaseManager;
+import bd1.obli2012.framework.Type;
 
 /**
  *
