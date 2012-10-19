@@ -2,6 +2,7 @@ package bd1.obli2012.framework;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -331,5 +332,21 @@ public class DatabaseManager {
         }
         query+= ";";
         return executeQueryInDB(dbName, query);
+    }
+    
+    public boolean dumpTable(String dbName, String tbName) {
+        Runtime.getRuntime().exec("pg_dump");
+        
+        cm = PostgresConnectionManager.getInstance();
+        Connection con = cm.obtenerConexion(dbName);
+        try {
+            PreparedStatement statement2 = con.prepareStatement("SELECT * FROM " + tbName);
+            statement2.executeQuery();
+            PreparedStatement statement = con.prepareStatement("copy (SELECT * FROM " + tbName + ") to '/home/shared/export.csv' delimiter ','");
+            //statement.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 }

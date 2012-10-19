@@ -40,6 +40,7 @@ public class Main {
                 }
             }
         }*/
+        /*
         String query = "SELECT datname FROM pg_database;";
         ResultSet rs = DatabaseManager.getInstance().executeQueryWithResult(query);
         try {
@@ -49,6 +50,7 @@ public class Main {
             }
         } catch (SQLException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
+        DatabaseManager.getInstance().dumpTable("bd201202", "usuario");
     }
 }

@@ -5,7 +5,6 @@
 package bd1.obli2012.main;
 
 import bd1.obli2012.framework.DatabaseManager;
-import bd1.obli2012.framework.Type;
 
 /**
  *
@@ -160,7 +159,7 @@ public class DialogAddAttrib extends javax.swing.JDialog {
     }//GEN-LAST:event_txtNombreActionPerformed
 
     private void cmbTipoDatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTipoDatoActionPerformed
-        Type tipo = (Type) cmbTipoDato.getSelectedItem();
+        bd1.obli2012.framework.Type tipo = (bd1.obli2012.framework.Type) cmbTipoDato.getSelectedItem();
         txtLargo.setEnabled(tipo.hasLenght());
     }//GEN-LAST:event_cmbTipoDatoActionPerformed
 
