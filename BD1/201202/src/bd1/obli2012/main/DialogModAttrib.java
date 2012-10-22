@@ -6,7 +6,6 @@ package bd1.obli2012.main;
 
 import bd1.obli2012.framework.Attribute;
 import bd1.obli2012.framework.DatabaseManager;
-import bd1.obli2012.framework.Type;
 
 /**
  *
@@ -186,7 +185,7 @@ public class DialogModAttrib extends javax.swing.JDialog {
         
         
         String nombre = txtNombre.getText().trim();
-        String type = ((Type)cmbTipoDato.getSelectedItem()).name();
+        String type = ((bd1.obli2012.framework.Type)cmbTipoDato.getSelectedItem()).name();
         String largo = txtLargo.getText().trim();
         boolean notNull = chkNotNull.isSelected();
         String defaultValue = txtDefault.getText().trim();
@@ -198,10 +197,16 @@ public class DialogModAttrib extends javax.swing.JDialog {
             exitCode = dbm.modifyColumnName(dbName, tbName, columna.getNombre() ,nombre);
         }
         //FIXME arreglar el tema del largo Steeeeve!!
-        if(!Type.valueOf(type).equals(columna.getTipo())) {
+        if(!bd1.obli2012.framework.Type.valueOf(type).equals(columna.getTipo())) {
             exitCode = dbm.modifyColumnType(dbName, tbName, nombre, type, largo);
         }
         
+        if(notNull != columna.isNullable()) {
+            exitCode = dbm.modifyColumnNullability(dbName, tbName, nombre, notNull);
+        }
+     
+        exitCode = dbm.modifyDefaultValue(dbName, tbName, columna.getNombre(), defaultValue);
+     
         
         if(exitCode) {
             parent.actualizarDatos();

@@ -176,7 +176,7 @@ public class DialogAddAttrib extends javax.swing.JDialog {
         
         
         String nombre = txtNombre.getText().trim();
-        String type = ((Type)cmbTipoDato.getSelectedItem()).name();
+        String type = ((bd1.obli2012.framework.Type)cmbTipoDato.getSelectedItem()).name();
         String largo = txtLargo.getText().trim();
         boolean notNull = chkNotNull.isSelected();
         String defaultValue = txtDefault.getText().trim();
