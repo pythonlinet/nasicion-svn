@@ -545,4 +545,17 @@ public class DatabaseManager {
         query = String.format(query, tbName, nombre, newNombre);
         return executeQueryInDB(dbName, query);
     }
+    
+    /**
+     * modifica el default value de la columna
+     * @param dbName
+     * @param tbName
+     * @param defaultValue
+     * @return 
+     */
+    public boolean modifyDefaultValue(String dbName, String tbName, String colName, String defaultValue) {
+        String query = "ALTER TABLE %s ALTER COLUMN %s SET default %s;";
+        query = String.format(query, tbName, colName, defaultValue);
+        return executeQueryInDB(dbName, query);
+    }
 }
