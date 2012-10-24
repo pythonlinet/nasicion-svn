@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package bd1.obli2012.framework;
+package bd1.obli2012.framework.definicion;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class Schema {
     private String nombre;
-    private List<Table> tablas;
+    private List<Tabla> tablas;
 
     public Schema(String nombre){
         this.nombre = nombre;
@@ -23,7 +23,7 @@ public class Schema {
         this.nombre = nombre;
     }
 
-    public void setTablas(List<Table> tablas) {
+    public void setTablas(List<Tabla> tablas) {
         this.tablas = tablas;
     }
 
@@ -31,7 +31,7 @@ public class Schema {
         return nombre;
     }
 
-    public List<Table> getTablas() {
+    public List<Tabla> getTablas() {
         return tablas;
     }
 

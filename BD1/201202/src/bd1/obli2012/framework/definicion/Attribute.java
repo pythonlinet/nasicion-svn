@@ -2,7 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package bd1.obli2012.framework;
+package bd1.obli2012.framework.definicion;
+
+import bd1.obli2012.framework.definicion.TipoDato;
 
 /**
  *
@@ -10,7 +12,7 @@ package bd1.obli2012.framework;
  */
 public class Attribute {
     private String nombre;
-    private Type tipo;
+    private TipoDato tipo;
     private boolean nullable;
     private String defaultValue;
 
@@ -31,14 +33,14 @@ public class Attribute {
     /**
      * @return the tipo
      */
-    public Type getTipo() {
+    public TipoDato getTipo() {
         return tipo;
     }
 
     /**
      * @param tipo the tipo to set
      */
-    public void setTipo(Type tipo) {
+    public void setTipo(TipoDato tipo) {
         this.tipo = tipo;
     }
 

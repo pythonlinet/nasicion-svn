@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package bd1.obli2012.framework;
+package bd1.obli2012.framework.definicion;
 
 import java.util.List;
 import java.util.Map;
@@ -11,14 +11,14 @@ import java.util.Map;
  *
  * @author 
  */
-public class Table {
+public class Tabla {
     private String nombre;
     private List<Attribute> attributes;
     private List<String> primaryKeys;
     private Map<String, String> foreignKeys;
     private String database;
 
-    public Table(String nombre){
+    public Tabla(String nombre){
         this.nombre = nombre;
     }
     
