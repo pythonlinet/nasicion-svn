@@ -2,13 +2,13 @@
  * To change this template(), choose Tools | Templates
  * and open the template in the editor.
  */
-package bd1.obli2012.framework;
+package bd1.obli2012.framework.definicion;
 
 /**
  *
  * @author guillermo
  */
-public enum Type {
+public enum TipoDato {
     /*    -7	BIT
      -6	TINYINT
      -5	BIGINT
@@ -54,7 +54,7 @@ public enum Type {
     
     private int codigo;
     private boolean hasLenght;
-    private Type(int codigo, boolean hasLenght){
+    private TipoDato(int codigo, boolean hasLenght){
         this.codigo = codigo;
         this.hasLenght = hasLenght;
     }
@@ -70,13 +70,13 @@ public enum Type {
         return this.hasLenght;
     }
     /**
-     * Obtiene el Type para un codigo dado
-     * @param codigo - codigo del Type requerido;
-     * @return el Type cuyo codigo corresponde o null si no existe  
+     * Obtiene el TipoDato para un codigo dado
+     * @param codigo - codigo del TipoDato requerido;
+     * @return el TipoDato cuyo codigo corresponde o null si no existe  
      *      el type con el codigo dado
      */
-    public static Type getTypeForCode(int codigo){
-        for(Type t : Type.values()){
+    public static TipoDato getTypeForCode(int codigo){
+        for(TipoDato t : TipoDato.values()){
             if(t.getCodigo() == codigo){
                 return t;
             }

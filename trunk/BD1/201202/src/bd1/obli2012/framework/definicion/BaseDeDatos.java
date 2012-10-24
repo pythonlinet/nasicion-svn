@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package bd1.obli2012.framework;
+package bd1.obli2012.framework.definicion;
 
 import java.util.List;
 
@@ -10,9 +10,9 @@ import java.util.List;
  *
  * @author gnasi
  */
-public class Database {
+public class BaseDeDatos {
     private String dbName;
-    private List<Table> tables;
+    private List<Tabla> tables;
 
     /**
      * @return the dbName
@@ -31,14 +31,14 @@ public class Database {
     /**
      * @return the tables
      */
-    public List<Table> getTables() {
+    public List<Tabla> getTables() {
         return tables;
     }
 
     /**
      * @param tables the tables to set
      */
-    public void setTables(List<Table> tables) {
+    public void setTables(List<Tabla> tables) {
         this.tables = tables;
     }
 

@@ -1,5 +1,10 @@
 package bd1.obli2012.framework;
 
+import bd1.obli2012.framework.definicion.BaseDeDatos;
+import bd1.obli2012.framework.definicion.Attribute;
+import bd1.obli2012.framework.definicion.Schema;
+import bd1.obli2012.framework.definicion.Tabla;
+import bd1.obli2012.framework.definicion.TipoDato;
 import bd1.obli2012.Util;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -130,15 +135,15 @@ public class DatabaseManager {
         return salida;
     }
 
-    public List<Table> getTablesForDB(String nombreDB) {
+    public List<Tabla> getTablesForDB(String nombreDB) {
         cm = PostgresConnectionManager.getInstance();
         Connection con = cm.obtenerConexion(nombreDB);
-        List<Table> salida = null;
+        List<Tabla> salida = null;
         try {
             DatabaseMetaData metadata = con.getMetaData();
             String[] tipoTabla = {"TABLE"};
             ResultSet rs = metadata.getTables(null, "public", "%", tipoTabla);
-            salida = new ArrayList<Table>();
+            salida = new ArrayList<Tabla>();
             while (rs.next()) {
                 /*
                  * Column 1 table_cat
@@ -146,7 +151,7 @@ public class DatabaseManager {
                  * Column 3 table_name
                  * Column 4 table_type
                  */
-                Table t = new Table(rs.getString(3));
+                Tabla t = new Tabla(rs.getString(3));
                 t.setDatabase(nombreDB);
                 t.setAttributes(getColumsForTable(t));
                 List<String> pk = getPrimaryKeysForTable(t);
@@ -162,7 +167,7 @@ public class DatabaseManager {
         return salida;
     }
 
-    public List<Attribute> getColumsForTable(Table tabla) {
+    public List<Attribute> getColumsForTable(Tabla tabla) {
         cm = PostgresConnectionManager.getInstance();
         Connection con = cm.obtenerConexion(tabla.getDatabase());
         List<Attribute> salida = null;
@@ -203,7 +208,7 @@ public class DatabaseManager {
 
                 Attribute attr = new Attribute();
                 attr.setNombre(nombre);
-                attr.setTipo(Type.getTypeForCode(codigoTipo));
+                attr.setTipo(TipoDato.getTypeForCode(codigoTipo));
                 attr.setNullable(nullable);
                 attr.setDefaultValue(defaultValue);
 
@@ -266,7 +271,7 @@ public class DatabaseManager {
 
                 salida = new Attribute();
                 salida.setNombre(nombre);
-                salida.setTipo(Type.getTypeForCode(codigoTipo));
+                salida.setTipo(TipoDato.getTypeForCode(codigoTipo));
                 salida.setNullable(nullable);
                 salida.setDefaultValue(defaultValue);
 
@@ -280,7 +285,7 @@ public class DatabaseManager {
         return salida;
     }
 
-    private List<String> getPrimaryKeysForTable(Table tabla) {
+    private List<String> getPrimaryKeysForTable(Tabla tabla) {
         cm = PostgresConnectionManager.getInstance();
         Connection con = cm.obtenerConexion(tabla.getDatabase());
         List<String> result = null;
@@ -297,7 +302,7 @@ public class DatabaseManager {
         return result;
     }
 
-    private Map<String, String> getForeignKeysForTable(Table tabla) {
+    private Map<String, String> getForeignKeysForTable(Tabla tabla) {
         cm = PostgresConnectionManager.getInstance();
         Connection con = cm.obtenerConexion(tabla.getDatabase());
         Map<String, String> result = null;
@@ -323,15 +328,15 @@ public class DatabaseManager {
         return result;
     }
 
-    public List<Database> getDataBases() {
-        List<Database> databases = null;
+    public List<BaseDeDatos> getDataBases() {
+        List<BaseDeDatos> databases = null;
         cm = PostgresConnectionManager.getInstance();
         Connection con = cm.obtenerConexion();
         try {
             ResultSet res = executeQueryWithResult(PostgresConnectionManager.getInstance().listDBsQuery());
-            databases = new LinkedList<Database>();
+            databases = new LinkedList<BaseDeDatos>();
             while (res.next()) {
-                Database db = new Database();
+                BaseDeDatos db = new BaseDeDatos();
                 db.setDbName(res.getString(1));
 
                 db.setTables(getTablesForDB(db.getDbName()));
@@ -354,10 +359,10 @@ public class DatabaseManager {
         return databases;
     }
 
-    public Table getTable(String nombreDB, String tbName) {
+    public Tabla getTable(String nombreDB, String tbName) {
         cm = PostgresConnectionManager.getInstance();
         Connection con = cm.obtenerConexion(nombreDB);
-        Table salida = null;
+        Tabla salida = null;
         try {
             DatabaseMetaData metadata = con.getMetaData();
             String[] tipoTabla = {"TABLE"};
@@ -370,7 +375,7 @@ public class DatabaseManager {
                  * Column 3 table_name
                  * Column 4 table_type
                  */
-                salida = new Table(rs.getString(3));
+                salida = new Tabla(rs.getString(3));
                 salida.setDatabase(nombreDB);
                 salida.setAttributes(getColumsForTable(salida));
                 List<String> pk = getPrimaryKeysForTable(salida);
@@ -492,70 +497,5 @@ public class DatabaseManager {
         String sql = "ALTER TABLE %s RENAME TO %s";
         sql = String.format(sql, tbName, newName);
         return executeQueryInDB(dbName, sql);
-    }
-
-    /**
-     * Modifica la definición de una columna en la tabla de la base de datos
-     * espeficicadas
-     *
-     * @param dbName
-     * @param tbName
-     * @param nombre
-     * @param type
-     * @param largo
-     * @return
-     */
-    public boolean modifyColumnType(String dbName, String tbName, String nombre, String type, String largo) {
-        String query = "ALTER TABLE %s ALTER COLUMN %s TYPE %s;";
-        if (largo.trim().length() > 0) {
-            type += "(" + largo.trim() + ")";
-        }
-        query = String.format(query, tbName, nombre, type);
-        return executeQueryInDB(dbName, query);
-    }
-
-    /**
-     *
-     * @param dbName
-     * @param tbName
-     * @param nombre
-     * @param notNull
-     * @return
-     */
-    public boolean modifyColumnNullability(String dbName, String tbName, String nombre, Boolean notNull) {
-        String query = "ALTER TABLE %s ALTER COLUMN %s;";
-        if (notNull) {
-            query = String.format(query, tbName, nombre, "SET NOT NULL");
-        } else {
-            query = String.format(query, tbName, nombre, "DROP NOT NULL");
-        }
-        return executeQueryInDB(dbName, query);
-    }
-
-    /**
-     * Renombra la columna
-     * @param dbName
-     * @param tbName
-     * @param nombre
-     * @param newNombre
-     * @return 
-     */
-    public boolean modifyColumnName(String dbName, String tbName, String nombre, String newNombre) {
-        String query = "ALTER TABLE %s RENAME COLUMN %s TO %s;";
-        query = String.format(query, tbName, nombre, newNombre);
-        return executeQueryInDB(dbName, query);
-    }
-    
-    /**
-     * modifica el default value de la columna
-     * @param dbName
-     * @param tbName
-     * @param defaultValue
-     * @return 
-     */
-    public boolean modifyDefaultValue(String dbName, String tbName, String colName, String defaultValue) {
-        String query = "ALTER TABLE %s ALTER COLUMN %s SET default %s;";
-        query = String.format(query, tbName, colName, defaultValue);
-        return executeQueryInDB(dbName, query);
     }
 }
