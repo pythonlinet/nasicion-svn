@@ -32,7 +32,6 @@ import javax.swing.UIManager;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 /**
@@ -152,7 +151,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         DefaultMutableTreeNode dbRoot = new DefaultMutableTreeNode("Bases de datos");
         final JTree dbTree = new JTree(dbRoot);
         for (BaseDeDatos db : dbs) {
-            DBTreeNode dbNode = new DBTreeNode(db,dbTree);
+            DBTreeNode dbNode = new DBTreeNode(db, dbTree);
             //Este if es por un extraño bug que no piendo perder tiempo en investigar
             if (db.getTables() != null) {
                 for (Tabla t : db.getTables()) {
@@ -169,7 +168,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
             dbRoot.add(dbNode);
         }
 
-        
+
         dbTree.addTreeSelectionListener(this);
         dbTree.setCellRenderer(
                 new DBTreeCellRenderer());
@@ -190,28 +189,28 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
                     Component mc = e.getComponent();
                     TreePath path = dbTree.getSelectionPath();
                     if (path != null) {
-                        
+
                         DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-                        if(node instanceof DBTreeNode) {
+                        if (node instanceof DBTreeNode) {
                             Object nodeInfo = node.getUserObject();
                             BaseDeDatos mno = (BaseDeDatos) nodeInfo;
 
-                            DBPopupMenu jPopupMenu1 = new DBPopupMenu(mno, (DBTreeNode)node);
+                            DBPopupMenu jPopupMenu1 = new DBPopupMenu(mno, (DBTreeNode) node);
                             jPopupMenu1.show(mc, e.getX(), e.getY());
                             if (jPopupMenu1.getParent().getX() == 0) {
                                 jPopupMenu1.show(mc, e.getX(), e.getY() - jPopupMenu1.getHeight());
                             }//if
-                        } else if(node instanceof TableTreeNode) {
+                        } else if (node instanceof TableTreeNode) {
                             Object nodeInfo = node.getUserObject();
                             Tabla mno = (Tabla) nodeInfo;
 
-                            TablaPopupMenu jPopupMenu1 = new TablaPopupMenu(mno, (TableTreeNode)node);
+                            TablaPopupMenu jPopupMenu1 = new TablaPopupMenu(mno, (TableTreeNode) node);
                             jPopupMenu1.show(mc, e.getX(), e.getY());
                             if (jPopupMenu1.getParent().getX() == 0) {
                                 jPopupMenu1.show(mc, e.getX(), e.getY() - jPopupMenu1.getHeight());
                             }//if
                         }
-                    
+
                     }//if
                 }//if
             }//mouseReleased
@@ -254,37 +253,40 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
 
     }
 
-
     class DBPopupMenu extends JPopupMenu {
-        private BaseDeDatos mno;
+
+        private BaseDeDatos baseDeDatos;
 
         public DBPopupMenu(BaseDeDatos object, final DBTreeNode node) {
-            mno = object;
+            baseDeDatos = object;
 
             JMenuItem menuItem = new JMenuItem("Crear tabla");
             menuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bd1/obli2012/icons/table_add.png")));
             add(menuItem);
             menuItem.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    DialogAddTabla addTabla = new DialogAddTabla(null, true, mno.getDbName(), node);
+                    DialogAddTabla addTabla = new DialogAddTabla(null, true, baseDeDatos.getDbName(), node);
                     addTabla.setVisible(true);
                 }
             });
 
         }
     }
-        class TablaPopupMenu extends JPopupMenu {
-        private Tabla mno;
+
+    class TablaPopupMenu extends JPopupMenu {
+
+        private Tabla tabla;
 
         public TablaPopupMenu(Tabla object, final TableTreeNode node) {
-            mno = object;
+            this.tabla = object;
 
             JMenuItem menuItem = new JMenuItem("Borrar tabla");
             menuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bd1/obli2012/icons/table_delete.png")));
             add(menuItem);
             menuItem.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    JOptionPane jpane = new JOptionPane("Vas a borrar la tabla José!!!", JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, null);
+                    Integer salida = JOptionPane.showConfirmDialog(null, "Se está por borrar la tabla " + tabla.getNombre(), "Drop Tabla", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+                    
                 }
             });
 

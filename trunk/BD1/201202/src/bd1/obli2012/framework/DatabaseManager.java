@@ -232,7 +232,7 @@ public class DatabaseManager {
                 Integer codigoTipo = Integer.parseInt(rs.getString(5));
                 Boolean nullable = Integer.parseInt(rs.getString(11)) == 1 ? true : false;
                 String defaultValue = rs.getString(13);
-                if (defaultValue != null) {
+                if (defaultValue != null && defaultValue.contains("'")) {
                     defaultValue = defaultValue.substring(defaultValue.indexOf("'") + 1, defaultValue.lastIndexOf("'"));
                 }
                 Attribute attr = new Attribute();
