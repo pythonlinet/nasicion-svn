@@ -22,6 +22,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -200,6 +201,15 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
                             if (jPopupMenu1.getParent().getX() == 0) {
                                 jPopupMenu1.show(mc, e.getX(), e.getY() - jPopupMenu1.getHeight());
                             }//if
+                        } else if(node instanceof TableTreeNode) {
+                            Object nodeInfo = node.getUserObject();
+                            Tabla mno = (Tabla) nodeInfo;
+
+                            TablaPopupMenu jPopupMenu1 = new TablaPopupMenu(mno, (TableTreeNode)node);
+                            jPopupMenu1.show(mc, e.getX(), e.getY());
+                            if (jPopupMenu1.getParent().getX() == 0) {
+                                jPopupMenu1.show(mc, e.getX(), e.getY() - jPopupMenu1.getHeight());
+                            }//if
                         }
                     
                     }//if
@@ -264,18 +274,17 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         }
     }
         class TablaPopupMenu extends JPopupMenu {
-        private BaseDeDatos mno;
+        private Tabla mno;
 
-        public TablaPopupMenu(BaseDeDatos object, final TableTreeNode node) {
+        public TablaPopupMenu(Tabla object, final TableTreeNode node) {
             mno = object;
 
-            JMenuItem menuItem = new JMenuItem("Crear tabla");
-            menuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bd1/obli2012/icons/table_add.png")));
+            JMenuItem menuItem = new JMenuItem("Borrar tabla");
+            menuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bd1/obli2012/icons/table_delete.png")));
             add(menuItem);
             menuItem.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    DialogAddTabla addTabla = new DialogAddTabla(null, true, mno.getDbName(), node);
-                    addTabla.setVisible(true);
+                    JOptionPane jpane = new JOptionPane("Vas a borrar la tabla José!!!", JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, null);
                 }
             });
 
