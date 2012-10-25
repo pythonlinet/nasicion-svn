@@ -4,10 +4,11 @@
  */
 package bd1.obli2012.gui;
 
+import bd1.obli2012.framework.ColumnManager;
 import bd1.obli2012.framework.definicion.Attribute;
 import bd1.obli2012.framework.DatabaseManager;
+import bd1.obli2012.framework.TablaManager;
 import bd1.obli2012.framework.definicion.Tabla;
-import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -19,7 +20,10 @@ public class PanelTabla extends javax.swing.JPanel {
     private DefaultTableModel tableModel;
     private String dbName;
     private String tbName;
+    private String tempTbName;
     private MainFrame parent;
+    private boolean lock=false;
+    private TablaManager tm = new TablaManager();
 
     /**
      * Creates new form TablePanel
@@ -47,6 +51,7 @@ public class PanelTabla extends javax.swing.JPanel {
         btnAgregarAttr = new javax.swing.JButton();
         btnEditarAttr = new javax.swing.JButton();
         btnQuitarAttr1 = new javax.swing.JButton();
+        btnLockTabla = new javax.swing.JButton();
 
         tablaAtributos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -74,6 +79,7 @@ public class PanelTabla extends javax.swing.JPanel {
         jScrollPane1.setViewportView(tablaAtributos);
 
         btnAgregarAttr.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bd1/obli2012/icons/buttons/add.png"))); // NOI18N
+        btnAgregarAttr.setEnabled(false);
         btnAgregarAttr.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAgregarAttrActionPerformed(evt);
@@ -81,6 +87,7 @@ public class PanelTabla extends javax.swing.JPanel {
         });
 
         btnEditarAttr.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bd1/obli2012/icons/buttons/edit.png"))); // NOI18N
+        btnEditarAttr.setEnabled(false);
         btnEditarAttr.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEditarAttrActionPerformed(evt);
@@ -88,9 +95,17 @@ public class PanelTabla extends javax.swing.JPanel {
         });
 
         btnQuitarAttr1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bd1/obli2012/icons/buttons/delete.png"))); // NOI18N
+        btnQuitarAttr1.setEnabled(false);
         btnQuitarAttr1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnQuitarAttr1ActionPerformed(evt);
+            }
+        });
+
+        btnLockTabla.setText("Lock");
+        btnLockTabla.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLockTablaActionPerformed(evt);
             }
         });
 
@@ -99,27 +114,31 @@ public class PanelTabla extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 872, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 860, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnQuitarAttr1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAgregarAttr, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEditarAttr, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(btnQuitarAttr1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnEditarAttr, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnAgregarAttr, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnLockTabla, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btnAgregarAttr, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnEditarAttr, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnQuitarAttr1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 25, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnLockTabla, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnAgregarAttr, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnEditarAttr, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnQuitarAttr1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -136,12 +155,38 @@ public class PanelTabla extends javax.swing.JPanel {
     private void btnQuitarAttr1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarAttr1ActionPerformed
         
         String colName = getSelectedColumnName();
-        DatabaseManager.getInstance().removeColumn(dbName, tbName, colName);
+        ColumnManager columnManager = new ColumnManager();
+        columnManager.dropColumn(dbName, tbName, colName);
         actualizarDatos();
     }//GEN-LAST:event_btnQuitarAttr1ActionPerformed
+
+    private void btnLockTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLockTablaActionPerformed
+        if(lock) {
+            lock = false;
+            btnLockTabla.setText("Lock");
+            btnAgregarAttr.setEnabled(false);
+            btnEditarAttr.setEnabled(false);
+            btnQuitarAttr1.setEnabled(false);
+        } else {
+            lock = true;
+            btnLockTabla.setText("UnLock");
+            btnAgregarAttr.setEnabled(true);
+            btnEditarAttr.setEnabled(true);
+            btnQuitarAttr1.setEnabled(true);
+            
+            tm.copyTableStructure(dbName, tbName);
+            this.tempTbName = tbName;
+            this.tbName+="_new";
+            cargarInformacionTabla();
+            //tm.truncateTable(dbName, tbName);
+        }
+        
+    }//GEN-LAST:event_btnLockTablaActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarAttr;
     private javax.swing.JButton btnEditarAttr;
+    private javax.swing.JButton btnLockTabla;
     private javax.swing.JButton btnQuitarAttr1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tablaAtributos;

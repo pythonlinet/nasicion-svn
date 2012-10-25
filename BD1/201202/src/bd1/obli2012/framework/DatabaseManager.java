@@ -68,25 +68,47 @@ public class DatabaseManager {
             LOGGER.log(Level.SEVERE, "Error al ejecutar la consulta : {0}", query);
             LOGGER.severe(e.getMessage());
             salida = false;
+        } finally {
+            cm.cerrarConexion();
         }
         return salida;
     }
 
-    public boolean executeQueryInDB(String dbName, String query) {
-        boolean salida = true;
+    public ExecutionResult executeQueryInDB(String dbName, String query) {
+        ExecutionResult salida = null;
         cm = PostgresConnectionManager.getInstance();
         Connection con = cm.obtenerConexion(dbName);
         try {
             Statement st = con.createStatement();
             st.execute(query);
-            con.close();
+            salida = new ExecutionResult(true, "");
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error al ejecutar la consulta : {0}", query);
             LOGGER.severe(e.getMessage());
-            salida = false;
+            salida = new ExecutionResult(false, e.getLocalizedMessage());
+        } finally {
+            cm.cerrarConexion();
         }
 
         return salida;
+    }
+
+    public void executeQuerysWithinTransaction(String dbName, List<String> querys) throws SQLException {
+        cm = PostgresConnectionManager.getInstance();
+        Connection con = cm.obtenerConexion(dbName);
+
+
+        con.setAutoCommit(false);
+        for (String query : querys) {
+            Statement st = con.createStatement();
+            LOGGER.log(Level.INFO, "Ejecutando: {0}", query);
+            st.execute(query);
+        }
+        LOGGER.info("============================> Realizando commit....");
+        con.commit();
+        LOGGER.info("============================> Commit realizado correctamente!!!");
+
+        cm.cerrarConexion();
     }
 
     /**
@@ -106,6 +128,8 @@ public class DatabaseManager {
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error al ejecutar la consulta : {0}", query);
             LOGGER.severe(e.getMessage());
+        } finally {
+            cm.cerrarConexion();
         }
         return rs;
     }
@@ -128,10 +152,12 @@ public class DatabaseManager {
                 s.setTablas(getTablesForDB(s.getNombre()));
                 salida.add(s);
             }
-            return salida;
         } catch (SQLException ex) {
             LOGGER.severe(ex.getMessage());
+        } finally {
+            cm.cerrarConexion();
         }
+
         return salida;
     }
 
@@ -163,6 +189,8 @@ public class DatabaseManager {
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Error obteniendo tablas para el schema: {0}", nombreDB);
             LOGGER.severe(ex.getMessage());
+        } finally {
+            cm.cerrarConexion();
         }
         return salida;
     }
@@ -204,8 +232,9 @@ public class DatabaseManager {
                 Integer codigoTipo = Integer.parseInt(rs.getString(5));
                 Boolean nullable = Integer.parseInt(rs.getString(11)) == 1 ? true : false;
                 String defaultValue = rs.getString(13);
-
-
+                if (defaultValue != null) {
+                    defaultValue = defaultValue.substring(defaultValue.indexOf("'") + 1, defaultValue.lastIndexOf("'"));
+                }
                 Attribute attr = new Attribute();
                 attr.setNombre(nombre);
                 attr.setTipo(TipoDato.getTypeForCode(codigoTipo));
@@ -218,68 +247,8 @@ public class DatabaseManager {
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Error obteniendo atributos para la tabla: {0}", tabla);
             LOGGER.severe(ex.getMessage());
-        }
-
-        return salida;
-    }
-
-    /**
-     * Obtiene la información de una columna de la tabla de la base de datos
-     *
-     * @param dbName
-     * @param tbName
-     * @param colName
-     * @return
-     */
-    public Attribute getColumnFromTable(String dbName, String tbName, String colName) {
-        cm = PostgresConnectionManager.getInstance();
-        Connection con = cm.obtenerConexion(dbName);
-        Attribute salida = null;
-        try {
-            DatabaseMetaData metadata = con.getMetaData();
-            ResultSet rs = metadata.getColumns(dbName, "public", tbName, colName);
-            while (rs.next()) {
-                /*
-                 * Column 1 TABLE_CAT
-                 * Column 2 TABLE_SCHEM
-                 * Column 3 TABLE_NAME
-                 * Column 4 COLUMN_NAME
-                 * Column 5 DATA_TYPE
-                 * Column 6 TYPE_NAME
-                 * Column 7 COLUMN_SIZE
-                 * Column 8 BUFFER_LENGTH
-                 * Column 9 DECIMAL_DIGITS
-                 * Column 10 NUM_PREC_RADIX
-                 * Column 11 NULLABLE
-                 * Column 12 REMARKS
-                 * Column 13 COLUMN_DEF
-                 * Column 14 SQL_DATA_TYPE
-                 * Column 15 SQL_DATETIME_SUB
-                 * Column 16 CHAR_OCTET_LENGTH
-                 * Column 17 ORDINAL_POSITION
-                 * Column 18 IS_NULLABLE
-                 * Column 19 SCOPE_CATLOG
-                 * Column 20 SCOPE_SCHEMA
-                 * Column 21 SCOPE_TABLE
-                 * Column 22 SOURCE_DATA_TYPE
-                 */
-                String nombre = rs.getString(4);
-                Integer codigoTipo = Integer.parseInt(rs.getString(5));
-                Boolean nullable = Integer.parseInt(rs.getString(11)) == 1 ? true : false;
-                String defaultValue = rs.getString(13);
-
-
-                salida = new Attribute();
-                salida.setNombre(nombre);
-                salida.setTipo(TipoDato.getTypeForCode(codigoTipo));
-                salida.setNullable(nullable);
-                salida.setDefaultValue(defaultValue);
-
-            }
-
-        } catch (SQLException ex) {
-            LOGGER.log(Level.SEVERE, "Error obteniendo columna {0} para la tabla {1}", new String[]{colName, tbName});
-            LOGGER.severe(ex.getMessage());
+        } finally {
+            cm.cerrarConexion();
         }
 
         return salida;
@@ -302,6 +271,12 @@ public class DatabaseManager {
         return result;
     }
 
+    /**
+     * Obtiene las FK de una tabla
+     *
+     * @param tabla
+     * @return
+     */
     private Map<String, String> getForeignKeysForTable(Tabla tabla) {
         cm = PostgresConnectionManager.getInstance();
         Connection con = cm.obtenerConexion(tabla.getDatabase());
@@ -328,6 +303,11 @@ public class DatabaseManager {
         return result;
     }
 
+    /**
+     * Obtiene las bases de datos en el sistema
+     *
+     * @return
+     */
     public List<BaseDeDatos> getDataBases() {
         List<BaseDeDatos> databases = null;
         cm = PostgresConnectionManager.getInstance();
@@ -348,17 +328,20 @@ public class DatabaseManager {
             LOGGER.severe("Error obteniendo las bases de datos del sistema");
             LOGGER.severe(ex.getMessage());
         } finally {
-            try {
-                con.close();
-            } catch (SQLException ex) {
-                LOGGER.severe(ex.getMessage());
-            }
-
+            cm.cerrarConexion();
         }
 
         return databases;
     }
 
+    /**
+     * Obtiene una tabla junto con sus atributos de la base de datos
+     * especificada
+     *
+     * @param nombreDB
+     * @param tbName
+     * @return
+     */
     public Tabla getTable(String nombreDB, String tbName) {
         cm = PostgresConnectionManager.getInstance();
         Connection con = cm.obtenerConexion(nombreDB);
@@ -387,23 +370,11 @@ public class DatabaseManager {
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Error obteniendo tablas para el schema: {0}", nombreDB);
             LOGGER.severe(ex.getMessage());
+        } finally {
+            cm.cerrarConexion();
         }
 
         return salida;
-    }
-
-    public boolean addColumn(String dbName, String tbName, String nombre, String type, String largo, boolean notNull, String defaultValue) {
-        String query = "ALTER TABLE %s ADD %s %s %s";
-        if (largo.trim().length() > 0) {
-            type += "(" + largo.trim() + ")";
-        }
-        String notNullStr = notNull ? "NOT NULL" : "NULL";
-        query = String.format(query, tbName, nombre, type, notNullStr);
-        if (defaultValue.trim().length() > 0) {
-            query += " default '" + defaultValue.trim() + "'";
-        }
-        query += ";";
-        return executeQueryInDB(dbName, query);
     }
 
     /**
@@ -472,30 +443,67 @@ public class DatabaseManager {
     }
 
     /**
-     * Borra la columna especificada
+     * Obtiene la información de una columna de la tabla de la base de datos
      *
      * @param dbName
      * @param tbName
      * @param colName
      * @return
      */
-    public boolean removeColumn(String dbName, String tbName, String colName) {
-        String sql = "ALTER TABLE %s DROP COLUMN %s";
-        sql = String.format(sql, tbName, colName);
-        return executeQueryInDB(dbName, sql);
-    }
+    public Attribute getColumnFromTable(String dbName, String tbName, String colName) {
+        cm = PostgresConnectionManager.getInstance();
+        Connection con = cm.obtenerConexion(dbName);
+        Attribute salida = null;
+        try {
+            DatabaseMetaData metadata = con.getMetaData();
+            ResultSet rs = metadata.getColumns(dbName, "public", tbName, colName);
+            while (rs.next()) {
+                /*
+                 * Column 1 TABLE_CAT
+                 * Column 2 TABLE_SCHEM
+                 * Column 3 TABLE_NAME
+                 * Column 4 COLUMN_NAME
+                 * Column 5 DATA_TYPE
+                 * Column 6 TYPE_NAME
+                 * Column 7 COLUMN_SIZE
+                 * Column 8 BUFFER_LENGTH
+                 * Column 9 DECIMAL_DIGITS
+                 * Column 10 NUM_PREC_RADIX
+                 * Column 11 NULLABLE
+                 * Column 12 REMARKS
+                 * Column 13 COLUMN_DEF
+                 * Column 14 SQL_DATA_TYPE
+                 * Column 15 SQL_DATETIME_SUB
+                 * Column 16 CHAR_OCTET_LENGTH
+                 * Column 17 ORDINAL_POSITION
+                 * Column 18 IS_NULLABLE
+                 * Column 19 SCOPE_CATLOG
+                 * Column 20 SCOPE_SCHEMA
+                 * Column 21 SCOPE_TABLE
+                 * Column 22 SOURCE_DATA_TYPE
+                 */
+                String nombre = rs.getString(4);
+                Integer codigoTipo = Integer.parseInt(rs.getString(5));
+                Boolean nullable = Integer.parseInt(rs.getString(11)) == 1 ? true : false;
+                String defaultValue = rs.getString(13);
+                if (defaultValue != null) {
+                    defaultValue = defaultValue.substring(defaultValue.indexOf("'") + 1, defaultValue.lastIndexOf("'"));
+                }
 
-    /**
-     * Renombra la tabla especificada
-     *
-     * @param dbName
-     * @param tbName
-     * @param newName
-     * @return
-     */
-    public boolean renameTable(String dbName, String tbName, String newName) {
-        String sql = "ALTER TABLE %s RENAME TO %s";
-        sql = String.format(sql, tbName, newName);
-        return executeQueryInDB(dbName, sql);
+
+                salida = new Attribute();
+                salida.setNombre(nombre);
+                salida.setTipo(TipoDato.getTypeForCode(codigoTipo));
+                salida.setNullable(nullable);
+                salida.setDefaultValue(defaultValue);
+
+            }
+
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Error obteniendo columna {0} para la tabla {1}", new String[]{colName, tbName});
+            LOGGER.severe(ex.getMessage());
+        }
+
+        return salida;
     }
 }

@@ -80,5 +80,8 @@ public class Attribute {
         this.defaultValue = defaultValue;
     }
     
+    public boolean notNull(){
+        return !this.nullable;
+    }
     
 }

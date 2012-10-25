@@ -4,8 +4,11 @@
  */
 package bd1.obli2012.gui;
 
+import bd1.obli2012.framework.ColumnManager;
 import bd1.obli2012.framework.DatabaseManager;
+import bd1.obli2012.framework.ExecutionResult;
 import bd1.obli2012.framework.definicion.TipoDato;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -182,12 +185,14 @@ public class DialogAddAttrib extends javax.swing.JDialog {
         String defaultValue = txtDefault.getText().trim();
         
         //boolean exitCode = DatabaseManager.getInstance().executeQueryInDB(dbName, query);
-        boolean exitCode = DatabaseManager.getInstance().addColumn(dbName, tbName, nombre, type, largo, notNull, defaultValue);
-        System.out.println("Exitcode: " + exitCode);
-        if(exitCode) {
-            parent.actualizarDatos();
-            this.dispose();
-        }
+        ColumnManager colMan = new ColumnManager();
+        ExecutionResult er = colMan.addColumn(dbName, tbName, nombre, type, largo, notNull, defaultValue);
+        if (er.success) {
+                //parent.actualizarDatos();
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+            }
         
     }//GEN-LAST:event_btnAceptarActionPerformed
 

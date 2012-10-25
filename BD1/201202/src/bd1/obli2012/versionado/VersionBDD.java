@@ -11,7 +11,7 @@ import java.util.Map;
  *
  * @author gnasi
  */
-public class VersionBD  implements  Serializable{
+public class VersionBDD  implements  Serializable{
     private String version;
     private Map<Integer,Cambio> cambios;
 }
