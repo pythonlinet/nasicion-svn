@@ -29,7 +29,7 @@ public class DBTreeNode extends DefaultMutableTreeNode {
 
     }
 
-    public void reconstruir() {
+    public void reconstruir(boolean llamadaDeTabla) {
         this.removeAllChildren();
         List<Tabla> tablas = DatabaseManager.getInstance().getTablesForDB(db.getDbName());
         if (tablas != null) {
@@ -39,11 +39,13 @@ public class DBTreeNode extends DefaultMutableTreeNode {
                 add(tableNode);
             }
         }
-        
+
         TreePath seleccionado = tree.getAnchorSelectionPath();
-        DefaultTreeModel model = (DefaultTreeModel)this.tree.getModel();
-        
-        model.reload();;
+        DefaultTreeModel model = (DefaultTreeModel) this.tree.getModel();
+        model.reload();
+        if (llamadaDeTabla) {
+            seleccionado = seleccionado.getParentPath();
+        }
         tree.expandPath(seleccionado);
     }
 

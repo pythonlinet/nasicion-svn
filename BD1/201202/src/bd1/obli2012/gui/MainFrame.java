@@ -7,13 +7,14 @@ package bd1.obli2012.gui;
 import bd1.obli2012.gui.arbol.TableTreeNode;
 import bd1.obli2012.framework.definicion.BaseDeDatos;
 import bd1.obli2012.framework.DatabaseManager;
+import bd1.obli2012.framework.ExecutionResult;
+import bd1.obli2012.framework.TablaManager;
 import bd1.obli2012.framework.definicion.Tabla;
 import bd1.obli2012.gui.arbol.DBTreeCellRenderer;
 import bd1.obli2012.gui.arbol.DBTreeNode;
 import bd1.obli2012.gui.backend.Contexto;
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.FlowLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,9 +40,10 @@ import javax.swing.tree.TreePath;
  * @author guillermo
  */
 public class MainFrame extends javax.swing.JFrame implements TreeSelectionListener {
-
+public final String  BORRAR_TABLA = 
+        "Se está por borrar la tabla {0}. Toda la información en la tabla se perdera.";
     private JTree arbolBD;
-    private JPanel tablePanel;
+    private JPanel panelTabla;
 
     /**
      * Creates new form MainFrame
@@ -51,6 +53,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         //Colocamos el nuevo tipo de layout que queremos que tenga nuestro JFrame
         //this.setLayout(new FlowLayout());
         this.setLayout(new BorderLayout());
+        
         this.pack();
     }
 
@@ -65,17 +68,22 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
 
         /* inicializamos el arbol */
         arbolBD = cargarArbol();
-        treePanel = new JScrollPane(arbolBD);
+        treePane = new JScrollPane(arbolBD);
+        flowPanel = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(500, 600));
+        setMinimumSize(new java.awt.Dimension(1300, 600));
 
-        treePanel.setViewportBorder(javax.swing.BorderFactory.createEtchedBorder());
-        treePanel.setMinimumSize(new java.awt.Dimension(250, 0));
-        treePanel.setPreferredSize(new java.awt.Dimension(260, 0));
+        treePane.setViewportBorder(javax.swing.BorderFactory.createEtchedBorder());
+        treePane.setMaximumSize(new java.awt.Dimension(250, 600));
+        treePane.setMinimumSize(new java.awt.Dimension(250, 0));
+        treePane.setPreferredSize(new java.awt.Dimension(260, 0));
+
+        flowPanel.setPreferredSize(new java.awt.Dimension(800, 440));
+        flowPanel.setLayout(new java.awt.BorderLayout());
 
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
@@ -90,12 +98,23 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(treePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 658, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(treePane, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(flowPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(treePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(treePane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(flowPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         pack();
@@ -138,10 +157,11 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel flowPanel;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JScrollPane treePanel;
+    private javax.swing.JScrollPane treePane;
     // End of variables declaration//GEN-END:variables
 
     public JTree cargarArbol() {
@@ -219,22 +239,22 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         return dbTree;
     }
 
-    public void repaintTree() {
-        this.treePanel.repaint();
-    }
-
     public void valueChanged(TreeSelectionEvent tse) {
         Object selectedNode = arbolBD.getLastSelectedPathComponent();
         if (selectedNode instanceof TableTreeNode) {
             TableTreeNode tn = (TableTreeNode) selectedNode;
 
-            if (tablePanel != null) {
-                this.remove(tablePanel);
+            if (panelTabla != null) {
+                this.remove(panelTabla);
             }
-            tablePanel = new PanelTabla(tn.getDatabase(), tn.getTable().getNombre(), this);
+            panelTabla = new PanelTabla(tn.getDatabase(), tn.getTable().getNombre(), this);
 
-            this.add(tablePanel, BorderLayout.WEST);
-            this.pack();
+            //this.add(panelTabla, BorderLayout.WEST);
+            //this.pack();
+            this.flowPanel.removeAll();;
+            this.flowPanel.add(panelTabla);
+            this.flowPanel.revalidate();;
+            
             Contexto.getInstance().setTbSeleccionada(tn.getTable().getNombre());
         } else if (selectedNode instanceof DBTreeNode) {
             DBTreeNode nodo = (DBTreeNode) selectedNode;
@@ -266,9 +286,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
     }
 
     class TablaPopupMenu extends JPopupMenu {
-
         private Tabla tabla;
-
         public TablaPopupMenu(Tabla object, final TableTreeNode node) {
             this.tabla = object;
 
@@ -277,13 +295,29 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
             add(menuItem);
             menuItem.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    Integer salida = JOptionPane.showConfirmDialog(null, "Se está por borrar la tabla " + tabla.getNombre(), "Drop Tabla", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+                    Integer salida;
+                    salida = JOptionPane.showConfirmDialog(null, 
+                             String.format(BORRAR_TABLA, tabla.getNombre()),
+                             "Drop Tabla", 
+                             JOptionPane.OK_CANCEL_OPTION, 
+                             JOptionPane.WARNING_MESSAGE);
                     if(salida == 0) {
-                        //Codigo para borrar
+                        TablaManager tm = new TablaManager();
+                        ExecutionResult er = tm.dropTable(tabla.getDatabase(), tabla.getNombre());
+                        if(er.success) {
+                           DBTreeNode padre = (DBTreeNode)node.getParent();
+                           padre.reconstruir(true);
+                        } else {
+                            JOptionPane.showMessageDialog(null, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 }
             });
 
         }
+    }
+    
+    public JScrollPane getTreePane(){
+        return this.treePane;
     }
 }

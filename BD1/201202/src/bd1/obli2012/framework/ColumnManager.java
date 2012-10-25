@@ -4,7 +4,7 @@
  */
 package bd1.obli2012.framework;
 
-import bd1.obli2012.framework.definicion.Attribute;
+import bd1.obli2012.framework.definicion.Columna;
 import bd1.obli2012.framework.definicion.TipoDato;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -48,7 +48,7 @@ public class ColumnManager {
     }
 
     public ExecutionResult modificarColumna(String dbName, String tbName, String colName,String nombre, String type, String largo, boolean notNull, String defaultValue){
-        Attribute columnaOriginal = DatabaseManager.getInstance().getColumnFromTable(dbName, tbName, colName);
+        Columna columnaOriginal = DatabaseManager.getInstance().getColumnFromTable(dbName, tbName, colName);
         
         List<String> querys = new LinkedList<String>();
         if(!defaultValue.trim().equals(columnaOriginal.getDefaultValue())){

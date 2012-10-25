@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class Tabla {
     private String nombre;
-    private List<Attribute> attributes;
+    private List<Columna> attributes;
     private List<String> primaryKeys;
     private Map<String, String> foreignKeys;
     private String database;
@@ -65,14 +65,14 @@ public class Tabla {
     /**
      * @return the attributes
      */
-    public List<Attribute> getAttributes() {
+    public List<Columna> getAttributes() {
         return attributes;
     }
 
     /**
      * @param attributes the attributes to set
      */
-    public void setAttributes(List<Attribute> attributes) {
+    public void setAttributes(List<Columna> attributes) {
         this.attributes = attributes;
     }
 

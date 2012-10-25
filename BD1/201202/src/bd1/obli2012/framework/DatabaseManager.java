@@ -1,7 +1,7 @@
 package bd1.obli2012.framework;
 
 import bd1.obli2012.framework.definicion.BaseDeDatos;
-import bd1.obli2012.framework.definicion.Attribute;
+import bd1.obli2012.framework.definicion.Columna;
 import bd1.obli2012.framework.definicion.Schema;
 import bd1.obli2012.framework.definicion.Tabla;
 import bd1.obli2012.framework.definicion.TipoDato;
@@ -195,14 +195,14 @@ public class DatabaseManager {
         return salida;
     }
 
-    public List<Attribute> getColumsForTable(Tabla tabla) {
+    public List<Columna> getColumsForTable(Tabla tabla) {
         cm = PostgresConnectionManager.getInstance();
         Connection con = cm.obtenerConexion(tabla.getDatabase());
-        List<Attribute> salida = null;
+        List<Columna> salida = null;
         try {
             DatabaseMetaData metadata = con.getMetaData();
             ResultSet rs = metadata.getColumns(tabla.getDatabase(), "public", tabla.getNombre(), "%");
-            salida = new ArrayList<Attribute>();
+            salida = new ArrayList<Columna>();
             while (rs.next()) {
                 /*
                  * Column 1 TABLE_CAT
@@ -235,7 +235,7 @@ public class DatabaseManager {
                 if (defaultValue != null && defaultValue.contains("'")) {
                     defaultValue = defaultValue.substring(defaultValue.indexOf("'") + 1, defaultValue.lastIndexOf("'"));
                 }
-                Attribute attr = new Attribute();
+                Columna attr = new Columna();
                 attr.setNombre(nombre);
                 attr.setTipo(TipoDato.getTypeForCode(codigoTipo));
                 attr.setNullable(nullable);
@@ -450,10 +450,10 @@ public class DatabaseManager {
      * @param colName
      * @return
      */
-    public Attribute getColumnFromTable(String dbName, String tbName, String colName) {
+    public Columna getColumnFromTable(String dbName, String tbName, String colName) {
         cm = PostgresConnectionManager.getInstance();
         Connection con = cm.obtenerConexion(dbName);
-        Attribute salida = null;
+        Columna salida = null;
         try {
             DatabaseMetaData metadata = con.getMetaData();
             ResultSet rs = metadata.getColumns(dbName, "public", tbName, colName);
@@ -491,7 +491,7 @@ public class DatabaseManager {
                 }
 
 
-                salida = new Attribute();
+                salida = new Columna();
                 salida.setNombre(nombre);
                 salida.setTipo(TipoDato.getTypeForCode(codigoTipo));
                 salida.setNullable(nullable);

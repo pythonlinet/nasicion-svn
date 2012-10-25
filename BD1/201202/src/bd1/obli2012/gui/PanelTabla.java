@@ -5,7 +5,7 @@
 package bd1.obli2012.gui;
 
 import bd1.obli2012.framework.ColumnManager;
-import bd1.obli2012.framework.definicion.Attribute;
+import bd1.obli2012.framework.definicion.Columna;
 import bd1.obli2012.framework.DatabaseManager;
 import bd1.obli2012.framework.TablaManager;
 import bd1.obli2012.framework.definicion.Tabla;
@@ -170,9 +170,11 @@ public class PanelTabla extends javax.swing.JPanel {
             btnAgregarAttr.setEnabled(false);
             btnEditarAttr.setEnabled(false);
             btnQuitarAttr1.setEnabled(false);
+            parent.getTreePane().setEnabled(true);
         } else {
             lock = true;
             btnLockTabla.setText("UnLock");
+            parent.getTreePane().setEnabled(false);
             btnAgregarAttr.setEnabled(true);
             btnEditarAttr.setEnabled(true);
             btnQuitarAttr1.setEnabled(true);
@@ -217,7 +219,7 @@ public class PanelTabla extends javax.swing.JPanel {
          tableModel.addColumn("Reference");
          */
         Tabla tabla = DatabaseManager.getInstance().getTable(dbName, tbName);
-        for (Attribute a : tabla.getAttributes()) {
+        for (Columna a : tabla.getAttributes()) {
             model.addRow(
                     new Object[]{
                         a.getNombre(),
