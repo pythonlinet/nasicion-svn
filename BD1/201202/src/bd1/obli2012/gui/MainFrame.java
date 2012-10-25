@@ -49,7 +49,8 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
     public MainFrame() {
         initComponents();
         //Colocamos el nuevo tipo de layout que queremos que tenga nuestro JFrame
-        this.setLayout(new FlowLayout());
+        //this.setLayout(new FlowLayout());
+        this.setLayout(new BorderLayout());
         this.pack();
     }
 
@@ -70,9 +71,11 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setResizable(false);
+        setMinimumSize(new java.awt.Dimension(500, 600));
 
-        treePanel.setMinimumSize(new java.awt.Dimension(120, 90));
+        treePanel.setViewportBorder(javax.swing.BorderFactory.createEtchedBorder());
+        treePanel.setMinimumSize(new java.awt.Dimension(250, 0));
+        treePanel.setPreferredSize(new java.awt.Dimension(260, 0));
 
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
@@ -87,16 +90,12 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(treePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(713, Short.MAX_VALUE))
+                .addComponent(treePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 658, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(32, Short.MAX_VALUE)
-                .addComponent(treePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+            .addComponent(treePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -176,13 +175,14 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
 
         //Este es el codigo para el click derecho del nodo
         MouseListener ml = new MouseAdapter() {
+            /*
             public void mousePressed(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e)) {
                     Point p = e.getPoint();
                     TreePath path = dbTree.getPathForLocation(p.x, p.y);
                 }
             }//mousePressed
-
+*/
             public void mouseReleased(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e)) {
                     Point p = e.getPoint();
@@ -191,23 +191,22 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
                     if (path != null) {
 
                         DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+                        Object nodeInfo = node.getUserObject();
                         if (node instanceof DBTreeNode) {
-                            Object nodeInfo = node.getUserObject();
-                            BaseDeDatos mno = (BaseDeDatos) nodeInfo;
+                            BaseDeDatos bd = (BaseDeDatos) nodeInfo;
 
-                            DBPopupMenu jPopupMenu1 = new DBPopupMenu(mno, (DBTreeNode) node);
-                            jPopupMenu1.show(mc, e.getX(), e.getY());
-                            if (jPopupMenu1.getParent().getX() == 0) {
-                                jPopupMenu1.show(mc, e.getX(), e.getY() - jPopupMenu1.getHeight());
+                            DBPopupMenu popUpMenuDB = new DBPopupMenu(bd, (DBTreeNode) node);
+                            popUpMenuDB.show(mc, e.getX(), e.getY());
+                            if (popUpMenuDB.getParent().getX() == 0) {
+                                popUpMenuDB.show(mc, e.getX(), e.getY() - popUpMenuDB.getHeight());
                             }//if
                         } else if (node instanceof TableTreeNode) {
-                            Object nodeInfo = node.getUserObject();
-                            Tabla mno = (Tabla) nodeInfo;
+                            Tabla tabla = (Tabla) nodeInfo;
 
-                            TablaPopupMenu jPopupMenu1 = new TablaPopupMenu(mno, (TableTreeNode) node);
-                            jPopupMenu1.show(mc, e.getX(), e.getY());
-                            if (jPopupMenu1.getParent().getX() == 0) {
-                                jPopupMenu1.show(mc, e.getX(), e.getY() - jPopupMenu1.getHeight());
+                            TablaPopupMenu popUpMenuTabla = new TablaPopupMenu(tabla, (TableTreeNode) node);
+                            popUpMenuTabla.show(mc, e.getX(), e.getY());
+                            if (popUpMenuTabla.getParent().getX() == 0) {
+                                popUpMenuTabla.show(mc, e.getX(), e.getY() - popUpMenuTabla.getHeight());
                             }//if
                         }
 
@@ -233,21 +232,14 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
                 this.remove(tablePanel);
             }
             tablePanel = new PanelTabla(tn.getDatabase(), tn.getTable().getNombre(), this);
-            this.add(tablePanel, BorderLayout.EAST);
+
+            this.add(tablePanel, BorderLayout.WEST);
             this.pack();
             Contexto.getInstance().setTbSeleccionada(tn.getTable().getNombre());
         } else if (selectedNode instanceof DBTreeNode) {
             DBTreeNode nodo = (DBTreeNode) selectedNode;
 
             //Contexto.getInstance().selectBaseDeDatos(nodo.getDbName());
-
-
-
-
-
-
-
-
         }
 
 
@@ -286,7 +278,9 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
             menuItem.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     Integer salida = JOptionPane.showConfirmDialog(null, "Se está por borrar la tabla " + tabla.getNombre(), "Drop Tabla", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
-                    
+                    if(salida == 0) {
+                        //Codigo para borrar
+                    }
                 }
             });
 
