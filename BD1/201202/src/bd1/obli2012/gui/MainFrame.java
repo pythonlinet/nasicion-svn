@@ -262,6 +262,23 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
             });
 
         }
+    }
+        class TablaPopupMenu extends JPopupMenu {
+        private BaseDeDatos mno;
 
+        public TablaPopupMenu(BaseDeDatos object, final TableTreeNode node) {
+            mno = object;
+
+            JMenuItem menuItem = new JMenuItem("Crear tabla");
+            menuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bd1/obli2012/icons/table_add.png")));
+            add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    DialogAddTabla addTabla = new DialogAddTabla(null, true, mno.getDbName(), node);
+                    addTabla.setVisible(true);
+                }
+            });
+
+        }
     }
 }
