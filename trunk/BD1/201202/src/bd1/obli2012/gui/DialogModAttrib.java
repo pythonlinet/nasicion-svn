@@ -5,7 +5,7 @@
 package bd1.obli2012.gui;
 
 import bd1.obli2012.framework.ColumnManager;
-import bd1.obli2012.framework.definicion.Attribute;
+import bd1.obli2012.framework.definicion.Columna;
 import bd1.obli2012.framework.DatabaseManager;
 import bd1.obli2012.framework.ExecutionResult;
 import javax.swing.JOptionPane;
@@ -18,7 +18,7 @@ public class DialogModAttrib extends javax.swing.JDialog {
     private String dbName;
     private String tbName;
     private PanelTabla parent;
-    private Attribute columna;
+    private Columna columna;
     /**
      * Creates new form DialogAddAttrib
      */

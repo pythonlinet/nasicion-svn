@@ -48,4 +48,10 @@ public class TablaManager {
         sql = String.format(sql, tbName);
         return DatabaseManager.getInstance().executeQueryInDB(dbName, sql);
     }
+
+    public ExecutionResult dropTable(String dbName, String tbName) {
+        String sql = "DROP TABLE %s;";
+        sql = String.format(sql, tbName);
+        return DatabaseManager.getInstance().executeQueryInDB(dbName, sql);
+    }
 }

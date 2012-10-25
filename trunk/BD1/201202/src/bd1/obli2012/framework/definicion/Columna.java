@@ -10,7 +10,7 @@ import bd1.obli2012.framework.definicion.TipoDato;
  *
  * @author 
  */
-public class Attribute {
+public class Columna {
     private String nombre;
     private TipoDato tipo;
     private boolean nullable;

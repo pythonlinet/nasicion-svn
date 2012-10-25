@@ -4,7 +4,7 @@
  */
 package bd1.obli2012.gui.arbol;
 
-import bd1.obli2012.framework.definicion.Attribute;
+import bd1.obli2012.framework.definicion.Columna;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
@@ -15,7 +15,7 @@ public class AttributeTreeNode extends DefaultMutableTreeNode{
 
     private String representation;
 
-    public AttributeTreeNode(Attribute a) {
+    public AttributeTreeNode(Columna a) {
         this.setUserObject(a);
         this.representation = a.getNombre() + ":" + a.getTipo();
         

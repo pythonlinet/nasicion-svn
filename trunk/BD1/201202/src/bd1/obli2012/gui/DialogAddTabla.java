@@ -100,7 +100,7 @@ public class DialogAddTabla extends javax.swing.JDialog {
 
             if (er.success) {
                 //parent.actualizarDatos();
-                node.reconstruir();
+                node.reconstruir(false);
                 this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
