@@ -5,30 +5,33 @@
 package bd1.obli2012.versionado;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  *
  * @author gnasi
  */
-public class BaseDeDatos implements Serializable {
+public class BDDVersionado implements Serializable {
 
-    private String name;
+    private String nombreBDD;
     private String versionActual;
-    private Map<String, VersionBD> versiones;
+    private Map<String, VersionBDD> versiones;
 
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
+    public BDDVersionado() {
+    }
+
+    public BDDVersionado(String nombreBDD) {
+        this.nombreBDD = nombreBDD;
+        this.versionActual = "1";
+        this.versiones = new HashMap<String, VersionBDD>();
     }
 
     /**
-     * @param name the name to set
+     * @return the nombreBDD
      */
-    public void setName(String name) {
-        this.name = name;
+    public String getNombreBDD() {
+        return nombreBDD;
     }
 
     /**
@@ -48,14 +51,7 @@ public class BaseDeDatos implements Serializable {
     /**
      * @return the versiones
      */
-    public Map<String, VersionBD> getVersiones() {
+    public Map<String, VersionBDD> getVersiones() {
         return versiones;
-    }
-
-    /**
-     * @param versiones the versiones to set
-     */
-    public void setVersiones(Map<String, VersionBD> versiones) {
-        this.versiones = versiones;
     }
 }

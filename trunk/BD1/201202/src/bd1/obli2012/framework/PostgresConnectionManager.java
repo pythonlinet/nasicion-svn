@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -20,6 +21,7 @@ public class PostgresConnectionManager implements ConnectionManager {
     private static ConnectionManager instance;
     private Connection conn;
     private String dbHost;
+    private String nombreBDDConectada;
 
     private PostgresConnectionManager() {
     }
@@ -54,6 +56,7 @@ public class PostgresConnectionManager implements ConnectionManager {
             this.conn = DriverManager.getConnection(url, user, passsword);
             LOGGER.info("Conexión establecida");
             this.dbHost = (String) props.get("db.host");
+            this.nombreBDDConectada = "";
         } catch (SQLException e) {
             LOGGER.severe("Ocurrió un error al establecer la conexión");
             LOGGER.severe(e.getMessage());
@@ -70,6 +73,7 @@ public class PostgresConnectionManager implements ConnectionManager {
         if (this.conn != null) {
             try {
                 this.conn.close();
+                LOGGER.log(Level.INFO, "==========================> OK! Cerrada conexión con BDD {0}", this.nombreBDDConectada);
             } catch (SQLException e) {
                 LOGGER.severe("ERROR al cerrar la conexión");
                 LOGGER.severe(e.getMessage());
@@ -95,12 +99,15 @@ public class PostgresConnectionManager implements ConnectionManager {
         String user = props.getProperty("db.user");
         String passsword = props.getProperty("db.userPassword");
         try {
-            LOGGER.info("Estableciendo conexión");
+            LOGGER.log(Level.INFO, "Estableciendo conexión con BDD {0}", dbName);
+            
             this.conn = DriverManager.getConnection(url, user, passsword);
-            LOGGER.info("Conexión establecida");
-            this.dbHost = (String) props.get("db.host");
+            
+            LOGGER.log(Level.INFO, "Conexión establecida con BDD {0}", dbName);
+            //this.dbHost = (String) props.get("db.host");
+            this.nombreBDDConectada = dbName;
         } catch (SQLException e) {
-            LOGGER.severe("Ocurrió un error al establecer la conexión");
+            LOGGER.log(Level.SEVERE, "Ocurrió un error al establecer la conexión con BDD {0}", dbName);
             LOGGER.severe(e.getMessage());
         }
 

@@ -7,6 +7,8 @@ package bd1.obli2012.gui;
 import bd1.obli2012.framework.ColumnManager;
 import bd1.obli2012.framework.definicion.Attribute;
 import bd1.obli2012.framework.DatabaseManager;
+import bd1.obli2012.framework.ExecutionResult;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -191,27 +193,16 @@ public class DialogModAttrib extends javax.swing.JDialog {
         boolean notNull = chkNotNull.isSelected();
         String defaultValue = txtDefault.getText().trim();
         
-        ColumnManager dbm = new ColumnManager();
-        Boolean exitCode = false;
-        //Si cambió el nombre se cambia el nombre
-        if(!nombre.equals(columna.getNombre())){
-            exitCode = dbm.modifyColumnName(dbName, tbName, columna.getNombre() ,nombre);
-        }
-        //FIXME arreglar el tema del largo Steeeeve!!
-        if(!bd1.obli2012.framework.definicion.TipoDato.valueOf(type).equals(columna.getTipo())) {
-            exitCode = dbm.modifyColumnType(dbName, tbName, nombre, type, largo);
-        }
+        ColumnManager colMan = new ColumnManager();
         
-        if(notNull != columna.isNullable()) {
-            exitCode = dbm.modifyColumnNullability(dbName, tbName, nombre, notNull);
-        }
-     
-        exitCode = dbm.modifyDefaultValue(dbName, tbName, columna.getNombre(), defaultValue);
-     
+        ExecutionResult er = colMan.modificarColumna(dbName, tbName, columna.getNombre(), nombre, type, largo, notNull, defaultValue);
+         
         
-        if(exitCode) {
+        if(er.success) {
             parent.actualizarDatos();
             this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
         }
         
     }//GEN-LAST:event_btnAceptarActionPerformed
