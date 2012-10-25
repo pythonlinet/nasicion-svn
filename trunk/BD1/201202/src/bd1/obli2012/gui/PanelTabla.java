@@ -53,6 +53,9 @@ public class PanelTabla extends javax.swing.JPanel {
         btnQuitarAttr1 = new javax.swing.JButton();
         btnLockTabla = new javax.swing.JButton();
 
+        setMaximumSize(new java.awt.Dimension(800, 400));
+        setPreferredSize(new java.awt.Dimension(800, 400));
+
         tablaAtributos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
