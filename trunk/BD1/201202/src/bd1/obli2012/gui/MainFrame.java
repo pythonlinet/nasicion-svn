@@ -40,8 +40,9 @@ import javax.swing.tree.TreePath;
  * @author guillermo
  */
 public class MainFrame extends javax.swing.JFrame implements TreeSelectionListener {
-public final String  BORRAR_TABLA = 
-        "Se está por borrar la tabla {0}. Toda la información en la tabla se perdera.";
+
+    public final String BORRAR_TABLA =
+            "Se está por borrar la tabla \"%s\". \nToda la información en la tabla se perdera.";
     private JTree arbolBD;
     private JPanel panelTabla;
 
@@ -53,7 +54,7 @@ public final String  BORRAR_TABLA =
         //Colocamos el nuevo tipo de layout que queremos que tenga nuestro JFrame
         //this.setLayout(new FlowLayout());
         this.setLayout(new BorderLayout());
-        
+
         this.pack();
     }
 
@@ -196,13 +197,13 @@ public final String  BORRAR_TABLA =
         //Este es el codigo para el click derecho del nodo
         MouseListener ml = new MouseAdapter() {
             /*
-            public void mousePressed(MouseEvent e) {
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    Point p = e.getPoint();
-                    TreePath path = dbTree.getPathForLocation(p.x, p.y);
-                }
-            }//mousePressed
-*/
+             public void mousePressed(MouseEvent e) {
+             if (SwingUtilities.isRightMouseButton(e)) {
+             Point p = e.getPoint();
+             TreePath path = dbTree.getPathForLocation(p.x, p.y);
+             }
+             }//mousePressed
+             */
             public void mouseReleased(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e)) {
                     Point p = e.getPoint();
@@ -254,7 +255,7 @@ public final String  BORRAR_TABLA =
             this.flowPanel.removeAll();;
             this.flowPanel.add(panelTabla);
             this.flowPanel.revalidate();;
-            
+
             Contexto.getInstance().setTbSeleccionada(tn.getTable().getNombre());
         } else if (selectedNode instanceof DBTreeNode) {
             DBTreeNode nodo = (DBTreeNode) selectedNode;
@@ -286,27 +287,35 @@ public final String  BORRAR_TABLA =
     }
 
     class TablaPopupMenu extends JPopupMenu {
+
         private Tabla tabla;
+
         public TablaPopupMenu(Tabla object, final TableTreeNode node) {
             this.tabla = object;
 
-            JMenuItem menuItem = new JMenuItem("Borrar tabla");
-            menuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bd1/obli2012/icons/table_delete.png")));
-            add(menuItem);
-            menuItem.addActionListener(new ActionListener() {
+            JMenuItem menuItemBorrarTabla = new JMenuItem("Borrar tabla");
+            JMenuItem menuItemRenombrarTabla = new JMenuItem("Renombrar tabla");
+            
+            menuItemBorrarTabla.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bd1/obli2012/icons/table_delete.png")));
+            menuItemRenombrarTabla.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bd1/obli2012/icons/table_row_alt.png")));
+            
+            add(menuItemBorrarTabla);
+            add(menuItemRenombrarTabla);
+            
+            menuItemBorrarTabla.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     Integer salida;
-                    salida = JOptionPane.showConfirmDialog(null, 
-                             String.format(BORRAR_TABLA, tabla.getNombre()),
-                             "Drop Tabla", 
-                             JOptionPane.OK_CANCEL_OPTION, 
-                             JOptionPane.WARNING_MESSAGE);
-                    if(salida == 0) {
+                    salida = JOptionPane.showConfirmDialog(null,
+                            String.format(BORRAR_TABLA, tabla.getNombre()),
+                            "Drop Tabla",
+                            JOptionPane.OK_CANCEL_OPTION,
+                            JOptionPane.WARNING_MESSAGE);
+                    if (salida == 0) {
                         TablaManager tm = new TablaManager();
                         ExecutionResult er = tm.dropTable(tabla.getDatabase(), tabla.getNombre());
-                        if(er.success) {
-                           DBTreeNode padre = (DBTreeNode)node.getParent();
-                           padre.reconstruir(true);
+                        if (er.success) {
+                            DBTreeNode padre = (DBTreeNode) node.getParent();
+                            padre.reconstruir(true);
                         } else {
                             JOptionPane.showMessageDialog(null, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
                         }
@@ -314,10 +323,22 @@ public final String  BORRAR_TABLA =
                 }
             });
 
+            
+            
+            
+            menuItemRenombrarTabla.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    new DialogRenombrarTabla(null, 
+                            true, 
+                            tabla.getDatabase(), 
+                            tabla.getNombre(),
+                            (DBTreeNode)node.getParent()).setVisible(true);
+                }
+            });
         }
     }
-    
-    public JScrollPane getTreePane(){
+
+    public JScrollPane getTreePane() {
         return this.treePane;
     }
 }
