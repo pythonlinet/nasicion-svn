@@ -5,6 +5,8 @@ import bd1.obli2012.framework.definicion.Columna;
 import bd1.obli2012.framework.definicion.Tabla;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
@@ -48,6 +50,9 @@ public class AplicacionExterna extends javax.swing.JFrame {
         jList1 = new javax.swing.JList();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
+        btnModificar = new javax.swing.JButton();
+        btnBorrar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,10 +73,31 @@ public class AplicacionExterna extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
-        ));
+        ){@Override
+            public boolean isCellEditable (int fila, int columna) {
+                return false;
+            }
+        });
         jScrollPane2.setViewportView(jTable1);
+
+        jButton1.setText("Añadir");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        btnModificar.setText("Modificar");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
+
+        btnBorrar.setText("Borrar");
+        btnBorrar.setToolTipText("");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -81,16 +107,30 @@ public class AplicacionExterna extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1)
+                            .addComponent(btnModificar)
+                            .addComponent(btnBorrar))))
                 .addContainerGap())
         );
 
@@ -98,12 +138,56 @@ public class AplicacionExterna extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
-        if(!evt.getValueIsAdjusting()){
+        if (!evt.getValueIsAdjusting()) {
             Tabla t = (Tabla) this.jList1.getSelectedValue();
-            crearTableModel(t);
+            actualizarTableModel(t);
         }
     }//GEN-LAST:event_jList1ValueChanged
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        new NewJDialog(this,
+                true,
+                (Tabla) this.jList1.getSelectedValue(), false,null).
+                setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        new NewJDialog(this,
+                true,
+                (Tabla) this.jList1.getSelectedValue(), false,obtenerValoresPK()).
+                setVisible(true);
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    /**
+     * Obtiene los valores de la PK de la fila seleccionada
+     * @return null si no hay fila seleccionada
+     */
+    private List<String> obtenerValoresPK(){
+        Integer fila = jTable1.getSelectedRow();
+        if (fila > -1) {
+            Tabla tablaSeleccionada = (Tabla) jList1.getSelectedValue();
+
+            List<String> pks = tablaSeleccionada.getPrimaryKeys();
+            List<Integer> posicionPks = new ArrayList<Integer>();
+            for (String pk : pks) {
+                boolean encontrado = false;
+                for (int j = 0; j < tablaSeleccionada.getAttributes().size() && !encontrado; j++) {
+                    String nc = tablaSeleccionada.getAttributes().get(j).getNombre();
+                    if (nc.equals(pk)) {
+                        posicionPks.add(j);
+                    }
+
+                }
+            }
+            List<String> valoresPK = new LinkedList<String>();
+            for (Integer pos : posicionPks) {
+                valoresPK.add(jTable1.getValueAt(fila, pos).toString());
+                //System.out.println(jTable1.getValueAt(fila, pos).toString());
+            }
+            return valoresPK;
+        }
+        return null;
+    }
     /**
      * @param args the command line arguments
      */
@@ -139,19 +223,21 @@ public class AplicacionExterna extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBorrar;
+    private javax.swing.JButton btnModificar;
+    private javax.swing.JButton jButton1;
     private javax.swing.JList jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 
-    private void crearTableModel(Tabla tabla) {
+    public void actualizarTableModel(Tabla tabla) {
         DefaultTableModel modelo = (DefaultTableModel) this.jTable1.getModel();
         modelo.setColumnIdentifiers(tabla.getNombresColumnas());
 
-        for (int i = 0; i < modelo.getRowCount(); i++) {
-
-            modelo.removeRow(i);
+        while (modelo.getRowCount() > 0) {
+            modelo.removeRow(0);
         }
         ResultSet rs = DatabaseManager.getInstance().executeQueryWithResult(dbName, QueryBuilder.obtenerInformacionTabla(tabla));
         System.out.println(QueryBuilder.obtenerInformacionTabla(tabla));
@@ -164,11 +250,9 @@ public class AplicacionExterna extends javax.swing.JFrame {
                     rowData[i] = rs.getString(c.getNombre());
                     i++;
                 }
-                //System.out.println(rowData);
-
                 modelo.addRow(rowData);
             }
-
+            modelo.fireTableDataChanged();
         } catch (SQLException ex) {
             Logger.getLogger(AplicacionExterna.class.getName()).log(Level.SEVERE, null, ex);
         }
