@@ -4,6 +4,7 @@
  */
 package bd1.obli2012.framework.definicion;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -124,5 +125,16 @@ public class Tabla {
      */
     public void setForeignKeys(Map<String, String> foreignKeys) {
         this.foreignKeys = foreignKeys;
+    }
+    
+    
+    public String[] getNombresColumnas() {
+        String[] nombres = new String[attributes.size()];
+        for (int i = 0; i < attributes.size(); i++) {
+            nombres[i] = attributes.get(i).getNombre();
+            
+        }
+        
+        return nombres;
     }
 }

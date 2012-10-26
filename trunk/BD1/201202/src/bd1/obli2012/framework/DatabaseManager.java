@@ -134,6 +134,29 @@ public class DatabaseManager {
         return rs;
     }
 
+        /**
+     * Ejecuta una consulta contra la base de datos que espere resultados
+     *
+     * @param query - la query a ser ejecutada en la base de datos
+     * @return un {@link ResultSet} con el resultado de la consulta
+     */
+    public ResultSet executeQueryWithResult(String dbName, String query) {
+        ResultSet rs = null;
+        cm = PostgresConnectionManager.getInstance();
+        Connection con = cm.obtenerConexion(dbName);
+        try {
+            Statement st = con.createStatement();
+            rs = st.executeQuery(query);
+
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error al ejecutar la consulta : {0}", query);
+            LOGGER.severe(e.getMessage());
+        } finally {
+            cm.cerrarConexion();
+        }
+        return rs;
+    }
+    
     /**
      * Obtiene los esquemas presentes en la base de datos
      *
