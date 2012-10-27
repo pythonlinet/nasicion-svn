@@ -1,3 +1,5 @@
+package bd1.obli2012.extapp;
+
 
 import bd1.obli2012.framework.DatabaseManager;
 import bd1.obli2012.framework.ExecutionResult;
@@ -27,14 +29,14 @@ import javax.swing.JTextField;
  *
  * @author guillermo
  */
-public class NewJDialog extends javax.swing.JDialog {
+public class DialogAltaMod extends javax.swing.JDialog {
 
     private Tabla tabla;
 
     /**
      * Creates new form NewJDialog
      */
-    public NewJDialog(java.awt.Frame parent, boolean modal, Tabla tabla, boolean nuevoRegistro, List<String> valoresPK) {
+    public DialogAltaMod(java.awt.Frame parent, boolean modal, Tabla tabla, boolean nuevoRegistro, final List<String> valoresPK) {
         super(parent, modal);
         this.tabla = tabla;
         setLayout(new GridLayout(tabla.getAttributes().size() + 1, 2));
@@ -53,14 +55,10 @@ public class NewJDialog extends javax.swing.JDialog {
                 }
             });
         } else {
-
             cargarDatosTupla(valoresPK);
-
-
-
             aceptar.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    updateAction(evt);
+                    updateAction(evt, valoresPK);
                 }
             });
         }
@@ -69,6 +67,10 @@ public class NewJDialog extends javax.swing.JDialog {
         pack();
     }
 
+    /**
+     * Obtiene los valors del formulario
+     * @return array string con los valores del "form" (Dios, extranio web)
+     */
     private String[] obtenerValores() {
 
         List<String> vals = new ArrayList<String>();
@@ -84,6 +86,11 @@ public class NewJDialog extends javax.swing.JDialog {
         return valores;
     }
 
+    /**
+     * Obtiene todos los componentes JTextField del formulario
+     * @param c contenedor de los txtfield
+     * @return 
+     */
     private List<JTextField> getAllTxtComponents(final Container c) {
         Component[] comps = c.getComponents();
         List<JTextField> compList = new ArrayList<JTextField>();
@@ -98,9 +105,27 @@ public class NewJDialog extends javax.swing.JDialog {
         return compList;
     }
 
+    /**
+     * Accion para el boton Aceptar cuando hay que insertar
+     * @param evt 
+     */
     private void insertarAction(ActionEvent evt) {
         String[] valores = obtenerValores();
         String query = QueryBuilder.insertarEnTabla(tabla, valores);
+        ejecutarQuery(query);
+    }
+
+    private void updateAction(ActionEvent evt, List<String> valoresPK) {
+        String[] valores = obtenerValores();
+        String query = QueryBuilder.modificarEnTabla(tabla, valores, valoresPK);
+        ejecutarQuery(query);
+    }
+
+    /**
+     * Ejecuta la query provista, si es un exito cierra el modal si falla muestra mensaje de error
+     * @param sql 
+     */
+    private void ejecutarQuery(String query){
         ExecutionResult er = DatabaseManager.getInstance().executeQueryInDB(tabla.getDatabase(), query);
         if (er.success) {
             ((AplicacionExterna) getParent()).actualizarTableModel(tabla);
@@ -109,11 +134,10 @@ public class NewJDialog extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    private void updateAction(ActionEvent evt) {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
+    /**
+     * Carga los datos de una tupla en la pantalla en base a las PK y la tabla
+     * @param valoresPK valores de pk
+     */
     private void cargarDatosTupla(List<String> valoresPK) {
         String query = QueryBuilder.obtenerTuplaTabla(tabla, valoresPK);
         //System.out.println(query);
@@ -130,7 +154,7 @@ public class NewJDialog extends javax.swing.JDialog {
                 }
             }
         } catch (SQLException ex) {
-            Logger.getLogger(NewJDialog.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DialogAltaMod.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

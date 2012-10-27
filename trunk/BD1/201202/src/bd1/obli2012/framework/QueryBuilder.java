@@ -69,4 +69,66 @@ public class QueryBuilder {
         sb.append(";");
         return sb.toString();
     }
+
+    public static String modificarEnTabla(Tabla tabla, String[] valores, List<String> valoresPK) {
+       StringBuilder sb = new StringBuilder("UPDATE ").
+               append(tabla.getNombre()).append(" SET ");
+        
+        for (int i = 0; i < valores.length; i++) {
+            sb.append(tabla.getAttributes().get(i).getNombre())
+                    .append("='")
+                    .append(valores[i])
+                    .append("',");
+            
+        }
+        sb.replace(sb.length()-1, sb.length(), "");
+        sb.append(" WHERE ");
+        for (int i = 0; i < valoresPK.size(); i++) {
+            sb.append(tabla.getPrimaryKeys().get(i)).
+                    append("='").
+                    append(valoresPK.get(i)).
+                    append("' AND ");
+        }
+        sb.replace(sb.length()-4, sb.length(), "");
+        sb.append(";");
+        return sb.toString();
+    }
+
+    public static String borrarTuplaTabla(Tabla tabla, List<String> valoresPK) {
+        StringBuilder sb = new StringBuilder("DELETE ");
+        sb.append("FROM ").
+                append(tabla.getNombre()).
+                append(" WHERE ");
+        
+        
+        for (int i = 0; i < valoresPK.size(); i++) {
+            sb.append(tabla.getPrimaryKeys().get(i)).
+                    append("='").
+                    append(valoresPK.get(i)).
+                    append("' AND ");
+        }
+        sb.replace(sb.length()-4, sb.length(), "");
+        sb.append(";");
+        return sb.toString();
+    }
+    
+    public static String select(Tabla tabla, List<QueryCriteria> criteria) {
+    StringBuilder sb = new StringBuilder("SELECT ");
+        for(Columna c : tabla.getAttributes()) {
+            sb.append(c.getNombre()).append(",");
+        }
+        sb.replace(sb.length()-1, sb.length(), "");
+        sb.append(" FROM ").
+                append(tabla.getNombre()).
+                append(" WHERE ");
+        
+        for (QueryCriteria qc : criteria) {
+            sb.append(qc.toSQL()).
+                    append(" AND ");
+        }
+        
+        sb.replace(sb.length()-4, sb.length(), "");
+        sb.append(";");
+        return sb.toString();
+    }
 }

@@ -1,6 +1,10 @@
+package bd1.obli2012.extapp;
+
 
 import bd1.obli2012.framework.DatabaseManager;
+import bd1.obli2012.framework.ExecutionResult;
 import bd1.obli2012.framework.QueryBuilder;
+import bd1.obli2012.framework.QueryCriteria;
 import bd1.obli2012.framework.definicion.Columna;
 import bd1.obli2012.framework.definicion.Tabla;
 import java.sql.ResultSet;
@@ -8,9 +12,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -26,6 +30,7 @@ public class AplicacionExterna extends javax.swing.JFrame {
     private List<Tabla> tablas;
     private final String dbName;
     private String tabla;
+    private List<QueryCriteria> criteriasActivas;
 
     /**
      * Creates new form AplicacionExterna
@@ -53,6 +58,7 @@ public class AplicacionExterna extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         btnBorrar = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -98,6 +104,18 @@ public class AplicacionExterna extends javax.swing.JFrame {
 
         btnBorrar.setText("Borrar");
         btnBorrar.setToolTipText("");
+        btnBorrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBorrarActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Filtrar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -108,14 +126,15 @@ public class AplicacionExterna extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -130,39 +149,67 @@ public class AplicacionExterna extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton1)
                             .addComponent(btnModificar)
-                            .addComponent(btnBorrar))))
+                            .addComponent(btnBorrar)
+                            .addComponent(jButton2))))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public void setCriteriasActivas(List<QueryCriteria> criteriasActivas) {
+        this.criteriasActivas = criteriasActivas;
+    }
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
         if (!evt.getValueIsAdjusting()) {
             Tabla t = (Tabla) this.jList1.getSelectedValue();
+            this.criteriasActivas = null;
             actualizarTableModel(t);
         }
     }//GEN-LAST:event_jList1ValueChanged
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        new NewJDialog(this,
+        new DialogAltaMod(this,
                 true,
-                (Tabla) this.jList1.getSelectedValue(), false,null).
+                (Tabla) this.jList1.getSelectedValue(), true, null).
                 setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        new NewJDialog(this,
+        new DialogAltaMod(this,
                 true,
-                (Tabla) this.jList1.getSelectedValue(), false,obtenerValoresPK()).
+                (Tabla) this.jList1.getSelectedValue(), false, obtenerValoresPK()).
                 setVisible(true);
     }//GEN-LAST:event_btnModificarActionPerformed
 
+    private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
+        if (this.jList1.getSelectedIndex() > -1) {
+            Integer salida;
+            salida = JOptionPane.showConfirmDialog(null,
+                    "¿Seguro que desea borrar el registro?",
+                    "",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+            if (salida == 0) {
+                Tabla t = (Tabla) this.jList1.getSelectedValue();
+                List<String> pks = obtenerValoresPK();
+                String query = QueryBuilder.borrarTuplaTabla(t, pks);
+                ejecutarQuery(t, query);
+                actualizarTableModel(t);
+            }
+        }
+    }//GEN-LAST:event_btnBorrarActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        new DialogoFiltro(this, true, (Tabla) jList1.getSelectedValue()).setVisible(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * Obtiene los valores de la PK de la fila seleccionada
+     *
      * @return null si no hay fila seleccionada
      */
-    private List<String> obtenerValoresPK(){
+    private List<String> obtenerValoresPK() {
         Integer fila = jTable1.getSelectedRow();
         if (fila > -1) {
             Tabla tablaSeleccionada = (Tabla) jList1.getSelectedValue();
@@ -188,6 +235,7 @@ public class AplicacionExterna extends javax.swing.JFrame {
         }
         return null;
     }
+
     /**
      * @param args the command line arguments
      */
@@ -226,6 +274,7 @@ public class AplicacionExterna extends javax.swing.JFrame {
     private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JList jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -239,8 +288,15 @@ public class AplicacionExterna extends javax.swing.JFrame {
         while (modelo.getRowCount() > 0) {
             modelo.removeRow(0);
         }
-        ResultSet rs = DatabaseManager.getInstance().executeQueryWithResult(dbName, QueryBuilder.obtenerInformacionTabla(tabla));
-        System.out.println(QueryBuilder.obtenerInformacionTabla(tabla));
+        String query = "";
+        if(criteriasActivas == null || criteriasActivas.isEmpty()){
+            query = QueryBuilder.obtenerInformacionTabla(tabla);
+        } else {
+            query = QueryBuilder.select(tabla, criteriasActivas);
+        }
+        
+        ResultSet rs = DatabaseManager.getInstance().executeQueryWithResult(dbName, query);
+        System.out.println(query);
         try {
             String[] rowData = null;
             while (rs.next()) {
@@ -255,6 +311,19 @@ public class AplicacionExterna extends javax.swing.JFrame {
             modelo.fireTableDataChanged();
         } catch (SQLException ex) {
             Logger.getLogger(AplicacionExterna.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Ejecuta la query provista, si es un exito cierra el modal si falla muestra mensaje de error
+     * @param sql 
+     */
+    private void ejecutarQuery(Tabla tabla, String query){
+        ExecutionResult er = DatabaseManager.getInstance().executeQueryInDB(tabla.getDatabase(), query);
+        if (er.success) {
+            actualizarTableModel(tabla);
+        } else {
+            JOptionPane.showMessageDialog(this, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
