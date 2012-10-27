@@ -7,25 +7,20 @@ package bd1.obli2012.gui;
 import bd1.obli2012.gui.arbol.TableTreeNode;
 import bd1.obli2012.framework.definicion.BaseDeDatos;
 import bd1.obli2012.framework.DatabaseManager;
-import bd1.obli2012.framework.ExecutionResult;
-import bd1.obli2012.framework.TablaManager;
 import bd1.obli2012.framework.definicion.Tabla;
 import bd1.obli2012.gui.arbol.DBTreeCellRenderer;
 import bd1.obli2012.gui.arbol.DBTreeNode;
 import bd1.obli2012.gui.backend.Contexto;
+import bd1.obli2012.gui.popup.DBPopupMenu;
+import bd1.obli2012.gui.popup.TablaPopupMenu;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
@@ -41,8 +36,7 @@ import javax.swing.tree.TreePath;
  */
 public class MainFrame extends javax.swing.JFrame implements TreeSelectionListener {
 
-    public final String BORRAR_TABLA =
-            "Se está por borrar la tabla \"%s\". \nToda la información en la tabla se perdera.";
+    
     private JTree arbolBD;
     private JPanel panelTabla;
 
@@ -266,77 +260,9 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
 
     }
 
-    class DBPopupMenu extends JPopupMenu {
+    
 
-        private BaseDeDatos baseDeDatos;
-
-        public DBPopupMenu(BaseDeDatos object, final DBTreeNode node) {
-            baseDeDatos = object;
-
-            JMenuItem menuItem = new JMenuItem("Crear tabla");
-            menuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bd1/obli2012/icons/table_add.png")));
-            add(menuItem);
-            menuItem.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    DialogAddTabla addTabla = new DialogAddTabla(null, true, baseDeDatos.getDbName(), node);
-                    addTabla.setVisible(true);
-                }
-            });
-
-        }
-    }
-
-    class TablaPopupMenu extends JPopupMenu {
-
-        private Tabla tabla;
-
-        public TablaPopupMenu(Tabla object, final TableTreeNode node) {
-            this.tabla = object;
-
-            JMenuItem menuItemBorrarTabla = new JMenuItem("Borrar tabla");
-            JMenuItem menuItemRenombrarTabla = new JMenuItem("Renombrar tabla");
-            
-            menuItemBorrarTabla.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bd1/obli2012/icons/table_delete.png")));
-            menuItemRenombrarTabla.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bd1/obli2012/icons/table_row_alt.png")));
-            
-            add(menuItemBorrarTabla);
-            add(menuItemRenombrarTabla);
-            
-            menuItemBorrarTabla.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    Integer salida;
-                    salida = JOptionPane.showConfirmDialog(null,
-                            String.format(BORRAR_TABLA, tabla.getNombre()),
-                            "Drop Tabla",
-                            JOptionPane.OK_CANCEL_OPTION,
-                            JOptionPane.WARNING_MESSAGE);
-                    if (salida == 0) {
-                        TablaManager tm = new TablaManager();
-                        ExecutionResult er = tm.dropTable(tabla.getDatabase(), tabla.getNombre());
-                        if (er.success) {
-                            DBTreeNode padre = (DBTreeNode) node.getParent();
-                            padre.reconstruir(true);
-                        } else {
-                            JOptionPane.showMessageDialog(null, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                }
-            });
-
-            
-            
-            
-            menuItemRenombrarTabla.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    new DialogRenombrarTabla(null, 
-                            true, 
-                            tabla.getDatabase(), 
-                            tabla.getNombre(),
-                            (DBTreeNode)node.getParent()).setVisible(true);
-                }
-            });
-        }
-    }
+   
 
     public JScrollPane getTreePane() {
         return this.treePane;

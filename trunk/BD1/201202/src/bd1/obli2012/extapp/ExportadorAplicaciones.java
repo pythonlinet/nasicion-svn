@@ -126,31 +126,4 @@ public class ExportadorAplicaciones {
             i++;
         }while(is != null);
     }
-
-    
-
-    
-    
-    /**
-     * Esto queda como un mal recuerdo de que hay mas de una forma de... pelar una gallina?
-     * @throws IOException 
-     */
-    private void compilarClases() throws IOException {
-        String BASE_PATH = "." + File.separator + "src" + File.separator + "bd1" + File.separator + "obli2012/";
-
-        
-        DataInputStream in = new DataInputStream(
-                this.getClass().getResourceAsStream("/bd1/obli2012/extapp/clasesExport"));
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        String strLine;
-        
-        
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-        //Read File Line By Line
-        while ((strLine = br.readLine()) != null) {
-            //System.out.println(strLine);
-            compiler.run(null, null, null, new File(BASE_PATH + strLine).getCanonicalPath());
-        }
-        in.close();
-    }
 }
