@@ -61,9 +61,7 @@ public class Columna {
     
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(this.nombre).append(" : ").append(this.tipo).append(" NULLABLE ").append(this.nullable);
-        return sb.toString();
+        return this.nombre;
     }
 
     /**
