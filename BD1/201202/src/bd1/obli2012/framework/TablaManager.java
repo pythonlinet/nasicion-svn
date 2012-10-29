@@ -84,37 +84,39 @@ public class TablaManager {
         String sqlDropConstraint = "ALTER TABLE %s DROP CONSTRAINT %s;";
         String sqlAddConstraint = "ALTER TABLE %s ADD CONSTRAINT %s PRIMARY KEY (%s);";
         String pkConstName = "pk_" + tabla.getNombre();
-        
+
         //Borramos la pK actual
         String prevPkConstNameOld = getPKConstraintName(tabla.getDatabase(), tabla.getNombre());
-        DatabaseManager.getInstance().executeQueryInDB(tabla.getDatabase(),
+        ExecutionResult er = DatabaseManager.getInstance().executeQueryInDB(tabla.getDatabase(),
                 String.format(sqlDropConstraint, tabla.getNombre(),
                 prevPkConstNameOld));
 
 
+        if (!pks.isEmpty()) {
+            StringBuilder pkString = new StringBuilder();
+            for (String pk : pks) {
+                pkString.append(pk).append(",");
+            }
+            pkString.replace(pkString.length() - 1, pkString.length(), "");
+            sqlAddConstraint = String.format(sqlAddConstraint,
+                    tabla.getNombre(), pkConstName, pkString.toString());
 
-        StringBuilder pkString = new StringBuilder();
-        for (String pk : pks) {
-            pkString.append(pk).append(",");
+            er = DatabaseManager.getInstance().executeQueryInDB(tabla.getDatabase(), sqlAddConstraint);
         }
-        pkString.replace(pkString.length() - 1, pkString.length(),"");
-        sqlAddConstraint = String.format(sqlAddConstraint,
-                tabla.getNombre(), pkConstName, pkString.toString());
-        
-        return DatabaseManager.getInstance().executeQueryInDB(tabla.getDatabase(), sqlAddConstraint);
+        return er;
     }
-    
-    public ExecutionResult dropConstraint(Tabla tabla, String constraint){
+
+    public ExecutionResult dropConstraint(Tabla tabla, String constraint) {
         String sqlDropConstraint = "ALTER TABLE %s DROP CONSTRAINT %s;";
         sqlDropConstraint = String.format(sqlDropConstraint, tabla.getNombre(), constraint);
         return DatabaseManager.getInstance().executeQueryInDB(tabla.getDatabase(), sqlDropConstraint);
     }
 
-    public ExecutionResult addFKConstraint(Tabla tabla,String consName, String columna, String tablaReferencia, String columnaReferencia) {
+    public ExecutionResult addFKConstraint(Tabla tabla, String consName, String columna, String tablaReferencia, String columnaReferencia) {
         String sql = "ALTER TABLE %s ADD CONSTRAINT %s FOREIGN KEY (%s) REFERENCES %s (%s);";
-        
+
         sql = String.format(sql, tabla.getNombre(), consName, columna, tablaReferencia, columnaReferencia);
-        
+
         return DatabaseManager.getInstance().executeQueryInDB(tabla.getDatabase(), sql);
     }
 }

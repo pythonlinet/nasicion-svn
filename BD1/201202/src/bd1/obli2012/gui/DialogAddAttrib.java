@@ -203,7 +203,8 @@ public class DialogAddAttrib extends javax.swing.JDialog {
 
             Cambio cambio = new Cambio(TipoCambio.COLUMNA_CREAR, parametros);
             Contexto.getInstance().guardarCambioACola(cambio);
-
+            MainFrame.getInstance().updateTree();
+            MainFrame.getInstance().getPanelTabla().actualizarDatos();
             this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);

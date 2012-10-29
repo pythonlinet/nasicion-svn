@@ -5,17 +5,23 @@
 package bd1.obli2012.gui;
 
 import bd1.obli2012.Util;
+import bd1.obli2012.framework.DatabaseManager;
 import bd1.obli2012.framework.ExecutionResult;
 import bd1.obli2012.framework.TablaManager;
 import bd1.obli2012.framework.definicion.Columna;
 import bd1.obli2012.framework.definicion.Tabla;
 import bd1.obli2012.gui.arbol.DBTreeNode;
 import bd1.obli2012.gui.arbol.TableTreeNode;
+import bd1.obli2012.gui.backend.Contexto;
+import bd1.obli2012.versionado.Cambio;
+import bd1.obli2012.versionado.TipoCambio;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -29,7 +35,7 @@ public class DialogPKTabla extends javax.swing.JDialog {
 
     private Tabla tabla;
     private TableTreeNode node;
-    
+    private final List<String> originalPKs;
 
     /**
      * Creates new form DialogPKTabla
@@ -37,11 +43,12 @@ public class DialogPKTabla extends javax.swing.JDialog {
     public DialogPKTabla(MainFrame parent, boolean modal, final Tabla tabla, TableTreeNode node) {
         super(parent, modal);
         //initComponents();
-        
+
         this.setTitle("Indique cuales campos deberian ser las PKs para la tabla");
         this.tabla = tabla;
         this.node = node;
-        setLayout(new GridLayout(tabla.getAttributes().size() + 1, 1,10,10));
+        
+        setLayout(new GridLayout(tabla.getAttributes().size() + 1, 1, 10, 10));
         JButton btnAceptar = new JButton("Aceptar");
 
         add(btnAceptar);
@@ -49,13 +56,14 @@ public class DialogPKTabla extends javax.swing.JDialog {
             JCheckBox chk = new JCheckBox(c.getNombre(), null, tabla.isPrimaryKey(c.getNombre()));
             add(chk);
         }
+        this.originalPKs = getSelectedPK();
         pack();
 
 
 
 
         btnAceptar.addActionListener(new ActionListener() {
-           public void actionPerformed(ActionEvent ae) {
+            public void actionPerformed(ActionEvent ae) {
                 aceptarButtonActionPeformed(ae);
             }
         });
@@ -89,15 +97,12 @@ public class DialogPKTabla extends javax.swing.JDialog {
     private void aceptarButtonActionPeformed(ActionEvent evt) {
         TablaManager tm = new TablaManager();
 
-        List<JCheckBox> selected = Util.getAllCheckbox(this);
-        List<String> pks = new ArrayList<String>();
-        for (JCheckBox o : selected) {
-            if(o.isSelected()){
-                pks.add(o.getText());
-            }
-        }
+        List<String> pks = getSelectedPK();
+
         ExecutionResult er = tm.setPrimaryKey(tabla, pks);
         if (er.success) {
+
+            guardarCambio();
             MainFrame.getInstance().getPanelTabla().actualizarDatos();
             DBTreeNode padre = (DBTreeNode) node.getParent();
             padre.reconstruir(true);
@@ -106,6 +111,36 @@ public class DialogPKTabla extends javax.swing.JDialog {
         } else {
             JOptionPane.showMessageDialog(null, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private List<String> getSelectedPK() {
+        List<JCheckBox> selected = Util.getAllCheckbox(this);
+        List<String> pks = new ArrayList<String>();
+        for (JCheckBox o : selected) {
+            if (o.isSelected()) {
+                pks.add(o.getText());
+            }
+        }
+        return pks;
+    }
+
+    private void guardarCambio() {
+        TablaManager manager = new TablaManager();
+        Map<String, String> parametros = new HashMap<String, String>();
+        parametros.put("NOMBRE_TABLA", this.tabla.getNombre());
+        parametros.put("NOMBRE_CONSTRIAINT", manager.getPKConstraintName(tabla.getDatabase(), tabla.getNombre()));
+        StringBuilder storePk = new StringBuilder();
+        for (String pk : originalPKs) {
+            storePk.append(pk).append(",");
+        }
+        if(storePk.length() > 0){
+            storePk.replace(storePk.length() - 1, storePk.length(), "");
+        }
+        parametros.put("COLUMNAS", storePk.toString());
+
+        Cambio cambio = new Cambio(TipoCambio.TABLA_ALTER_PK, parametros);
+        Contexto.getInstance().guardarCambioACola(cambio);
+
     }
 }
     // Variables declaration - do not modify//GEN-BEGIN:variables

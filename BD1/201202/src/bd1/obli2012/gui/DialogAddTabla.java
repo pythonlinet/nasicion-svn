@@ -106,7 +106,7 @@ public class DialogAddTabla extends javax.swing.JDialog {
             Map<String,String> params = new HashMap<String, String>();
             params.put("NOMBRE_TABLA", nombreTb);
             Cambio cambio = new Cambio(TipoCambio.TABLA_CREAR, params);
-            Contexto.getInstance().guardarCambio(cambio);
+            Contexto.getInstance().guardarCambioACola(cambio);
             if (er.success) {
                 //parent.actualizarDatos();
                 node.reconstruir(false);

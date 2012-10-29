@@ -141,7 +141,8 @@ public class DialogFKTabla extends javax.swing.JDialog {
         });
         this.add(botonAgregar);
         this.cmps.add(botonAgregar);
-        revalidate();
+        //revalidate();
+        
         pack();
     }
 

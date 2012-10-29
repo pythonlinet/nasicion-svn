@@ -8,6 +8,11 @@ import bd1.obli2012.framework.ColumnManager;
 import bd1.obli2012.framework.definicion.Columna;
 import bd1.obli2012.framework.DatabaseManager;
 import bd1.obli2012.framework.ExecutionResult;
+import bd1.obli2012.gui.backend.Contexto;
+import bd1.obli2012.versionado.Cambio;
+import bd1.obli2012.versionado.TipoCambio;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JOptionPane;
 
 /**
@@ -194,12 +199,26 @@ public class DialogModAttrib extends javax.swing.JDialog {
         String defaultValue = txtDefault.getText().trim();
         
         ColumnManager colMan = new ColumnManager();
+
+        
+        
+        //Preparamos el cambio en caso de que se borre correctamente la columna
+        Map<String, String> parametros = new HashMap<String, String>();
+        parametros.put("NOMBRE_TABLA", tbName);
+        parametros.put("NOMBRE_COLUMNA", columna.getNombre());
+        parametros.put("TIPO", columna.getTipo().toString());
+        parametros.put("NOT_NULL", columna.notNull().toString());
+        Cambio cambio = new Cambio(TipoCambio.COLUMNA_BORRAR, parametros);
+        
+        
+        
         
         ExecutionResult er = colMan.modificarColumna(dbName, tbName, columna.getNombre(), nombre, type, largo, notNull, defaultValue);
          
         
         if(er.success) {
             parent.actualizarDatos();
+            Contexto.getInstance().guardarCambioACola(cambio);
             this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
