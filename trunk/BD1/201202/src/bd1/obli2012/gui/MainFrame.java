@@ -20,7 +20,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
@@ -196,14 +195,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
 
         //Este es el codigo para el click derecho del nodo
         MouseListener ml = new MouseAdapter() {
-            /*
-             public void mousePressed(MouseEvent e) {
-             if (SwingUtilities.isRightMouseButton(e)) {
-             Point p = e.getPoint();
-             TreePath path = dbTree.getPathForLocation(p.x, p.y);
-             }
-             }//mousePressed
-             */
+
             public void mouseReleased(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e)) {
                     Point p = e.getPoint();
@@ -230,7 +222,6 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
                                 popUpMenuTabla.show(mc, e.getX(), e.getY() - popUpMenuTabla.getHeight());
                             }//if
                         }
-
                     }//if
                 }//if
             }//mouseReleased
@@ -256,11 +247,16 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
             this.flowPanel.add(panelTabla);
             this.flowPanel.revalidate();;
 
-            Contexto.getInstance().setTbSeleccionada(tn.getTable().getNombre());
+            
+            
+            
+            
+            //Contexto.getInstance().setTbSeleccionada(tn.getTable().getNombre());
+            Contexto.getInstance().seleccionarBaseDeDatos(tn.getDatabase());
         } else if (selectedNode instanceof DBTreeNode) {
             DBTreeNode nodo = (DBTreeNode) selectedNode;
 
-            //Contexto.getInstance().selectBaseDeDatos(nodo.getDbName());
+            Contexto.getInstance().seleccionarBaseDeDatos(nodo.getDbName());
         }
 
 

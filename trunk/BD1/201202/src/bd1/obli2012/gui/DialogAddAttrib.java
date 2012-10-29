@@ -8,6 +8,11 @@ import bd1.obli2012.framework.ColumnManager;
 import bd1.obli2012.framework.DatabaseManager;
 import bd1.obli2012.framework.ExecutionResult;
 import bd1.obli2012.framework.definicion.TipoDato;
+import bd1.obli2012.gui.backend.Contexto;
+import bd1.obli2012.versionado.Cambio;
+import bd1.obli2012.versionado.TipoCambio;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JOptionPane;
 
 /**
@@ -15,9 +20,11 @@ import javax.swing.JOptionPane;
  * @author gnasi
  */
 public class DialogAddAttrib extends javax.swing.JDialog {
+
     private String dbName;
     private String tbName;
     private PanelTabla parent;
+
     /**
      * Creates new form DialogAddAttrib
      */
@@ -176,32 +183,38 @@ public class DialogAddAttrib extends javax.swing.JDialog {
     }//GEN-LAST:event_txtLargoActionPerformed
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-        
-        
+
+
         String nombre = txtNombre.getText().trim();
-        String type = ((bd1.obli2012.framework.definicion.TipoDato)cmbTipoDato.getSelectedItem()).name();
+        String type = ((bd1.obli2012.framework.definicion.TipoDato) cmbTipoDato.getSelectedItem()).name();
         String largo = txtLargo.getText().trim();
         boolean notNull = chkNotNull.isSelected();
         String defaultValue = txtDefault.getText().trim();
-        
+
         //boolean exitCode = DatabaseManager.getInstance().executeQueryInDB(dbName, query);
         ColumnManager colMan = new ColumnManager();
         ExecutionResult er = colMan.addColumn(dbName, tbName, nombre, type, largo, notNull, defaultValue);
         if (er.success) {
-                //parent.actualizarDatos();
-                this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        
+            //parent.actualizarDatos();
+
+            Map<String, String> parametros = new HashMap<String, String>();
+            parametros.put("NOMBRE_TABLA", tbName);
+            parametros.put("NOMBRE_COLUMNA", nombre);
+
+            Cambio cambio = new Cambio(TipoCambio.COLUMNA_CREAR, parametros);
+            Contexto.getInstance().guardarCambioACola(cambio);
+
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
 
         this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
-
-   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnCancelar;

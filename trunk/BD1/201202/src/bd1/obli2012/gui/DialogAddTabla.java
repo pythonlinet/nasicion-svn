@@ -7,6 +7,11 @@ package bd1.obli2012.gui;
 import bd1.obli2012.framework.ExecutionResult;
 import bd1.obli2012.framework.TablaManager;
 import bd1.obli2012.gui.arbol.DBTreeNode;
+import bd1.obli2012.gui.backend.Contexto;
+import bd1.obli2012.versionado.Cambio;
+import bd1.obli2012.versionado.TipoCambio;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JOptionPane;
 
 /**
@@ -98,6 +103,10 @@ public class DialogAddTabla extends javax.swing.JDialog {
             TablaManager tm = new TablaManager();
             ExecutionResult er = tm.createTable(dbName, nombreTb);
 
+            Map<String,String> params = new HashMap<String, String>();
+            params.put("NOMBRE_TABLA", nombreTb);
+            Cambio cambio = new Cambio(TipoCambio.TABLA_CREAR, params);
+            Contexto.getInstance().guardarCambio(cambio);
             if (er.success) {
                 //parent.actualizarDatos();
                 node.reconstruir(false);

@@ -1,62 +1,71 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package bd1.obli2012.gui.backend;
 
 import bd1.obli2012.versionado.BDDVersionado;
+import bd1.obli2012.versionado.Cambio;
+import bd1.obli2012.versionado.VersionBDD;
 import bd1.obli2012.versionado.helper.VersionadoHelper;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- *
- * @author gnasi
- */
 public class Contexto {
 
-    private static Contexto instance;
-    private boolean tieneCambios;
-    private boolean cambiosSalvados;
-    private BDDVersionado baseDeDatosActiva;
-    private String tbSeleccionada;
+    private static Contexto instancia;
+    private BDDVersionado bddVersionado;
+    private List<Cambio> colaCambios;
+
+    public static Contexto getInstance() {
+        if (instancia == null) {
+            instancia = new Contexto();
+        }
+        return instancia;
+    }
+
+    public BDDVersionado getBDDVersionado() {
+        return this.bddVersionado;
+    }
 
     private Contexto() {
     }
 
-    public static Contexto getInstance() {
-        if (instance == null) {
-            instance = new Contexto();
-        }
-        return instance;
-    }
-    
-    public void selectBaseDeDatos(String nombreBD) {
-        if(baseDeDatosActiva == null || !nombreBD.equals(baseDeDatosActiva.getNombreBDD())){
-            //Guardar cambios como nueva version
-            BDDVersionado bddv = VersionadoHelper.obtenerVersiones(nombreBD);
-            if(bddv == null) {
-                baseDeDatosActiva = new BDDVersionado(nombreBD);
+    public void seleccionarBaseDeDatos(String nombreBaseDeDatos) {
+        if (bddVersionado != null) {
+            if (!bddVersionado.getNombreBDD().equals(nombreBaseDeDatos)) {
+                guardarCambiosEnCola();
+                this.bddVersionado = VersionadoHelper.obtenerVersiones(nombreBaseDeDatos);
             }
+        } else {
+            this.bddVersionado = VersionadoHelper.obtenerVersiones(nombreBaseDeDatos);
         }
     }
-    
-    public boolean isBDDActiva(String nombreBDD) {
-        return baseDeDatosActiva.getNombreBDD().equals(nombreBDD);
+
+    public void guardarCambio(Cambio cambio) {
+        Integer numVersion = bddVersionado.getVersionActual() + 1;
+        VersionBDD version = new VersionBDD();
+        version.setVersion(numVersion);
+        List<Cambio> cambios = new ArrayList<Cambio>();
+        cambios.add(cambio);
+        version.setCambios(cambios);
+        bddVersionado.getVersiones().put(numVersion, version);
+        VersionadoHelper.salvarCambios(bddVersionado);
     }
 
-    /**
-     * @return the tbSeleccionada
-     */
-    public String getTbSeleccionada() {
-        return tbSeleccionada;
+    public void guardarCambioACola(Cambio cambio) {
+        if (this.colaCambios == null) {
+            this.colaCambios = new ArrayList<Cambio>();
+        }
+        this.colaCambios.add(cambio);
     }
 
-    /**
-     * @param tbSeleccionada the tbSeleccionada to set
-     */
-    public void setTbSeleccionada(String tbSeleccionada) {
-        this.tbSeleccionada = tbSeleccionada;
+    private void guardarCambiosEnCola() {
+        if(this.colaCambios != null){
+        Integer numVersion = bddVersionado.getVersionActual() + 1;
+            VersionBDD version = new VersionBDD();
+            version.setVersion(numVersion);
+            List<Cambio> cambios = new ArrayList<Cambio>();
+            cambios.addAll(this.colaCambios);
+            version.setCambios(cambios);
+            bddVersionado.getVersiones().put(numVersion, version);
+            VersionadoHelper.salvarCambios(bddVersionado);
+        }
     }
-    
-    
-    
 }

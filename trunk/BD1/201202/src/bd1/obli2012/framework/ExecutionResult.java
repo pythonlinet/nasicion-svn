@@ -12,8 +12,9 @@ public class ExecutionResult {
     public final boolean success;
     public final String errorMessage;
     
-    public ExecutionResult(boolean success, String errorMessage){
+    public ExecutionResult(boolean success,String errorMessage){
         this.success = success;
         this.errorMessage = errorMessage;
     }
+    
 }

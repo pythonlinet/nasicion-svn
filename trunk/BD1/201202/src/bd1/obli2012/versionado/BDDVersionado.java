@@ -15,16 +15,16 @@ import java.util.Map;
 public class BDDVersionado implements Serializable {
 
     private String nombreBDD;
-    private String versionActual;
-    private Map<String, VersionBDD> versiones;
+    private Integer versionActual;
+    private Map<Integer, VersionBDD> versiones;
 
     public BDDVersionado() {
     }
 
     public BDDVersionado(String nombreBDD) {
         this.nombreBDD = nombreBDD;
-        this.versionActual = "1";
-        this.versiones = new HashMap<String, VersionBDD>();
+        this.versionActual = 1;
+        this.versiones = new HashMap<Integer, VersionBDD>();
     }
 
     /**
@@ -37,21 +37,21 @@ public class BDDVersionado implements Serializable {
     /**
      * @return the versionActual
      */
-    public String getVersionActual() {
+    public Integer getVersionActual() {
         return versionActual;
     }
 
     /**
      * @param versionActual the versionActual to set
      */
-    public void setVersionActual(String versionActual) {
+    public void setVersionActual(Integer versionActual) {
         this.versionActual = versionActual;
     }
 
     /**
      * @return the versiones
      */
-    public Map<String, VersionBDD> getVersiones() {
+    public Map<Integer, VersionBDD> getVersiones() {
         return versiones;
     }
 }

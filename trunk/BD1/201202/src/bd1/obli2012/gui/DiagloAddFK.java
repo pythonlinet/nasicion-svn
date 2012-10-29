@@ -9,8 +9,13 @@ import bd1.obli2012.framework.ExecutionResult;
 import bd1.obli2012.framework.TablaManager;
 import bd1.obli2012.framework.definicion.Columna;
 import bd1.obli2012.framework.definicion.Tabla;
+import bd1.obli2012.gui.backend.Contexto;
+import bd1.obli2012.versionado.Cambio;
+import bd1.obli2012.versionado.TipoCambio;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
@@ -156,11 +161,20 @@ public class DiagloAddFK extends javax.swing.JDialog {
         Columna col = (Columna) cmbColumna.getSelectedItem();
         Tabla tRef = (Tabla)cmbTablaRef.getSelectedItem();
         Columna colRef = (Columna)cmbColRef.getSelectedItem();
-        
-        ExecutionResult er = tm.addFKConstraint(tabla, col.getNombre(), tRef.getNombre(), colRef.getNombre());
+        String nombreConstraint = "fk_"+tabla.getNombre()+"-"+col.getNombre()+"_"+tRef.getNombre()+"-"+colRef.getNombre();
+        ExecutionResult er = tm.addFKConstraint(tabla, nombreConstraint,col.getNombre(), tRef.getNombre(), colRef.getNombre());
         if(er.success){
             this.parentDialog.construirVista();
             MainFrame.getInstance().getPanelTabla().actualizarDatos();
+            
+            
+            
+            Map<String, String> parametros = new HashMap<String, String>();
+            parametros.put("NOMBRE_TABLA", tabla.getNombre());
+            parametros.put("NOMBRE_CONSTRAINT", nombreConstraint);
+
+            Cambio cambio = new Cambio(TipoCambio.TABLA_SET_FK, parametros);
+            Contexto.getInstance().guardarCambio(cambio);
             this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);

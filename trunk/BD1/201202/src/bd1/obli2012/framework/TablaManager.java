@@ -110,10 +110,11 @@ public class TablaManager {
         return DatabaseManager.getInstance().executeQueryInDB(tabla.getDatabase(), sqlDropConstraint);
     }
 
-    public ExecutionResult addFKConstraint(Tabla tabla, String columna, String tablaReferencia, String columnaReferencia) {
+    public ExecutionResult addFKConstraint(Tabla tabla,String consName, String columna, String tablaReferencia, String columnaReferencia) {
         String sql = "ALTER TABLE %s ADD CONSTRAINT %s FOREIGN KEY (%s) REFERENCES %s (%s);";
-        String consName = "fk"+tabla.getNombre()+tablaReferencia;
+        
         sql = String.format(sql, tabla.getNombre(), consName, columna, tablaReferencia, columnaReferencia);
+        
         return DatabaseManager.getInstance().executeQueryInDB(tabla.getDatabase(), sql);
     }
 }
