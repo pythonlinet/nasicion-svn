@@ -1,6 +1,7 @@
 package bd1.obli2012.extapp;
 
 
+import bd1.obli2012.Util;
 import bd1.obli2012.framework.DatabaseManager;
 import bd1.obli2012.framework.ExecutionResult;
 import bd1.obli2012.framework.QueryBuilder;
@@ -37,7 +38,8 @@ public class AplicacionExterna extends javax.swing.JFrame {
      */
     public AplicacionExterna() {
         initComponents();
-        this.dbName = "autos";
+        //this.dbName = "autos";
+        this.dbName = Util.getProperties().getProperty("db.name");
         tablas = DatabaseManager.getInstance().getTablesForDB(this.dbName);
         this.jList1.setListData(tablas.toArray());
     }

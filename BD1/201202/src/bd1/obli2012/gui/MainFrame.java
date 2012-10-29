@@ -36,14 +36,20 @@ import javax.swing.tree.TreePath;
  */
 public class MainFrame extends javax.swing.JFrame implements TreeSelectionListener {
 
-    
+    private static MainFrame instance;
     private JTree arbolBD;
-    private JPanel panelTabla;
+    private PanelTabla panelTabla;
 
+    public static MainFrame getInstance(){
+        if(instance == null){
+            instance = new MainFrame();
+        }
+        return instance;
+    }
     /**
      * Creates new form MainFrame
      */
-    public MainFrame() {
+    private MainFrame() {
         initComponents();
         //Colocamos el nuevo tipo de layout que queremos que tenga nuestro JFrame
         //this.setLayout(new FlowLayout());
@@ -147,7 +153,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainFrame().setVisible(true);
+                MainFrame.getInstance().setVisible(true);
             }
         });
     }
@@ -266,5 +272,9 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
 
     public JScrollPane getTreePane() {
         return this.treePane;
+    }
+    
+    public PanelTabla getPanelTabla(){
+        return this.panelTabla;
     }
 }
