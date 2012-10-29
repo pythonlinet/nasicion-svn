@@ -118,7 +118,7 @@ public class DialogRenombrarTabla extends javax.swing.JDialog {
                 parametros.put("NUEVO_NOMBRE", nombreTb);
                 
                 Cambio cambio = new Cambio(TipoCambio.TABLA_RENOMBRAR, parametros);
-                Contexto.getInstance().guardarCambio(cambio);
+                Contexto.getInstance().guardarCambioACola(cambio);
                 this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);

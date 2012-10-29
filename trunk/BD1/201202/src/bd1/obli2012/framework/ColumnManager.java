@@ -51,13 +51,14 @@ public class ColumnManager {
         Columna columnaOriginal = DatabaseManager.getInstance().getColumnFromTable(dbName, tbName, colName);
         
         List<String> querys = new LinkedList<String>();
-        if(!defaultValue.trim().equals(columnaOriginal.getDefaultValue())){
-            querys.add(modifyDefaultValueQueryBuilder(tbName, columnaOriginal.getNombre(), defaultValue.trim()));
-        }
-
+        
         //FIXME arreglar el tema del largo Steeeeve!!
         if(!TipoDato.valueOf(type).equals(columnaOriginal.getTipo())) {
             querys.add(modifyTypeQueryBuilder(tbName, nombre, type, largo));
+        }
+        
+        if(!defaultValue.trim().equals(columnaOriginal.getDefaultValue())){
+            querys.add(modifyDefaultValueQueryBuilder(tbName, columnaOriginal.getNombre(), defaultValue.trim()));
         }
         
         if(notNull != columnaOriginal.notNull()) {

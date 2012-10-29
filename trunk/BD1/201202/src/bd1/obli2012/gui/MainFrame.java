@@ -255,15 +255,34 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
             Contexto.getInstance().seleccionarBaseDeDatos(tn.getDatabase());
         } else if (selectedNode instanceof DBTreeNode) {
             DBTreeNode nodo = (DBTreeNode) selectedNode;
-
+            
             Contexto.getInstance().seleccionarBaseDeDatos(nodo.getDbName());
+            PanelVersiones panelVer = new PanelVersiones();
+
+            //this.add(panelTabla, BorderLayout.WEST);
+            //this.pack();
+            this.flowPanel.removeAll();;
+            this.flowPanel.add(panelVer);
+            this.flowPanel.revalidate();;
+            
+            
+            
         }
 
 
     }
 
     
-
+    public void updateTree(){
+        Object selectedNode = arbolBD.getLastSelectedPathComponent();
+        if (selectedNode instanceof TableTreeNode) {
+            TableTreeNode node = (TableTreeNode)selectedNode;
+            ((DBTreeNode)node.getParent()).reconstruir(true);
+        } else if (selectedNode instanceof DBTreeNode) {
+            DBTreeNode node = (DBTreeNode)selectedNode;
+            node.reconstruir(false);
+        }
+    }
    
 
     public JScrollPane getTreePane() {

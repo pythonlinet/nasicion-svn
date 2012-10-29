@@ -161,7 +161,7 @@ public class DiagloAddFK extends javax.swing.JDialog {
         Columna col = (Columna) cmbColumna.getSelectedItem();
         Tabla tRef = (Tabla)cmbTablaRef.getSelectedItem();
         Columna colRef = (Columna)cmbColRef.getSelectedItem();
-        String nombreConstraint = "fk_"+tabla.getNombre()+"-"+col.getNombre()+"_"+tRef.getNombre()+"-"+colRef.getNombre();
+        String nombreConstraint = "fk_"+tabla.getNombre()+"_"+col.getNombre()+"_"+tRef.getNombre()+"_"+colRef.getNombre();
         ExecutionResult er = tm.addFKConstraint(tabla, nombreConstraint,col.getNombre(), tRef.getNombre(), colRef.getNombre());
         if(er.success){
             this.parentDialog.construirVista();
@@ -174,7 +174,7 @@ public class DiagloAddFK extends javax.swing.JDialog {
             parametros.put("NOMBRE_CONSTRAINT", nombreConstraint);
 
             Cambio cambio = new Cambio(TipoCambio.TABLA_SET_FK, parametros);
-            Contexto.getInstance().guardarCambio(cambio);
+            Contexto.getInstance().guardarCambioACola(cambio);
             this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);

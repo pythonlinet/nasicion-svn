@@ -145,7 +145,7 @@ public class PanelFKTabla extends javax.swing.JPanel {
             parametros.put("COLUMNA_REFERENCIA", this.fk.getReferenciaColumna());
 
             Cambio cambio = new Cambio(TipoCambio.TABLA_DROP_FK, parametros);
-            Contexto.getInstance().guardarCambio(cambio);
+            Contexto.getInstance().guardarCambioACola(cambio);
             this.dialogParent.construirVista();
        } else {
             JOptionPane.showMessageDialog(null, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);

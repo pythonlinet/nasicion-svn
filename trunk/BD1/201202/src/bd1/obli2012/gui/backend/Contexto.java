@@ -12,6 +12,7 @@ public class Contexto {
     private static Contexto instancia;
     private BDDVersionado bddVersionado;
     private List<Cambio> colaCambios;
+    private boolean hayCambios = false;
 
     public static Contexto getInstance() {
         if (instancia == null) {
@@ -24,6 +25,10 @@ public class Contexto {
         return this.bddVersionado;
     }
 
+    public List<Cambio> getColaCambios() {
+        return this.colaCambios;
+    }
+
     private Contexto() {
     }
 
@@ -32,21 +37,14 @@ public class Contexto {
             if (!bddVersionado.getNombreBDD().equals(nombreBaseDeDatos)) {
                 guardarCambiosEnCola();
                 this.bddVersionado = VersionadoHelper.obtenerVersiones(nombreBaseDeDatos);
+                this.colaCambios = new ArrayList<Cambio>();
+                this.hayCambios = false;
             }
         } else {
             this.bddVersionado = VersionadoHelper.obtenerVersiones(nombreBaseDeDatos);
+            this.colaCambios = new ArrayList<Cambio>();
+            this.hayCambios = false;
         }
-    }
-
-    public void guardarCambio(Cambio cambio) {
-        Integer numVersion = bddVersionado.getVersionActual() + 1;
-        VersionBDD version = new VersionBDD();
-        version.setVersion(numVersion);
-        List<Cambio> cambios = new ArrayList<Cambio>();
-        cambios.add(cambio);
-        version.setCambios(cambios);
-        bddVersionado.getVersiones().put(numVersion, version);
-        VersionadoHelper.salvarCambios(bddVersionado);
     }
 
     public void guardarCambioACola(Cambio cambio) {
@@ -54,18 +52,28 @@ public class Contexto {
             this.colaCambios = new ArrayList<Cambio>();
         }
         this.colaCambios.add(cambio);
+        this.hayCambios = true;
     }
 
     private void guardarCambiosEnCola() {
-        if(this.colaCambios != null){
-        Integer numVersion = bddVersionado.getVersionActual() + 1;
+        if (this.colaCambios != null && !this.colaCambios.isEmpty()) {
+            Integer numVersion = bddVersionado.getVersionActual() + 1;
+
             VersionBDD version = new VersionBDD();
             version.setVersion(numVersion);
+
             List<Cambio> cambios = new ArrayList<Cambio>();
             cambios.addAll(this.colaCambios);
             version.setCambios(cambios);
             bddVersionado.getVersiones().put(numVersion, version);
+            bddVersionado.setVersionActual(numVersion);
             VersionadoHelper.salvarCambios(bddVersionado);
+            this.colaCambios = new ArrayList<Cambio>();
+            this.hayCambios = false;
         }
+    }
+    
+    public boolean hayCambios(){
+        return this.hayCambios;
     }
 }
