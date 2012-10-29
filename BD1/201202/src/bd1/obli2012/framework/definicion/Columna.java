@@ -78,7 +78,7 @@ public class Columna {
         this.defaultValue = defaultValue;
     }
     
-    public boolean notNull(){
+    public Boolean notNull(){
         return !this.nullable;
     }
     

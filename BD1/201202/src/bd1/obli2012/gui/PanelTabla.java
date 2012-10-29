@@ -7,8 +7,15 @@ package bd1.obli2012.gui;
 import bd1.obli2012.framework.ColumnManager;
 import bd1.obli2012.framework.definicion.Columna;
 import bd1.obli2012.framework.DatabaseManager;
+import bd1.obli2012.framework.ExecutionResult;
 import bd1.obli2012.framework.TablaManager;
 import bd1.obli2012.framework.definicion.Tabla;
+import bd1.obli2012.gui.backend.Contexto;
+import bd1.obli2012.versionado.Cambio;
+import bd1.obli2012.versionado.TipoCambio;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -22,7 +29,7 @@ public class PanelTabla extends javax.swing.JPanel {
     private String tbName;
     private String tempTbName;
     private MainFrame parent;
-    private boolean lock=false;
+    private boolean lock = false;
     private TablaManager tm = new TablaManager();
 
     /**
@@ -151,20 +158,39 @@ public class PanelTabla extends javax.swing.JPanel {
     }//GEN-LAST:event_btnAgregarAttrActionPerformed
 
     private void btnEditarAttrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarAttrActionPerformed
-        DialogModAttrib j = new DialogModAttrib(null, true, dbName, tbName, getSelectedColumnName() ,this);
+        DialogModAttrib j = new DialogModAttrib(null, true, dbName, tbName, getSelectedColumnName(), this);
         j.setVisible(true);
     }//GEN-LAST:event_btnEditarAttrActionPerformed
 
     private void btnQuitarAttr1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarAttr1ActionPerformed
+
         
+        //Preparamos el cambio en caso de que se borre correctamente la columna
         String colName = getSelectedColumnName();
+        Columna columna = DatabaseManager.getInstance().getColumnFromTable(dbName, tbName, colName);
+        Map<String, String> parametros = new HashMap<String, String>();
+        parametros.put("NOMBRE_TABLA", tbName);
+        parametros.put("NOMBRE_COLUMNA", colName);
+        parametros.put("TIPO", columna.getTipo().toString());
+        parametros.put("NOT_NULL", columna.notNull().toString());
+        Cambio cambio = new Cambio(TipoCambio.COLUMNA_BORRAR, parametros);
+        
+
+
         ColumnManager columnManager = new ColumnManager();
-        columnManager.dropColumn(dbName, tbName, colName);
+        ExecutionResult er = columnManager.dropColumn(dbName, tbName, colName);
+        if (er.success) {
+            Contexto.getInstance().guardarCambioACola(cambio);
+        } else {
+            JOptionPane.showMessageDialog(parent, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+
         actualizarDatos();
     }//GEN-LAST:event_btnQuitarAttr1ActionPerformed
 
     private void btnLockTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLockTablaActionPerformed
-        if(lock) {
+        if (lock) {
             lock = false;
             btnLockTabla.setText("Lock");
             btnAgregarAttr.setEnabled(false);
@@ -178,16 +204,15 @@ public class PanelTabla extends javax.swing.JPanel {
             btnAgregarAttr.setEnabled(true);
             btnEditarAttr.setEnabled(true);
             btnQuitarAttr1.setEnabled(true);
-            
+
             tm.copyTableStructure(dbName, tbName);
             this.tempTbName = tbName;
-            this.tbName+="_new";
+            this.tbName += "_new";
             cargarInformacionTabla();
             //tm.truncateTable(dbName, tbName);
         }
-        
-    }//GEN-LAST:event_btnLockTablaActionPerformed
 
+    }//GEN-LAST:event_btnLockTablaActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarAttr;
     private javax.swing.JButton btnEditarAttr;
@@ -203,10 +228,10 @@ public class PanelTabla extends javax.swing.JPanel {
      * @param tabla
      */
     private void cargarInformacionTabla() {
-        DefaultTableModel model = (DefaultTableModel)tablaAtributos.getModel();
-        
+        DefaultTableModel model = (DefaultTableModel) tablaAtributos.getModel();
+
         //vaciar tabla
-        while(model.getRowCount() > 0){
+        while (model.getRowCount() > 0) {
             model.removeRow(0);
         }
         /*
@@ -233,17 +258,17 @@ public class PanelTabla extends javax.swing.JPanel {
         }
 
     }
-    
+
     public void actualizarDatos() {
         cargarInformacionTabla();
         //FIXME
         this.parent.cargarArbol();
     }
-    
+
     /**
      * Obtiene el nombre del atributo seleccionado de la tabla
-     * 
-     * @return 
+     *
+     * @return
      */
     private String getSelectedColumnName() {
         Integer row = tablaAtributos.getSelectedRow();

@@ -8,8 +8,10 @@ import bd1.obli2012.versionado.BDDVersionado;
 import bd1.obli2012.versionado.Cambio;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,26 +39,42 @@ public abstract class VersionadoHelper {
         Object leido = null;
         ObjectInputStream streamArchivo = null;
         try {
-            FileInputStream archivo = new FileInputStream(nombreDb + VERSION_EXTENSTION);
+            FileInputStream archivo = new FileInputStream("./"+nombreDb + VERSION_EXTENSTION);
             streamArchivo = new ObjectInputStream(archivo);
             leido = streamArchivo.readObject();
+            streamArchivo.close();
         } catch (ClassNotFoundException ex) {
             LOGGER.severe("Esto no deberia suceder");
         } catch (FileNotFoundException ex) {
             LOGGER.log(Level.INFO, "No existe versionado para la base de datos {0}", nombreDb);
+            return new BDDVersionado(nombreDb);
         } catch (IOException ex) {
             LOGGER.severe(ex.getMessage());
-        } finally {
-            try {
-                streamArchivo.close();
-            } catch (IOException ex) {
-                LOGGER.severe(ex.getMessage());
-            }
-        }
+        } 
         BDDVersionado salida = null;
         if (leido != null && leido instanceof BDDVersionado) {
             salida = (BDDVersionado) leido;
         }
         return salida;
+    }
+
+    public static void salvarCambios(BDDVersionado bddVersionado) {
+        FileOutputStream fout = null;
+        try {
+            fout = new FileOutputStream(bddVersionado.getNombreBDD() + VERSION_EXTENSTION,false);
+            ObjectOutputStream oos = new ObjectOutputStream(fout);
+            oos.writeObject(bddVersionado);
+            oos.close();
+        } catch (FileNotFoundException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fout.close();
+            } catch (IOException ex) {
+                LOGGER.log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }

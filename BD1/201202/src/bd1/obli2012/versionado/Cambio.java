@@ -11,9 +11,30 @@ import java.util.Map;
  *
  * @author gnasi
  */
-public class Cambio  implements  Serializable{
+public class Cambio implements Serializable {
+
+    private String tabla;
     private TipoCambio tipoCambio;
-    private Map<String,String> paramCambios;
+    private Map<String, String> paramCambios;
+
+    public Cambio(TipoCambio tipoCambio, Map<String, String> parametros) {
+        this.tipoCambio = tipoCambio;
+        this.paramCambios = parametros;
+    }
+
+    /**
+     * @return the tabla
+     */
+    public String getTabla() {
+        return tabla;
+    }
+
+    /**
+     * @param tabla the tabla to set
+     */
+    public void setTabla(String tabla) {
+        this.tabla = tabla;
+    }
 
     /**
      * @return the tipoCambio
@@ -32,15 +53,14 @@ public class Cambio  implements  Serializable{
     /**
      * @return the paramCambios
      */
-    public Map<String,String> getParamCambios() {
+    public Map<String, String> getParamCambios() {
         return paramCambios;
     }
 
     /**
      * @param paramCambios the paramCambios to set
      */
-    public void setParamCambios(Map<String,String> paramCambios) {
+    public void setParamCambios(Map<String, String> paramCambios) {
         this.paramCambios = paramCambios;
     }
-    
 }

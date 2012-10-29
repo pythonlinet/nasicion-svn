@@ -8,6 +8,11 @@ import bd1.obli2012.framework.ExecutionResult;
 import bd1.obli2012.framework.TablaManager;
 import bd1.obli2012.framework.definicion.Tabla;
 import bd1.obli2012.gui.arbol.DBTreeNode;
+import bd1.obli2012.gui.backend.Contexto;
+import bd1.obli2012.versionado.Cambio;
+import bd1.obli2012.versionado.TipoCambio;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JOptionPane;
 
 /**
@@ -104,8 +109,16 @@ public class DialogRenombrarTabla extends javax.swing.JDialog {
 
 
             if (er.success) {
-                //parent.actualizarDatos();
                 node.reconstruir(true);
+                
+                
+                
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("NOMBRE_TABLA", nombreOriginal);
+                parametros.put("NUEVO_NOMBRE", nombreTb);
+                
+                Cambio cambio = new Cambio(TipoCambio.TABLA_RENOMBRAR, parametros);
+                Contexto.getInstance().guardarCambio(cambio);
                 this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);

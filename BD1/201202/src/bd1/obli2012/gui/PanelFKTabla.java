@@ -8,8 +8,11 @@ import bd1.obli2012.framework.ExecutionResult;
 import bd1.obli2012.framework.TablaManager;
 import bd1.obli2012.framework.definicion.ForeignKey;
 import bd1.obli2012.framework.definicion.Tabla;
-import bd1.obli2012.gui.arbol.DBTreeNode;
-import bd1.obli2012.gui.arbol.TableTreeNode;
+import bd1.obli2012.gui.backend.Contexto;
+import bd1.obli2012.versionado.Cambio;
+import bd1.obli2012.versionado.TipoCambio;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JOptionPane;
 
 /**
@@ -131,6 +134,18 @@ public class PanelFKTabla extends javax.swing.JPanel {
        ExecutionResult er =  tm.dropConstraint(this.tabla, this.fk.getFkConstraintName());
        if (er.success) {
             MainFrame.getInstance().getPanelTabla().actualizarDatos();
+            
+            
+            Map<String, String> parametros = new HashMap<String, String>();
+           
+            parametros.put("NOMBRE_TABLA", this.tabla.getNombre());
+            parametros.put("NOMBRE_CONSTRIAINT", this.fk.getFkConstraintName());
+            parametros.put("NOMBRE_COLUMNA", this.fk.getNombreColumna());
+            parametros.put("TABLA_REFERENCIA", this.fk.getReferenciaTabla());
+            parametros.put("COLUMNA_REFERENCIA", this.fk.getReferenciaColumna());
+
+            Cambio cambio = new Cambio(TipoCambio.TABLA_DROP_FK, parametros);
+            Contexto.getInstance().guardarCambio(cambio);
             this.dialogParent.construirVista();
        } else {
             JOptionPane.showMessageDialog(null, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
