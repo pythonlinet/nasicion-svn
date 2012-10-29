@@ -6,6 +6,7 @@ import bd1.obli2012.framework.definicion.Schema;
 import bd1.obli2012.framework.definicion.Tabla;
 import bd1.obli2012.framework.definicion.TipoDato;
 import bd1.obli2012.Util;
+import bd1.obli2012.framework.definicion.ForeignKey;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -204,7 +205,7 @@ public class DatabaseManager {
                 t.setDatabase(nombreDB);
                 t.setAttributes(getColumsForTable(t));
                 List<String> pk = getPrimaryKeysForTable(t);
-                Map<String, String> fk = getForeignKeysForTable(t);
+                Map<String, ForeignKey> fk = getForeignKeysForTable(t);
                 t.setPrimaryKeys(pk);
                 t.setForeignKeys(fk);
                 salida.add(t);
@@ -300,14 +301,14 @@ public class DatabaseManager {
      * @param tabla
      * @return
      */
-    private Map<String, String> getForeignKeysForTable(Tabla tabla) {
+    private Map<String, ForeignKey> getForeignKeysForTable(Tabla tabla) {
         cm = PostgresConnectionManager.getInstance();
         Connection con = cm.obtenerConexion(tabla.getDatabase());
-        Map<String, String> result = null;
+        Map<String, ForeignKey> result = null;
         try {
             DatabaseMetaData metadata = con.getMetaData();
             ResultSet pKeys = metadata.getImportedKeys(null, null, tabla.getNombre());
-            result = new HashMap<String, String>();
+            result = new HashMap<String, ForeignKey>();
 
             while (pKeys.next()) {
 
@@ -318,7 +319,12 @@ public class DatabaseManager {
                  pKeys.getString(i));
                     
                  }*/
-                result.put(pKeys.getString("FKCOLUMN_NAME"), pKeys.getString("pktable_name"));
+                 ForeignKey fk = new ForeignKey(
+                         pKeys.getString("fkcolumn_name"), 
+                         pKeys.getString("fk_name"), 
+                         pKeys.getString("pktable_name"), 
+                         pKeys.getString("pkcolumn_name"));
+                result.put(pKeys.getString("FKCOLUMN_NAME"), fk);
             }
         } catch (SQLException ex) {
             LOGGER.severe(ex.getMessage());
@@ -385,7 +391,7 @@ public class DatabaseManager {
                 salida.setDatabase(nombreDB);
                 salida.setAttributes(getColumsForTable(salida));
                 List<String> pk = getPrimaryKeysForTable(salida);
-                Map<String, String> fk = getForeignKeysForTable(salida);
+                Map<String, ForeignKey> fk = getForeignKeysForTable(salida);
                 salida.setPrimaryKeys(pk);
                 salida.setForeignKeys(fk);
             }

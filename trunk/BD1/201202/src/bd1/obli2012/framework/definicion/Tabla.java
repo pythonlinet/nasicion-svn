@@ -4,7 +4,6 @@
  */
 package bd1.obli2012.framework.definicion;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +15,7 @@ public class Tabla {
     private String nombre;
     private List<Columna> attributes;
     private List<String> primaryKeys;
-    private Map<String, String> foreignKeys;
+    private Map<String, ForeignKey> foreignKeys;
     private String database;
 
     public Tabla(String nombre){
@@ -47,7 +46,8 @@ public class Tabla {
      * @return 
      */
     public String reference(String nombreColumna) {
-        return this.foreignKeys.get(nombreColumna);
+        ForeignKey fk = this.foreignKeys.get(nombreColumna);
+        return fk != null?fk.getReferenciaTabla() + " => " + fk.getReferenciaColumna():"";
     }
     /**
      * @return the nombre
@@ -116,14 +116,14 @@ public class Tabla {
     /**
      * @return the foreignKeys
      */
-    public Map<String, String> getForeignKeys() {
+    public Map<String, ForeignKey> getForeignKeys() {
         return foreignKeys;
     }
 
     /**
      * @param foreignKeys the foreignKeys to set
      */
-    public void setForeignKeys(Map<String, String> foreignKeys) {
+    public void setForeignKeys(Map<String, ForeignKey> foreignKeys) {
         this.foreignKeys = foreignKeys;
     }
     

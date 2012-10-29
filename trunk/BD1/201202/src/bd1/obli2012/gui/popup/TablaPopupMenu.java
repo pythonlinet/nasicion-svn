@@ -7,6 +7,8 @@ package bd1.obli2012.gui.popup;
 import bd1.obli2012.framework.ExecutionResult;
 import bd1.obli2012.framework.TablaManager;
 import bd1.obli2012.framework.definicion.Tabla;
+import bd1.obli2012.gui.DialogFKTabla;
+import bd1.obli2012.gui.DialogPKTabla;
 import bd1.obli2012.gui.DialogRenombrarTabla;
 import bd1.obli2012.gui.arbol.DBTreeNode;
 import bd1.obli2012.gui.arbol.TableTreeNode;
@@ -31,12 +33,16 @@ public class TablaPopupMenu extends JPopupMenu {
 
         JMenuItem menuItemBorrarTabla = new JMenuItem("Borrar tabla");
         JMenuItem menuItemRenombrarTabla = new JMenuItem("Renombrar tabla");
+        JMenuItem menuPKTabla = new JMenuItem("Editar Primary Key");
+        JMenuItem menuFKTabla = new JMenuItem("Editar Foreign Keys");
 
         menuItemBorrarTabla.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bd1/obli2012/icons/table_delete.png")));
         menuItemRenombrarTabla.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bd1/obli2012/icons/table_row_alt.png")));
 
         add(menuItemBorrarTabla);
         add(menuItemRenombrarTabla);
+        add(menuPKTabla);
+        add(menuFKTabla);
 
         menuItemBorrarTabla.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -71,5 +77,21 @@ public class TablaPopupMenu extends JPopupMenu {
                         (DBTreeNode) node.getParent()).setVisible(true);
             }
         });
+        
+        
+        menuPKTabla.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent ae) {
+                new DialogPKTabla(null, true, tabla, node).setVisible(true);
+            }
+        });
+        
+        menuFKTabla.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent ae) {
+                new DialogFKTabla(null, true, tabla, node).setVisible(true);
+            }
+        });
+        
     }
 }
