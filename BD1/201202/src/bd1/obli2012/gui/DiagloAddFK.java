@@ -21,7 +21,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author guillermo
+ * @author favio.ortelli/guillermo.nasi
  */
 public class DiagloAddFK extends javax.swing.JDialog {
 
@@ -90,8 +90,6 @@ public class DiagloAddFK extends javax.swing.JDialog {
         jLabel2.setText("Tabla Ref.:");
 
         jLabel3.setText("Col. Ref.:");
-
-        cmbColRef.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jButton1.setText("Aceptar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -174,7 +172,7 @@ public class DiagloAddFK extends javax.swing.JDialog {
             parametros.put("NOMBRE_CONSTRAINT", nombreConstraint);
 
             Cambio cambio = new Cambio(TipoCambio.TABLA_SET_FK, parametros);
-            Contexto.getInstance().guardarCambioACola(cambio);
+            Contexto.getInstance().guardarCambio(cambio);
             this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);

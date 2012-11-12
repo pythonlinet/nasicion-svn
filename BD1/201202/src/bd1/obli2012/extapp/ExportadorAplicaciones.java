@@ -35,7 +35,7 @@ import java.util.logging.Logger;
  */
 /**
  *
- * @author guillermo
+ * @author favio.ortelli/guillermo.nasi
  */
 public abstract class ExportadorAplicaciones {
 

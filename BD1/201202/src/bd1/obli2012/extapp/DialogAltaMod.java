@@ -27,7 +27,7 @@ import javax.swing.JTextField;
  */
 /**
  *
- * @author guillermo
+ * @author favio.ortelli/guillermo.nasi
  */
 public class DialogAltaMod extends javax.swing.JDialog {
 

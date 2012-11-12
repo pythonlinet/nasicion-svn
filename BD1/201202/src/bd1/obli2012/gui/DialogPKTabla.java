@@ -29,7 +29,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author guillermo
+ * @author favio.ortelli/guillermo.nasi
  */
 public class DialogPKTabla extends javax.swing.JDialog {
 
@@ -139,7 +139,7 @@ public class DialogPKTabla extends javax.swing.JDialog {
         parametros.put("COLUMNAS", storePk.toString());
 
         Cambio cambio = new Cambio(TipoCambio.TABLA_ALTER_PK, parametros);
-        Contexto.getInstance().guardarCambioACola(cambio);
+        Contexto.getInstance().guardarCambio(cambio);
 
     }
 }

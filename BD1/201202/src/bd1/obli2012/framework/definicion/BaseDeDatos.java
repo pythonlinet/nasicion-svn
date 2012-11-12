@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  *
- * @author gnasi
+ * @author favio.ortelli/guillermo.nasi
  */
 public class BaseDeDatos {
     private String dbName;

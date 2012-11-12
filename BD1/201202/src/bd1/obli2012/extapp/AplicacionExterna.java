@@ -24,7 +24,7 @@ import javax.swing.table.DefaultTableModel;
  */
 /**
  *
- * @author guillermo
+ * @author favio.ortelli/guillermo.nasi
  */
 public class AplicacionExterna extends javax.swing.JFrame {
 

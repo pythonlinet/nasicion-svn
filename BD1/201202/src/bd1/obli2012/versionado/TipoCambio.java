@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 /**
  *
- * @author gnasi
+ * @author favio.ortelli/guillermo.nasi
  */
 public enum TipoCambio implements Serializable {
     //TABLAS
@@ -25,10 +25,12 @@ public enum TipoCambio implements Serializable {
     //COLUMNAS
     COLUMNA_CREAR(new String[]{"NOMBRE_TABLA", "NOMBRE_COLUMNA"}),
     COLUMNA_BORRAR(new String[]{"NOMBRE_TABLA", "NOMBRE_COLUMNA", "TIPO", "NOT_NULL"}),
-    COLUMNA_CAMBIAR_TIPO(new String[]{"NOMBRE_TABLA", "NOMBRE_COLUMNA", "TIPO_VIEJO", "TIPO_NUEVO"}),
-    COLUMNA_CAMBIAR_SET_NOT_NULL(new String[]{"NOMBRE_TABLA", "NOMBRE_COLUMNA"}),
-    COLUMNA_CAMBIAR_DROP_NOT_NULL(new String[]{"NOMBRE_TABLA", "NOMBRE_COLUMNA"}),
-    COLUMNA_CAMBIAR_DEFAULT_VALUE(new String[]{"NOMBRE_TABLA", "NOMBRE_COLUMNA", "DEFAULT_VALUE_VIEJO", "DEFAULT_VALUE_NUEVO"});
+    COLUMNA_MODIFICAR(new String[]{"NOMBRE_TABLA", "NOMBRE_COLUMNA", "TIPO", "NOT_NULL","DEFAULT_VALUE"}),
+    COLUMNA_CAMBIAR_NOMBRE(new String[]{"NOMBRE_TABLA", "NOMBRE_VIEJO", "NOMBRE_NUEVO"});
+    //COLUMNA_CAMBIAR_TIPO(new String[]{"NOMBRE_TABLA", "NOMBRE_COLUMNA", "TIPO_VIEJO", "TIPO_NUEVO"}),
+    //COLUMNA_CAMBIAR_SET_NOT_NULL(new String[]{"NOMBRE_TABLA", "NOMBRE_COLUMNA"}),
+    //COLUMNA_CAMBIAR_DROP_NOT_NULL(new String[]{"NOMBRE_TABLA", "NOMBRE_COLUMNA"}),
+    //COLUMNA_CAMBIAR_DEFAULT_VALUE(new String[]{"NOMBRE_TABLA", "NOMBRE_COLUMNA", "DEFAULT_VALUE_VIEJO", "DEFAULT_VALUE_NUEVO"});
 
     private String[] params;
 

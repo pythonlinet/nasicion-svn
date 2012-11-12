@@ -17,7 +17,7 @@ import javax.swing.JPopupMenu;
 
 /**
  *
- * @author guillermo
+ * @author favio.ortelli/guillermo.nasi
  */
 public class DBPopupMenu extends JPopupMenu {
 
@@ -51,8 +51,11 @@ public class DBPopupMenu extends JPopupMenu {
                 try {
                     //DialogAddTabla addTabla = new DialogAddTabla(null, true, baseDeDatos.getDbName(), node);
                     //addTabla.setVisible(true);
+                   
                     String path = JOptionPane.showInputDialog(null, "Indique donde se debera exportar la aplicacion", "Exportar app a...", JOptionPane.INFORMATION_MESSAGE);
-                    ExportadorAplicaciones.exportarApp(path, baseDeDatos);
+                    if(path != null) {
+                        ExportadorAplicaciones.exportarApp(path, baseDeDatos);
+                    }
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(null, ex.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }

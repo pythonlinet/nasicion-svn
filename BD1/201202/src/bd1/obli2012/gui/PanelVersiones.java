@@ -4,19 +4,25 @@
  */
 package bd1.obli2012.gui;
 
+import bd1.obli2012.framework.DatabaseManager;
 import bd1.obli2012.gui.backend.Contexto;
 import bd1.obli2012.versionado.BDDVersionado;
 import bd1.obli2012.versionado.Cambio;
+import bd1.obli2012.versionado.InversorCambio;
 import bd1.obli2012.versionado.VersionBDD;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author gnasi
+ * @author favio.ortelli/guillermo.nasi
  */
 public class PanelVersiones extends javax.swing.JPanel {
 
@@ -25,43 +31,10 @@ public class PanelVersiones extends javax.swing.JPanel {
      */
     public PanelVersiones() {
         initComponents();
-        BDDVersionado bddversionado = Contexto.getInstance().getBDDVersionado();
-        List<Cambio> colaDeCambios = Contexto.getInstance().getColaCambios();
+        
 
-        List<Cambio> listaCambios = new ArrayList<Cambio>();
-
-        DefaultTableModel modelo = (DefaultTableModel) this.tablaVersiones.getModel();
-        String[] nombreCols = {"Versión", "Tipo Cambio", "Parametros"};
-
-
-        List<String[]> rows = new LinkedList<String[]>();
-        for (Integer verNum : bddversionado.getVersiones().keySet()) {
-            for (Cambio c : bddversionado.getVersiones().get(verNum).getCambios()) {
-                String[] row = new String[3];
-                row[0] = verNum.toString();
-                row[1] = c.getTipoCambio().toString();
-                row[2] = parametrosToString(c.getParamCambios());
-                rows.add(row);
-            }
-        }
-        for (Cambio c : listaCambios) {
-            String[] row = new String[3];
-            Integer ver = Contexto.getInstance().getBDDVersionado().getVersionActual() +1;
-            row[0] = ver.toString();
-            row[1] = c.getTipoCambio().toString();
-            row[2] = parametrosToString(c.getParamCambios());
-            rows.add(row);
-        }
-        Object[][] dataVector = new String[rows.size()][3];
-        int i = 0;
-        for(Object[] row : rows){
-            dataVector[i] = row;
-            i++;
-        }
-        modelo.setDataVector(dataVector, nombreCols);
-
+        cargarDatos();
         ///modelo.setColumnIdentifiers();
-
     }
 
     /**
@@ -75,6 +48,7 @@ public class PanelVersiones extends javax.swing.JPanel {
 
         tabla = new javax.swing.JScrollPane();
         tablaVersiones = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
 
         tablaVersiones.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -91,24 +65,79 @@ public class PanelVersiones extends javax.swing.JPanel {
         tablaVersiones.getTableHeader().setReorderingAllowed(false);
         tabla.setViewportView(tablaVersiones);
 
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bd1/obli2012/icons/buttons/undo.png"))); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabla, javax.swing.GroupLayout.DEFAULT_SIZE, 857, Short.MAX_VALUE)
+                .addComponent(tabla, javax.swing.GroupLayout.DEFAULT_SIZE, 841, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabla, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1)
+                    .addComponent(tabla, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Integer row = tablaVersiones.getSelectedRow();
+        Integer version = Integer.parseInt(tablaVersiones.getValueAt(row, 0).toString());
+
+        List<VersionBDD> cambiosRevert = new ArrayList<VersionBDD>();
+        for (Integer keyVer : Contexto.getInstance().getBDDVersionado().getVersiones().keySet()) {
+            if (keyVer >= version) {
+                cambiosRevert.add(Contexto.getInstance().getBDDVersionado().getVersiones().get(keyVer));
+            }
+        }
+
+        Collections.sort(cambiosRevert);
+
+        String bdSeleccionada = Contexto.getInstance().getBDDVersionado().getNombreBDD();
+        for (int j = cambiosRevert.size()-1; j >= 0; j--) {
+            List<String> sqls = new ArrayList<String>();
+            VersionBDD v = cambiosRevert.get(j);
+            for (int i = v.getCambios().size()-1; i >= 0; i--) {
+                Cambio c = v.getCambios().get(i);
+                String sql = InversorCambio.obtenerInverso(c.getTipoCambio(), c.getParamCambios());
+                if (sql != null) {
+                    System.out.println(sql);
+                    sqls.add(sql);
+                }
+            }
+            try {
+                DatabaseManager.getInstance().executeQuerysWithinTransaction(bdSeleccionada, sqls);
+                // MainFrame.getInstance().getPanelTabla().actualizarDatos();;
+                // MainFrame.getInstance().getPanelTabla().actualizarDatos();;
+            } catch (SQLException ex) {
+                Logger.getLogger(PanelVersiones.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Contexto.getInstance().getBDDVersionado().getVersiones().remove(cambiosRevert.get(j).getVersion());
+            Integer nuevaVersion = Contexto.getInstance().getBDDVersionado().getVersionActual() -1;
+            Contexto.getInstance().getBDDVersionado().setVersionActual(nuevaVersion);
+            Contexto.getInstance().salvar();
+
+        }
+
+        cargarDatos();
+        MainFrame.getInstance().updateTree();
+    }//GEN-LAST:event_jButton1ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane tabla;
     private javax.swing.JTable tablaVersiones;
     // End of variables declaration//GEN-END:variables
@@ -120,5 +149,39 @@ public class PanelVersiones extends javax.swing.JPanel {
         }
 
         return str.toString();
+    }
+
+    public void cargarDatos() {
+        List<Cambio> listaCambios = new ArrayList<Cambio>();
+        BDDVersionado bddversionado = Contexto.getInstance().getBDDVersionado();
+        DefaultTableModel modelo = (DefaultTableModel) this.tablaVersiones.getModel();
+        String[] nombreCols = {"Versión", "Tipo Cambio", "Parametros"};
+
+        List<String[]> rows = new LinkedList<String[]>();
+        for (Integer verNum : bddversionado.getVersiones().keySet()) {
+            for (Cambio c : bddversionado.getVersiones().get(verNum).getCambios()) {
+                String[] row = new String[3];
+                row[0] = verNum.toString();
+                row[1] = c.getTipoCambio().toString();
+                row[2] = parametrosToString(c.getParamCambios());
+                rows.add(row);
+            }
+        }
+        for (Cambio c : listaCambios) {
+            String[] row = new String[3];
+            Integer ver = Contexto.getInstance().getBDDVersionado().getVersionActual() + 1;
+            row[0] = ver.toString();
+            row[1] = c.getTipoCambio().toString();
+            row[2] = parametrosToString(c.getParamCambios());
+            rows.add(row);
+        }
+        Object[][] dataVector = new String[rows.size()][3];
+        int i = 0;
+        for (Object[] row : rows) {
+            dataVector[i] = row;
+            i++;
+        }
+        modelo.setDataVector(dataVector, nombreCols);
+
     }
 }

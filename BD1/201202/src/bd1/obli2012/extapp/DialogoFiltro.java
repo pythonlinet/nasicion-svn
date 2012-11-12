@@ -16,7 +16,7 @@ import javax.swing.JTextField;
  */
 /**
  *
- * @author guillermo
+ * @author favio.ortelli/guillermo.nasi
  */
 public class DialogoFiltro extends javax.swing.JDialog {
 

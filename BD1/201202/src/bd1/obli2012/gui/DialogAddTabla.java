@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author guillermo
+ * @author favio.ortelli/guillermo.nasi
  */
 public class DialogAddTabla extends javax.swing.JDialog {
 
@@ -47,6 +47,7 @@ public class DialogAddTabla extends javax.swing.JDialog {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Agregar Tabla");
 
         jLabel1.setText("Nombre");
 
@@ -75,7 +76,7 @@ public class DialogAddTabla extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -106,7 +107,7 @@ public class DialogAddTabla extends javax.swing.JDialog {
             Map<String,String> params = new HashMap<String, String>();
             params.put("NOMBRE_TABLA", nombreTb);
             Cambio cambio = new Cambio(TipoCambio.TABLA_CREAR, params);
-            Contexto.getInstance().guardarCambioACola(cambio);
+            Contexto.getInstance().guardarCambio(cambio);
             if (er.success) {
                 //parent.actualizarDatos();
                 node.reconstruir(false);

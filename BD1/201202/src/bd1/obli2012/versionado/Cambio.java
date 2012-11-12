@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  *
- * @author gnasi
+ * @author favio.ortelli/guillermo.nasi
  */
 public class Cambio implements Serializable {
 

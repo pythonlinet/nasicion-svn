@@ -6,7 +6,7 @@ package bd1.obli2012.framework;
 
 /**
  *
- * @author guillermo
+ * @author favio.ortelli/guillermo.nasi
  */
 public class QueryCriteria {
 

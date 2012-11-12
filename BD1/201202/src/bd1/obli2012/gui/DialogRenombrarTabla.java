@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author guillermo
+ * @author favio.ortelli/guillermo.nasi
  */
 public class DialogRenombrarTabla extends javax.swing.JDialog {
 
@@ -114,11 +114,11 @@ public class DialogRenombrarTabla extends javax.swing.JDialog {
                 
                 
                 Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("NOMBRE_TABLA", nombreOriginal);
-                parametros.put("NUEVO_NOMBRE", nombreTb);
+                parametros.put("NOMBRE_TABLA", nombreTb);
+                parametros.put("NUEVO_NOMBRE", nombreOriginal);
                 
                 Cambio cambio = new Cambio(TipoCambio.TABLA_RENOMBRAR, parametros);
-                Contexto.getInstance().guardarCambioACola(cambio);
+                Contexto.getInstance().guardarCambio(cambio);
                 this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);

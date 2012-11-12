@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author gnasi
+ * @author favio.ortelli/guillermo.nasi
  */
 public class DialogAddAttrib extends javax.swing.JDialog {
 
@@ -58,6 +58,7 @@ public class DialogAddAttrib extends javax.swing.JDialog {
         btnCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Agregar Tabla...");
 
         txtNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -202,7 +203,7 @@ public class DialogAddAttrib extends javax.swing.JDialog {
             parametros.put("NOMBRE_COLUMNA", nombre);
 
             Cambio cambio = new Cambio(TipoCambio.COLUMNA_CREAR, parametros);
-            Contexto.getInstance().guardarCambioACola(cambio);
+            Contexto.getInstance().guardarCambio(cambio);
             MainFrame.getInstance().updateTree();
             MainFrame.getInstance().getPanelTabla().actualizarDatos();
             this.dispose();

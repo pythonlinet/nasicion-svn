@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author gnasi
+ * @author favio.ortelli/guillermo.nasi
  */
 public class ColumnManager {
 
@@ -54,7 +54,7 @@ public class ColumnManager {
         
         //FIXME arreglar el tema del largo Steeeeve!!
         if(!TipoDato.valueOf(type).equals(columnaOriginal.getTipo())) {
-            querys.add(modifyTypeQueryBuilder(tbName, nombre, type, largo));
+            querys.add(modifyTypeQueryBuilder(tbName, columnaOriginal.getNombre(), type, largo));
         }
         
         if(!defaultValue.trim().equals(columnaOriginal.getDefaultValue())){
@@ -62,7 +62,7 @@ public class ColumnManager {
         }
         
         if(notNull != columnaOriginal.notNull()) {
-            querys.add(modifyNullabilityBuilder(tbName, nombre, notNull));
+            querys.add(modifyNullabilityBuilder(tbName, columnaOriginal.getNombre(), notNull));
         }
         if(!nombre.equals(columnaOriginal.getNombre())){
             querys.add(modifyNameQueryBuilder(tbName, columnaOriginal.getNombre() ,nombre));

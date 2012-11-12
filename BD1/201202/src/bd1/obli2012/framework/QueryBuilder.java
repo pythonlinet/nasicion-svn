@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  *
- * @author guillermo
+ * @author favio.ortelli/guillermo.nasi
  */
 public class QueryBuilder {
 

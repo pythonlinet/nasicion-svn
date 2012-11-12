@@ -11,9 +11,8 @@ public class Contexto {
 
     private static Contexto instancia;
     private BDDVersionado bddVersionado;
-    private List<Cambio> colaCambios;
-    private boolean hayCambios = false;
-
+    private Integer version;
+    
     public static Contexto getInstance() {
         if (instancia == null) {
             instancia = new Contexto();
@@ -25,36 +24,37 @@ public class Contexto {
         return this.bddVersionado;
     }
 
-    public List<Cambio> getColaCambios() {
-        return this.colaCambios;
-    }
-
     private Contexto() {
     }
 
     public void seleccionarBaseDeDatos(String nombreBaseDeDatos) {
         if (bddVersionado != null) {
             if (!bddVersionado.getNombreBDD().equals(nombreBaseDeDatos)) {
-                guardarCambiosEnCola();
                 this.bddVersionado = VersionadoHelper.obtenerVersiones(nombreBaseDeDatos);
-                this.colaCambios = new ArrayList<Cambio>();
-                this.hayCambios = false;
+                this.version = this.bddVersionado.getVersionActual();
+            
             }
         } else {
             this.bddVersionado = VersionadoHelper.obtenerVersiones(nombreBaseDeDatos);
-            this.colaCambios = new ArrayList<Cambio>();
-            this.hayCambios = false;
+            this.version = this.bddVersionado.getVersionActual();
+            
         }
     }
 
-    public void guardarCambioACola(Cambio cambio) {
-        if (this.colaCambios == null) {
-            this.colaCambios = new ArrayList<Cambio>();
+    public void guardarCambio(Cambio cambio) {
+        Integer ver = this.version + 1;
+        VersionBDD v = this.bddVersionado.getVersiones().get(ver);
+        this.bddVersionado.setVersionActual(ver);
+        if(v == null){
+            v = new VersionBDD();
+            v.setVersion(ver);
+            this.bddVersionado.getVersiones().put(ver, v);
         }
-        this.colaCambios.add(cambio);
-        this.hayCambios = true;
+            v.getCambios().add(cambio);
+           
+        VersionadoHelper.salvarCambios(bddVersionado);
     }
-
+/*
     private void guardarCambiosEnCola() {
         if (this.colaCambios != null && !this.colaCambios.isEmpty()) {
             Integer numVersion = bddVersionado.getVersionActual() + 1;
@@ -72,8 +72,9 @@ public class Contexto {
             this.hayCambios = false;
         }
     }
-    
-    public boolean hayCambios(){
-        return this.hayCambios;
+  */  
+
+    public void salvar() {
+        VersionadoHelper.salvarCambios(this.bddVersionado);
     }
 }
