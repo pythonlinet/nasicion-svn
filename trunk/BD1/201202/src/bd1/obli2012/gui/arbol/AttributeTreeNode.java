@@ -9,7 +9,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
  *
- * @author guillermo
+ * @author favio.ortelli/guillermo.nasi
  */
 public class AttributeTreeNode extends DefaultMutableTreeNode{
 

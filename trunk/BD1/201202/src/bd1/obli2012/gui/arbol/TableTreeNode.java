@@ -10,7 +10,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
  *
- * @author guillermo
+ * @author favio.ortelli/guillermo.nasi
  */
 public class TableTreeNode extends DefaultMutableTreeNode {
 

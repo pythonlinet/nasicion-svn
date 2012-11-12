@@ -15,7 +15,7 @@ import javax.swing.tree.TreePath;
 
 /**
  *
- * @author gnasi
+ * @author favio.ortelli/guillermo.nasi
  */
 public class DBTreeNode extends DefaultMutableTreeNode {
 

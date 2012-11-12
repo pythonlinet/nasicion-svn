@@ -6,7 +6,7 @@ package bd1.obli2012.framework.definicion;
 
 /**
  *
- * @author guillermo
+ * @author favio.ortelli/guillermo.nasi
  */
 public enum TipoDato {
     /*    -7	BIT

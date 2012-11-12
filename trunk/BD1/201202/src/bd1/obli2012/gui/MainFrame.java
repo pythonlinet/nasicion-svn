@@ -31,7 +31,7 @@ import javax.swing.tree.TreePath;
 
 /**
  *
- * @author guillermo
+ * @author favio.ortelli/guillermo.nasi
  */
 public class MainFrame extends javax.swing.JFrame implements TreeSelectionListener {
 
@@ -70,11 +70,9 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
         arbolBD = cargarArbol();
         treePane = new JScrollPane(arbolBD);
         flowPanel = new javax.swing.JPanel();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Universidad Catolica - Base de Datos I - Obligatorio 2012");
         setMinimumSize(new java.awt.Dimension(1300, 600));
 
         treePane.setViewportBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -84,14 +82,6 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
 
         flowPanel.setPreferredSize(new java.awt.Dimension(800, 440));
         flowPanel.setLayout(new java.awt.BorderLayout());
-
-        jMenu1.setText("File");
-        jMenuBar1.add(jMenu1);
-
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
-
-        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -113,7 +103,7 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
                         .addComponent(treePane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(10, 10, 10)
-                        .addComponent(flowPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(flowPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -158,9 +148,6 @@ public class MainFrame extends javax.swing.JFrame implements TreeSelectionListen
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel flowPanel;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane treePane;
     // End of variables declaration//GEN-END:variables
 

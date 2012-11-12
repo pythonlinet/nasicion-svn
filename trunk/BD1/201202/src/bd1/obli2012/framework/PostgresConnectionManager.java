@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author gnasi
+ * @author favio.ortelli/guillermo.nasi
  *
  */
 public class PostgresConnectionManager implements ConnectionManager {
@@ -39,7 +39,7 @@ public class PostgresConnectionManager implements ConnectionManager {
     }
 
     /* (non-Javadoc)
-     * @see uy.edu.ucu.bd1.gnasi.ConnectionManager#obtenerConexion()
+     * @see uy.edu.ucu.bd1.favio.ortelli/guillermo.nasi.ConnectionManager#obtenerConexion()
      */
     @Override
     public Connection obtenerConexion() {
@@ -66,7 +66,7 @@ public class PostgresConnectionManager implements ConnectionManager {
     }
 
     /* (non-Javadoc)
-     * @see uy.edu.ucu.bd1.gnasi.ConnectionManager#cerrarConexion()
+     * @see uy.edu.ucu.bd1.favio.ortelli/guillermo.nasi.ConnectionManager#cerrarConexion()
      */
     @Override
     public void cerrarConexion() {

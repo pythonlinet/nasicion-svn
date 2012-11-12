@@ -3,6 +3,7 @@ package bd1.obli2012;
 import java.awt.Component;
 import java.awt.Container;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,8 +19,7 @@ public class Util {
     public static Properties getProperties() {
         Properties props = new Properties();
         try {
-
-            props.load(Util.class.getResourceAsStream("/bd1/obli2012/database.properties"));
+            props.load(new FileInputStream("./database.properties"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

@@ -17,13 +17,15 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author gnasi
+ * @author favio.ortelli/guillermo.nasi
  */
 public class DialogModAttrib extends javax.swing.JDialog {
+
     private String dbName;
     private String tbName;
     private PanelTabla parent;
-    private Columna columna;
+    private Columna columnaOriginal;
+
     /**
      * Creates new form DialogAddAttrib
      */
@@ -33,14 +35,14 @@ public class DialogModAttrib extends javax.swing.JDialog {
         this.dbName = dbName;
         this.tbName = tbName;
         this.parent = parentPanel;
-        this.columna = DatabaseManager.getInstance().getColumnFromTable(dbName, tbName, colName);
-        
+        this.columnaOriginal = DatabaseManager.getInstance().getColumnFromTable(dbName, tbName, colName);
+
         //Carga los datos en pantalla
-        txtNombre.setText(columna.getNombre());
-        txtDefault.setText(columna.getDefaultValue());
-        cmbTipoDato.setSelectedItem(columna.getTipo());
-        chkNotNull.setSelected(!columna.isNullable());
-        
+        txtNombre.setText(columnaOriginal.getNombre());
+        txtDefault.setText(columnaOriginal.getDefaultValue());
+        cmbTipoDato.setSelectedItem(columnaOriginal.getTipo());
+        chkNotNull.setSelected(!columnaOriginal.isNullable());
+
     }
 
     /**
@@ -65,6 +67,7 @@ public class DialogModAttrib extends javax.swing.JDialog {
         btnCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Modificar Columna...");
 
         txtNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -190,48 +193,56 @@ public class DialogModAttrib extends javax.swing.JDialog {
     }//GEN-LAST:event_txtLargoActionPerformed
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-        
-        
+
+
         String nombre = txtNombre.getText().trim();
-        String type = ((bd1.obli2012.framework.definicion.TipoDato)cmbTipoDato.getSelectedItem()).name();
+        String type = ((bd1.obli2012.framework.definicion.TipoDato) cmbTipoDato.getSelectedItem()).name();
         String largo = txtLargo.getText().trim();
         boolean notNull = chkNotNull.isSelected();
         String defaultValue = txtDefault.getText().trim();
-        
+
         ColumnManager colMan = new ColumnManager();
 
-        
-        
+        ExecutionResult er = colMan.modificarColumna(dbName, tbName, columnaOriginal.getNombre(), nombre, type, largo, notNull, defaultValue);
+
         //Preparamos el cambio en caso de que se borre correctamente la columna
-        Map<String, String> parametros = new HashMap<String, String>();
-        parametros.put("NOMBRE_TABLA", tbName);
-        parametros.put("NOMBRE_COLUMNA", columna.getNombre());
-        parametros.put("TIPO", columna.getTipo().toString());
-        parametros.put("NOT_NULL", columna.notNull().toString());
-        Cambio cambio = new Cambio(TipoCambio.COLUMNA_BORRAR, parametros);
-        
-        
-        
-        
-        ExecutionResult er = colMan.modificarColumna(dbName, tbName, columna.getNombre(), nombre, type, largo, notNull, defaultValue);
-         
-        
-        if(er.success) {
+
+
+
+        if (er.success) {
             parent.actualizarDatos();
-            Contexto.getInstance().guardarCambioACola(cambio);
+
+
+            Map<String, String> parametros = new HashMap<String, String>();
+            parametros.put("NOMBRE_TABLA", tbName);
+            parametros.put("NOMBRE_COLUMNA", columnaOriginal.getNombre());
+            parametros.put("TIPO", columnaOriginal.getTipo().toString());
+            parametros.put("NOT_NULL", columnaOriginal.notNull().toString());
+            parametros.put("DEFAULT_VALUE", columnaOriginal.getDefaultValue());
+            Cambio cambio = new Cambio(TipoCambio.COLUMNA_MODIFICAR, parametros);
+            Contexto.getInstance().guardarCambio(cambio);
+
+
+
+            parametros = new HashMap<String, String>();
+            parametros.put("NOMBRE_TABLA", tbName);
+            parametros.put("NOMBRE_NUEVO", nombre);
+            parametros.put("NOMBRE_VIEJO", columnaOriginal.getNombre());
+            
+            cambio = new Cambio(TipoCambio.COLUMNA_CAMBIAR_NOMBRE, parametros);
+            Contexto.getInstance().guardarCambio(cambio);
+
             this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
         }
-        
+
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
 
         this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
-
-   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnCancelar;

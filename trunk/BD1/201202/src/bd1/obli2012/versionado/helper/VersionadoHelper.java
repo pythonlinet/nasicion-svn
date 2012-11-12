@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author gnasi
+ * @author favio.ortelli/guillermo.nasi
  */
 public abstract class VersionadoHelper {
 

@@ -137,4 +137,15 @@ public class Tabla {
         
         return nombres;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Tabla){
+            Tabla t = (Tabla)obj;
+            return t.nombre.equals(this.nombre) && t.getDatabase().equals(this.database);
+        }
+        return false;
+    }
+    
+    
 }

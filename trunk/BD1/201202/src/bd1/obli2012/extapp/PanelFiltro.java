@@ -13,7 +13,7 @@ import javax.swing.DefaultComboBoxModel;
 
 /**
  *
- * @author guillermo
+ * @author favio.ortelli/guillermo.nasi
  */
 public class PanelFiltro extends javax.swing.JPanel {
 

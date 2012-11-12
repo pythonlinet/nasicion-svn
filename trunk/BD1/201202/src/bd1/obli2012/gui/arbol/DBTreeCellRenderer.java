@@ -12,7 +12,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 
 /**
  *
- * @author guillermo
+ * @author favio.ortelli/guillermo.nasi
  */
 public class DBTreeCellRenderer extends DefaultTreeCellRenderer {
 

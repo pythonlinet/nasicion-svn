@@ -6,7 +6,7 @@ package bd1.obli2012.framework.definicion;
 
 /**
  *
- * @author guillermo
+ * @author favio.ortelli/guillermo.nasi
  */
 public class ForeignKey {
     private String nombreColumna;

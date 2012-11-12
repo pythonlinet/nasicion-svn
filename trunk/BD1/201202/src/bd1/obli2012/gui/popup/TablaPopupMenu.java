@@ -20,7 +20,7 @@ import javax.swing.JPopupMenu;
 
 /**
  *
- * @author guillermo
+ * @author favio.ortelli/guillermo.nasi
  */
 public class TablaPopupMenu extends JPopupMenu {
 
@@ -38,7 +38,9 @@ public class TablaPopupMenu extends JPopupMenu {
 
         menuItemBorrarTabla.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bd1/obli2012/icons/table_delete.png")));
         menuItemRenombrarTabla.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bd1/obli2012/icons/table_row_alt.png")));
-
+        menuPKTabla.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bd1/obli2012/icons/key.png")));
+        menuFKTabla.setIcon(new javax.swing.ImageIcon(getClass().getResource("/bd1/obli2012/icons/fkeys.png")));
+        
         add(menuItemBorrarTabla);
         add(menuItemRenombrarTabla);
         add(menuPKTabla);

@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author gnasi
+ * @author favio.ortelli/guillermo.nasi
  */
 public class TablaManager {
 

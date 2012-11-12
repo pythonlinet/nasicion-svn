@@ -20,7 +20,7 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author guillermo
+ * @author favio.ortelli/guillermo.nasi
  */
 public class PanelTabla extends javax.swing.JPanel {
 
@@ -166,7 +166,7 @@ public class PanelTabla extends javax.swing.JPanel {
         ColumnManager columnManager = new ColumnManager();
         ExecutionResult er = columnManager.dropColumn(dbName, tbName, colName);
         if (er.success) {
-            Contexto.getInstance().guardarCambioACola(cambio);
+            Contexto.getInstance().guardarCambio(cambio);
         } else {
             JOptionPane.showMessageDialog(parent, er.errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
         }

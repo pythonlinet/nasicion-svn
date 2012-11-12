@@ -5,17 +5,23 @@
 package bd1.obli2012.versionado;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
- * @author gnasi
+ * @author favio.ortelli/guillermo.nasi
  */
-public class VersionBDD implements Serializable {
+public class VersionBDD implements Serializable, Comparable<VersionBDD> {
 
     private Integer version;
     private List<Cambio> cambios;
 
+    public VersionBDD() {
+        this.cambios = new ArrayList<Cambio>() {};
+    }
+
+    
     /**
      * @return the version
      */
@@ -42,5 +48,9 @@ public class VersionBDD implements Serializable {
      */
     public void setCambios(List<Cambio> cambios) {
         this.cambios = cambios;
+    }
+
+    public int compareTo(VersionBDD t) {
+        return this.version.compareTo(t.version);
     }
 }
