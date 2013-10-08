@@ -345,11 +345,13 @@ public class AgregarActividad extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        NuevaActividad act = new NuevaActividad();
+        
         JDialog nuevaAct = new JDialog();
-        nuevaAct.setLayout(new FlowLayout());
+        NuevaActividad act = new NuevaActividad(nuevaAct);
+        
         nuevaAct.setSize(act.getHeight(), act.getWidth());
         nuevaAct.add(act);   
+        nuevaAct.pack();
         nuevaAct.setVisible(true);
         
     }//GEN-LAST:event_jButton1ActionPerformed

@@ -111,7 +111,11 @@ public class Solucion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        System.out.println(evt.paramString());
+        if(jCheckBox1.isSelected()){
+            jButton1.setEnabled(true);
+        } else {
+            jButton1.setEnabled(false);
+        }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
