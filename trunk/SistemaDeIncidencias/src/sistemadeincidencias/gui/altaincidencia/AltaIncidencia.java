@@ -3,13 +3,14 @@
  * and open the template in the editor.
  */
 package sistemadeincidencias.gui.altaincidencia;
-
+    
 /**
  *
  * @author gnasi
  */
 public class AltaIncidencia extends javax.swing.JPanel {
-
+    private boolean creado = false;
+    
     /**
      * Creates new form AltaIncidencia
      */
@@ -36,7 +37,7 @@ public class AltaIncidencia extends javax.swing.JPanel {
         cancelarBtn = new javax.swing.JButton();
         jComboBox2 = new javax.swing.JComboBox();
         jLabel4 = new javax.swing.JLabel();
-        jComboBox3 = new javax.swing.JComboBox();
+        estadoCmb = new javax.swing.JComboBox();
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 1), new java.awt.Dimension(0, 1), new java.awt.Dimension(32767, 1));
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Jira", "Confluence", "SVN", "Drupal", "Joomla", "Blabla" }));
@@ -80,8 +81,8 @@ public class AltaIncidencia extends javax.swing.JPanel {
 
         jLabel4.setText("Estado");
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Abierta", "Cerrada", "En Progreso", "Asignada" }));
-        jComboBox3.setEnabled(false);
+        estadoCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Abierta", "Cerrada", "En Progreso", "Asignada" }));
+        estadoCmb.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -105,7 +106,7 @@ public class AltaIncidencia extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(estadoCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -141,7 +142,7 @@ public class AltaIncidencia extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(estadoCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
@@ -159,7 +160,16 @@ public class AltaIncidencia extends javax.swing.JPanel {
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void crearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearBtnActionPerformed
-        // TODO add your handling code here:
+        
+        if(!creado){
+        Sugerencias sugerenciasForm = new Sugerencias();
+        sugerenciasForm.setVisible(true);
+        this.estadoCmb.setEnabled(true);
+        this.crearBtn.setText("Salvar");
+        this.cancelarBtn.setEnabled(false);
+        } else {
+            
+        }
         
     }//GEN-LAST:event_crearBtnActionPerformed
 
@@ -170,10 +180,10 @@ public class AltaIncidencia extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelarBtn;
     private javax.swing.JButton crearBtn;
+    private javax.swing.JComboBox estadoCmb;
     private javax.swing.Box.Filler filler2;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JComboBox jComboBox2;
-    private javax.swing.JComboBox jComboBox3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
