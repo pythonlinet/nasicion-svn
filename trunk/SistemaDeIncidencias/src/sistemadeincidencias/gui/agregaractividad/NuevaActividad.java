@@ -4,17 +4,20 @@
  */
 package sistemadeincidencias.gui.agregaractividad;
 
+import javax.swing.JDialog;
+
 /**
  *
  * @author Guillermo
  */
 public class NuevaActividad extends javax.swing.JPanel {
+    private final JDialog dialogparent;
 
-    /**
-     * Creates new form NuevaActivida
-     */
-    public NuevaActividad() {
+
+
+    NuevaActividad(JDialog nuevaAct) {
         initComponents();
+      this.dialogparent = nuevaAct;       
     }
 
     /**
@@ -46,6 +49,11 @@ public class NuevaActividad extends javax.swing.JPanel {
         jScrollPane1.setViewportView(jTextArea1);
 
         jButton1.setText("Guardar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -79,8 +87,18 @@ public class NuevaActividad extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
+        if("comboBoxChanged".equals(evt.getActionCommand())){
+            if(jComboBox1.getSelectedIndex() == 4){
+                jTextField1.setEnabled(true);
+            } else {
+                jTextField1.setEnabled(false);
+            }
+        }
     }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        this.dialogparent.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
